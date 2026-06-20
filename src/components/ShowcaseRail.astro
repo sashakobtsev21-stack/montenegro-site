@@ -1,0 +1,642 @@
+---
+/**
+ * ShowcaseRail (§8.4, §16) — «витрина»: лента карточек в ЗОЛОТОЙ рамке.
+ * Авто-прокрутка + drag (/js/showcase-rail.js); при наведении карточка
+ * подсвечивается, соседние затемняются, авто-движение на паузе.
+ *
+ * Карточки заведений (`place`):
+ *  - карусель фото (стрелки на наведении + свайп) — /js/rcard-gallery.js;
+ *  - клик по фото → лайтбокс с листанием — /js/lightbox.js;
+ *  - описание (часы/инфо/«На карте») выпадает ПОД карточкой при наведении/фокусе;
+ *  - знак качества (SVG-печать) — в правом верхнем углу, выходит ЗА рамку, со свечением;
+ *  - пин-чип города в левом нижнем углу обложки.
+ */
+import { t, type Lang } from '../i18n';
+import Icon from './Icon.astro';
+import type { IconName } from './iconNames';
+
+export interface ShowcaseItem {
+  href: string;
+  title: string;
+  kicker?: string;
+  cover?: { src: string; alt: string };
+  city?: string;
+  place?: boolean;
+  /** Знак качества (золотая медаль) на карточке витрины — ТОЛЬКО по запросу владельца. */
+  quality?: boolean;
+  subtitle?: string;
+  hours?: string;
+  info?: string;
+  mapUrl?: string;
+  website?: string;
+  instagram?: string;
+  address?: string;
+  photos?: { src: string; alt: string; credit?: string }[];
+  sponsored?: boolean;
+  ad?: boolean;
+  icon?: IconName;
+}
+
+interface Props {
+  lang: Lang;
+  items: ShowcaseItem[];
+  label: string;
+}
+
+const { lang, items, label } = Astro.props;
+const dict = t(lang);
+
+const QUALITY_MARK = '/images/quality/seal-gold.webp';
+
+const cells = [
+  ...items.map((it) => ({ ...it, clone: false })),
+  ...items.map((it) => ({ ...it, clone: true })),
+];
+---
+
+<section class="showcase" aria-label={label} data-reveal data-showcase>
+  <div class="showcase__viewport" data-showcase-viewport>
+    <ul class="showcase__track" data-showcase-track>
+      {
+        cells.map((c) =>
+          c.place ? (
+            <li class="showcase__cell" aria-hidden={c.clone ? 'true' : undefined}>
+              <div class="scard scard--place" data-scard-place>
+                <span class="scard__frame">
+                  <span class="scard__inner">
+                    {c.photos && c.photos.length > 0 && (
+                      <div
+                        class="scard__media"
+                        data-rcard-gallery
+                        data-gallery
+                        data-close={dict.gallery.close}
+                        data-prev={dict.gallery.prev}
+                        data-next={dict.gallery.next}
+                      >
+                        {c.photos.map((p, i) => (
+                          <figure class="scard__slide" data-rcard-slide hidden={i !== 0}>
+                            <button
+                              type="button"
+                              class="scard__zoom"
+                              data-gallery-item
+                              data-full={p.src}
+                              data-alt={p.alt}
+                              data-credit={p.credit ?? ''}
+                              aria-label={p.alt}
+                              tabindex={c.clone ? -1 : undefined}
+                            >
+                              <img
+                                class="scard__img"
+                                src={p.src}
+                                alt={c.clone ? '' : p.alt}
+                                width="280"
+                                height="158"
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            </button>
+                          </figure>
+                        ))}
+                        {c.photos.length > 1 && (
+                          <>
+                            <button
+                              type="button"
+                              class="scard__nav scard__nav--prev"
+                              data-rcard-prev
+                              aria-label={dict.gallery.prev}
+                              tabindex={c.clone ? -1 : undefined}
+                            >
+                              <Icon name="arrow-right" size={18} />
+                            </button>
+                            <button
+                              type="button"
+                              class="scard__nav scard__nav--next"
+                              data-rcard-next
+                              aria-label={dict.gallery.next}
+                              tabindex={c.clone ? -1 : undefined}
+                            >
+                              <Icon name="arrow-right" size={18} />
+                            </button>
+                          </>
+                        )}
+                        {c.city && (
+                          <span class="scard__city">
+                            <Icon name="map-pin" size={14} />
+                            {c.city}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    <a class="scard__titlelink" href={c.href} tabindex={c.clone ? -1 : undefined}>
+                      <span class="scard__body">
+                        {c.kicker && <span class="scard__kicker">{c.kicker}</span>}
+                        <span class="scard__title">{c.title}</span>
+                        {c.subtitle && <span class="scard__subtitle">{c.subtitle}</span>}
+                      </span>
+                    </a>
+                  </span>
+                </span>
+                {c.quality && (
+                  <img
+                    class="scard__quality"
+                    src={QUALITY_MARK}
+                    alt=""
+                    aria-hidden="true"
+                    width="62"
+                    height="62"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                )}
+                <div class="scard__pop" data-scard-pop>
+                  {c.address && (
+                    <p class="scard__pop-row">
+                      <Icon name="map-pin" size={16} />
+                      <span>{c.address}</span>
+                    </p>
+                  )}
+                  {c.hours && (
+                    <p class="scard__pop-row scard__pop-hours">
+                      <Icon name="clock" size={16} />
+                      <span class="scard__pop-hours-col">
+                        {c.hours
+                          .split(';')
+                          .map((h) => h.trim())
+                          .filter(Boolean)
+                          .map((h) => (
+                            <span>{h}</span>
+                          ))}
+                      </span>
+                    </p>
+                  )}
+                  <span class="scard__pop-actions">
+                    {c.mapUrl && (
+                      <a
+                        class="scard__pop-map"
+                        href={c.mapUrl}
+                        target="_blank"
+                        rel="noopener nofollow"
+                        tabindex={c.clone ? -1 : undefined}
+                      >
+                        <Icon name="map-pin" size={16} />
+                        <span>{dict.eda.onMap}</span>
+                      </a>
+                    )}
+                    {/* В компактном поповере витрины — один контакт: Instagram (приоритет),
+                        иначе сайт. Обе кнопки целиком — на карточке /eda/ и в статье. */}
+                    {c.instagram ? (
+                      <a
+                        class="scard__pop-map scard__pop-site"
+                        href={c.instagram}
+                        target="_blank"
+                        rel="noopener nofollow"
+                        tabindex={c.clone ? -1 : undefined}
+                      >
+                        <Icon name="instagram" size={16} />
+                        <span>Instagram</span>
+                      </a>
+                    ) : (
+                      c.website && (
+                        <a
+                          class="scard__pop-map scard__pop-site"
+                          href={c.website}
+                          target="_blank"
+                          rel="noopener nofollow"
+                          tabindex={c.clone ? -1 : undefined}
+                        >
+                          <Icon name={c.website.includes('instagram.com') ? 'instagram' : 'globe'} size={16} />
+                          <span>{c.website.includes('instagram.com') ? 'Instagram' : dict.eda.website}</span>
+                        </a>
+                      )
+                    )}
+                  </span>
+                </div>
+              </div>
+            </li>
+          ) : (
+            <li class="showcase__cell" aria-hidden={c.clone ? 'true' : undefined}>
+              <a
+                class:list={['scard', { 'scard--ad': c.ad }]}
+                href={c.href}
+                tabindex={c.clone ? -1 : undefined}
+              >
+                <span class="scard__frame">
+                  <span class="scard__inner">
+                    {c.ad ? (
+                      <span class="scard__art" aria-hidden="true">
+                        <Icon name={c.icon ?? 'send'} size={28} />
+                      </span>
+                    ) : (
+                      c.cover && (
+                        <span class="scard__media">
+                          <img
+                            class="scard__img scard__img--single"
+                            src={c.cover.src}
+                            alt={c.clone ? '' : c.cover.alt}
+                            width="280"
+                            height="158"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                          {c.city && (
+                            <span class="scard__city">
+                              <Icon name="map-pin" size={14} />
+                              {c.city}
+                            </span>
+                          )}
+                        </span>
+                      )
+                    )}
+                    <span class="scard__body">
+                      {c.kicker && <span class="scard__kicker">{c.kicker}</span>}
+                      <span class="scard__title">{c.title}</span>
+                    </span>
+                  </span>
+                </span>
+                {c.quality && (
+                  <img
+                    class="scard__quality"
+                    src={QUALITY_MARK}
+                    alt=""
+                    aria-hidden="true"
+                    width="62"
+                    height="62"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                )}
+              </a>
+            </li>
+          ),
+        )
+      }
+    </ul>
+  </div>
+</section>
+
+<script is:inline type="module" src="/js/showcase-rail.js"></script>
+<script is:inline type="module" src="/js/rcard-gallery.js"></script>
+<script is:inline type="module" src="/js/lightbox.js"></script>
+
+<style>
+  .showcase {
+    position: relative;
+  }
+  .showcase__viewport {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    cursor: grab;
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      transparent 0,
+      black 4%,
+      black 96%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(90deg, transparent 0, black 4%, black 96%, transparent 100%);
+  }
+  .showcase__viewport::-webkit-scrollbar {
+    display: none;
+  }
+  .showcase__viewport.is-grabbing {
+    cursor: grabbing;
+  }
+  .showcase__track {
+    display: flex;
+    width: max-content;
+    margin: 0;
+    /* верх — минимальный зазор под угол медали (медаль торчит вверх на 14px +
+       лёгкое свечение); больше не делаем, иначе над карточками висит пустая
+       кремовая «полоса». низ — под выпадающее описание заведения (overflow-y
+       нельзя сделать visible при overflow-x:auto, резервируем высоту паддингом). */
+    padding: 22px 0 198px;
+    list-style: none;
+  }
+  .showcase__cell {
+    flex: 0 0 auto;
+    width: clamp(15rem, 72vw, 18rem);
+    margin-inline-end: var(--space-4);
+    transition: opacity var(--dur) var(--ease-standard);
+  }
+  /* Спотлайт: при наведении на карточку соседние затемняются. */
+  .showcase__track:has(.showcase__cell:hover) .showcase__cell:not(:hover) {
+    opacity: 0.4;
+  }
+
+  /* --- Карточка в золотой рамке --- */
+  .scard {
+    position: relative; /* контекст для знака качества, выходящего за рамку */
+    display: block;
+    height: 100%;
+    text-decoration: none;
+    color: var(--text-body);
+  }
+  .scard--place {
+    position: relative;
+  }
+  .scard__frame {
+    display: block;
+    height: 100%;
+    padding: 2px;
+    border-radius: var(--radius-widget);
+    background: var(--gold-frame);
+    box-shadow: var(--gold-glow);
+    transition:
+      transform var(--dur) var(--ease-standard),
+      box-shadow var(--dur) var(--ease-standard);
+  }
+  /* Усиленное золотое свечение при наведении/фокусе/раскрытом описании. */
+  .scard:hover .scard__frame,
+  .scard:focus-visible .scard__frame,
+  .scard--place:hover .scard__frame,
+  .scard--place:focus-within .scard__frame,
+  .scard--place.is-open .scard__frame {
+    transform: translateY(-4px);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-gold) 70%, transparent),
+      0 0 18px color-mix(in srgb, var(--color-gold) 70%, transparent),
+      0 14px 40px color-mix(in srgb, var(--color-gold) 55%, transparent),
+      var(--shadow-raised);
+  }
+  .scard:focus-visible .scard__frame,
+  .scard--place:focus-within .scard__frame {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 3px;
+  }
+  .scard__inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    background: var(--surface-card);
+    border-radius: calc(var(--radius-widget) - 2px);
+  }
+  .scard__media {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+  }
+  .scard__slide {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+  }
+  .scard__slide[hidden] {
+    display: none;
+  }
+  .scard__zoom {
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: zoom-in;
+  }
+  .scard__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--dur-slow) var(--ease-standard);
+  }
+  .scard__img--single {
+    aspect-ratio: 16 / 9;
+    height: auto;
+  }
+  .scard:hover .scard__img,
+  .scard--place:hover .scard__img {
+    transform: scale(1.04);
+  }
+  /* Стрелки карусели — появляются при наведении/фокусе, полупрозрачные. */
+  .scard__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    color: var(--color-white);
+    background: color-mix(in srgb, var(--color-slate) 42%, transparent);
+    border: none;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    opacity: 0;
+    transition:
+      opacity var(--dur) var(--ease-standard),
+      background-color var(--dur) var(--ease-standard);
+  }
+  .scard--place:hover .scard__nav,
+  .scard--place:focus-within .scard__nav {
+    opacity: 1;
+  }
+  .scard__nav:hover,
+  .scard__nav:focus-visible {
+    background: color-mix(in srgb, var(--color-slate) 66%, transparent);
+  }
+  .scard__nav--prev {
+    left: var(--space-2);
+  }
+  .scard__nav--prev :global(svg) {
+    transform: rotate(180deg);
+  }
+  .scard__nav--next {
+    right: var(--space-2);
+  }
+  .scard__city {
+    position: absolute;
+    left: var(--space-2);
+    bottom: var(--space-2);
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    max-width: calc(100% - var(--space-4));
+    padding: 2px var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--color-white);
+    background: color-mix(in srgb, var(--color-slate) 72%, transparent);
+    border-radius: var(--radius-pill);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .scard__city :global(svg) {
+    flex: none;
+  }
+  /* Знак качества — медаль в правом верхнем углу, ВЫХОДИТ за рамку со свечением. */
+  .scard__quality {
+    position: absolute;
+    top: -14px;
+    right: -16px;
+    z-index: 5;
+    width: 62px;
+    height: 62px;
+    filter: drop-shadow(0 0 6px color-mix(in srgb, var(--color-gold) 85%, transparent))
+      drop-shadow(0 2px 4px color-mix(in srgb, var(--color-slate) 45%, transparent));
+    pointer-events: none;
+  }
+  .scard__art {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    color: var(--color-gold-deep);
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-gold-light) 40%, var(--surface-card)),
+      color-mix(in srgb, var(--color-gold) 22%, var(--surface-card))
+    );
+  }
+  .scard__titlelink {
+    display: block;
+    text-decoration: none;
+    color: var(--text-body);
+  }
+  .scard__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-3) var(--space-4) var(--space-4);
+  }
+  .scard__kicker {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-gold-text);
+  }
+  .scard__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-lg);
+    line-height: 1.2;
+    color: var(--text-heading);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .scard--ad .scard__title {
+    color: var(--color-gold-deep);
+  }
+  .scard__subtitle {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  /* --- Описание заведения: ВЫПАДАЕТ ПОД карточкой (наведение/фокус/тап) --- */
+  .scard__pop {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    z-index: 6;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-4) var(--space-3);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-widget);
+    box-shadow: var(--shadow-raised);
+    transform: translateY(-6px);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity var(--dur) var(--ease-standard),
+      transform var(--dur) var(--ease-standard),
+      visibility var(--dur) var(--ease-standard);
+  }
+  .scard--place:hover .scard__pop,
+  .scard--place:focus-within .scard__pop,
+  .scard--place.is-open .scard__pop {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .scard__pop-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--text-body);
+  }
+  .scard__pop-row :global(svg) {
+    flex: none;
+    color: var(--color-wine);
+  }
+  /* Часы — столбиком (по сменам дней): иконка сверху, строки одна под другой. */
+  .scard__pop-hours {
+    align-items: flex-start;
+  }
+  .scard__pop-hours-col {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .scard__pop-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-1);
+  }
+  .scard__pop-site {
+    color: var(--text-body);
+    background: var(--surface-page);
+    border: 1px solid var(--border-card);
+  }
+  .scard__pop-site:hover,
+  .scard__pop-site:focus-visible {
+    background: var(--surface-card);
+    border-color: var(--color-wine);
+  }
+  .scard__pop-map {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    align-self: flex-start;
+    margin-top: var(--space-1);
+    padding: var(--space-1) var(--space-3);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-on-cta);
+    background: var(--cta-bg);
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    transition: background-color var(--dur) var(--ease-standard);
+  }
+  .scard__pop-map:hover,
+  .scard__pop-map:focus-visible {
+    background: var(--cta-bg-hover);
+  }
+  .scard__pop-map :global(svg) {
+    flex: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scard__frame,
+    .scard__img,
+    .scard__pop,
+    .scard__nav,
+    .showcase__cell {
+      transition: none;
+    }
+    .scard:hover .scard__img,
+    .scard--place:hover .scard__img {
+      transform: none;
+    }
+  }
+</style>

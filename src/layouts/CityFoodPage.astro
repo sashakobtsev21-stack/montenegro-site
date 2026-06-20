@@ -1,0 +1,375 @@
+---
+/**
+ * CityFoodPage (§8.6) — per-city страница «Где поесть в {городе}».
+ * Лёгкий шаблон поверх коллекции `restaurants`: интро по городу + сетка
+ * проверенных карточек ЭТОГО города + перелинковка (вся директория, гид по
+ * кухне, путеводитель города). Данные реальные (§11), фильтр lang + !draft +
+ * city === локализованное название города.
+ *
+ * Один компонент для ru/uk; язык и ключ города — пропсами. Тексты из словарей
+ * (§12, `eda.cityPages`). Цены/часы не выдумываем — наследуются из карточек (§11).
+ *
+ * Schema.org (§14): ItemList(Restaurant) этого города + BreadcrumbList
+ * (Главная → Еда → Город). canonical + взаимные hreflang ru↔uk — в BaseLayout.
+ */
+import { getCollectionSafe } from '../loaders/getCollectionSafe';
+import { clampDesc } from '../lib/text';
+import {
+  t,
+  format,
+  formatDate,
+  sectionHref,
+  articleHref,
+  DEFAULT_LANG,
+  EDA_CITY_PAGES,
+  type Lang,
+  type EdaCityKey,
+} from '../i18n';
+import BaseLayout from './BaseLayout.astro';
+import RestaurantCard from '../components/RestaurantCard.astro';
+import AffiliateBox from '../components/AffiliateBox.astro';
+import Icon from '../components/Icon.astro';
+import EmptyHint from '../components/EmptyHint.astro';
+
+interface Props {
+  lang: Lang;
+  cityKey: EdaCityKey;
+}
+const { lang, cityKey } = Astro.props;
+const dict = t(lang);
+const cp = dict.eda.cityPages;
+const city = cp.items[cityKey];
+const cfg = EDA_CITY_PAGES.find((p) => p.key === cityKey)!;
+
+const pageTitle = `${city.heading} — ${dict.siteName}`;
+const description = clampDesc(city.lead);
+
+const SITE = Astro.site ?? new URL('https://georgiaguidebook.com');
+const pageUrl = new URL(Astro.url.pathname, SITE).href;
+const homeUrl = new URL(sectionHref(lang, 'home'), SITE).href;
+const edaUrl = new URL(sectionHref(lang, 'eda'), SITE).href;
+
+const edaHref = sectionHref(lang, 'eda');
+// Кросс-ссылки с фолбэком на язык по умолчанию (ru), если перевода на текущий язык
+// ещё нет (фазовая раскатка en) — чтобы не было битых ссылок (§12).
+const articlesAll = await getCollectionSafe('articles', (entry) => entry.data.draft !== true);
+const hasArticle = (category: string, slug: string): boolean =>
+  articlesAll.some(
+    (e) => e.data.lang === lang && e.data.category === category && e.data.slug === slug,
+  );
+const cuisineHref = articleHref(
+  hasArticle('eda', 'chto-poprobovat') ? lang : DEFAULT_LANG,
+  'eda',
+  'chto-poprobovat',
+);
+const cityGuideHref = articleHref(
+  hasArticle('goroda', cfg.citySlug) ? lang : DEFAULT_LANG,
+  'goroda',
+  cfg.citySlug,
+);
+
+/** Места этого города, не черновики (§11). */
+const places = await getCollectionSafe(
+  'restaurants',
+  (entry) =>
+    entry.data.lang === lang && entry.data.draft !== true && entry.data.city === city.cityName,
+);
+
+/** Спонсор активен, если флаг стоит и срок не истёк на сборку (§16). */
+const buildNow = new Date();
+const isSponsored = (p: (typeof places)[number]): boolean =>
+  p.data.sponsored === true && (!p.data.sponsoredUntil || p.data.sponsoredUntil >= buildNow);
+
+/** Порядок: спонсоры наверх, затем по названию (детерминированно). */
+places.sort((a, b) => {
+  const sa = isSponsored(a) ? 0 : 1;
+  const sb = isSponsored(b) ? 0 : 1;
+  if (sa !== sb) return sa - sb;
+  return a.data.name.localeCompare(b.data.name, lang);
+});
+
+const hasPlaces = places.length > 0;
+
+const priceRangeFor = (lvl: string): string =>
+  lvl === '₾' ? 'inexpensive' : lvl === '₾₾' ? 'moderate' : 'expensive';
+
+/** JSON-LD (§14): ItemList(Restaurant) этого города. Чужие рейтинги НЕ кладём (§15). */
+const itemListLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: city.heading,
+  itemListElement: places.map((p, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    item: {
+      '@type': 'Restaurant',
+      name: p.data.name,
+      priceRange: priceRangeFor(p.data.priceLevel),
+      ...(p.data.cuisine ? { servesCuisine: p.data.cuisine } : {}),
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: p.data.city,
+        addressCountry: 'GE',
+        ...(p.data.geo.address ? { streetAddress: p.data.geo.address } : {}),
+      },
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: p.data.geo.coord[0],
+        longitude: p.data.geo.coord[1],
+      },
+      hasMap: p.data.mapUrl,
+    },
+  })),
+};
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: dict.eda.breadcrumbHome, item: homeUrl },
+    { '@type': 'ListItem', position: 2, name: dict.nav.eda, item: edaUrl },
+    { '@type': 'ListItem', position: 3, name: city.cityName, item: pageUrl },
+  ],
+};
+---
+
+<BaseLayout title={pageTitle} description={description} lang={lang}>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
+  {
+    hasPlaces && (
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(itemListLd)} />
+    )
+  }
+
+  <div class="cityfood">
+    <div class="container">
+      <nav class="crumbs" aria-label={dict.breadcrumbs.aria}>
+        <a href={sectionHref(lang, 'home')}>{dict.eda.breadcrumbHome}</a>
+        <span class="crumbs__sep" aria-hidden="true">/</span>
+        <a href={edaHref}>{dict.nav.eda}</a>
+        <span class="crumbs__sep" aria-hidden="true">/</span>
+        <span aria-current="page">{city.cityName}</span>
+      </nav>
+
+      <header class="head" data-reveal>
+        <h1 class="head__title">{city.heading}</h1>
+        <p class="head__lead">{city.lead}</p>
+        <div class="head__intro">
+          {city.intro.map((p: string) => <p>{p}</p>)}
+        </div>
+        <a class="head__guide" href={cuisineHref}>
+          <Icon name="utensils" size={18} class="head__guide-icon" />
+          <span>{dict.eda.cuisineGuide}</span>
+          <Icon name="arrow-right" size={16} />
+        </a>
+      </header>
+
+      {
+        hasPlaces ? (
+          <section class="picks" aria-labelledby="picks-heading">
+            <h2 id="picks-heading" class="picks__heading">
+              {cp.picksHeading}
+            </h2>
+            <div class="grid">
+              {places.map((p) => (
+                <RestaurantCard
+                  lang={lang}
+                  anchorId={`r-${p.data.slug}`}
+                  name={p.data.name}
+                  priceLevel={p.data.priceLevel}
+                  district={p.data.district}
+                  cuisine={p.data.cuisine}
+                  summary={p.data.summary}
+                  ratingNote={p.data.ratingNote}
+                  mapUrl={p.data.mapUrl}
+                  verifiedDate={formatDate(p.data.verifiedAt, lang)}
+                  cover={p.data.cover}
+                  coverCredit={p.data.coverCredit}
+                  coverIllustrative={p.data.coverIllustrative}
+                  gallery={p.data.gallery}
+                  hours={p.data.hours}
+                  dishes={p.data.dishes}
+                  sponsored={isSponsored(p)}
+                  qualityMark={p.data.qualityMark}
+                  website={p.data.website}
+                  instagram={p.data.instagram}
+                />
+              ))}
+            </div>
+          </section>
+        ) : (
+          <EmptyHint text={dict.eda.emptyNoData} />
+        )
+      }
+
+      {/* Воронка §16: где остановиться в этом городе (trip-hotels). */}
+      <div class="city-lodging">
+        <AffiliateBox
+          lang={lang}
+          partner="trip-hotels"
+          slug={cfg.citySlug}
+          title={format(dict.eda.lodgingInCity, { city: city.cityName })}
+          label={dict.actions.more}
+          note={dict.eda.lodgingNote}
+        />
+      </div>
+
+      {/* Перелинковка: вся директория + путеводитель города (воронка §14). */}
+      <nav class="more" aria-label={cp.navHeading}>
+        <a class="more__link" href={edaHref}>
+          <Icon name="utensils" size={18} />
+          <span class="u-underline">{cp.backToAll}</span>
+          <Icon name="arrow-right" size={16} />
+        </a>
+        <a class="more__link" href={cityGuideHref}>
+          <Icon name="building" size={18} />
+          <span class="u-underline">{cp.cityGuideLink}: {city.cityName}</span>
+          <Icon name="arrow-right" size={16} />
+        </a>
+      </nav>
+    </div>
+  </div>
+
+  <script is:inline type="module" src="/js/rcard-gallery.js"></script>
+  <script is:inline type="module" src="/js/lightbox.js"></script>
+  <script is:inline type="module" src="/js/card-deeplink.js"></script>
+</BaseLayout>
+
+<style>
+  .container {
+    max-width: var(--container-content);
+    margin: 0 auto;
+    padding-inline: var(--space-4);
+  }
+  .cityfood {
+    padding-block: var(--space-8) var(--space-12);
+  }
+
+  /* Крошки */
+  .crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    margin-bottom: var(--space-6);
+  }
+  .crumbs a {
+    color: var(--link);
+    text-decoration: none;
+  }
+  .crumbs a:hover,
+  .crumbs a:focus-visible {
+    color: var(--link-hover);
+  }
+  .crumbs__sep {
+    color: var(--border-card);
+  }
+
+  /* Заголовок + интро */
+  .head {
+    margin-bottom: var(--space-12);
+  }
+  .head__title {
+    font-size: var(--text-3xl);
+    margin: 0;
+  }
+  .head__lead {
+    margin: var(--space-4) 0 0;
+    font-size: var(--text-xl);
+    color: var(--text-body);
+    max-width: var(--container-prose);
+  }
+  .head__intro {
+    display: grid;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+    max-width: var(--container-prose);
+  }
+  .head__intro :global(p) {
+    margin: 0;
+    color: var(--text-body);
+  }
+  .head__guide {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-6);
+    font-weight: 500;
+    color: var(--link);
+    text-decoration: none;
+    transition: color var(--dur) var(--ease-standard);
+  }
+  .head__guide:hover,
+  .head__guide:focus-visible {
+    color: var(--link-hover);
+  }
+  .head__guide :global(svg) {
+    flex: none;
+  }
+  .head__guide-icon {
+    color: var(--color-wine);
+  }
+  @media (min-width: 768px) {
+    .head__title {
+      font-size: var(--text-4xl);
+    }
+  }
+
+  /* Сетка карточек */
+  .picks__heading {
+    font-size: var(--text-2xl);
+    margin: 0 0 var(--space-6);
+  }
+  .grid {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 640px) {
+    .grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 1024px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+
+  /* Бокс жилья на city-странице (воронка §16). */
+  .city-lodging {
+    margin-top: var(--space-12);
+  }
+
+  /* Перелинковка снизу */
+  .more {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-6);
+    margin-top: var(--space-12);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--border-hairline);
+  }
+  .more__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--link);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color var(--dur) var(--ease-standard);
+  }
+  .more__link:hover,
+  .more__link:focus-visible {
+    color: var(--link-hover);
+  }
+  .more__link :global(svg) {
+    flex: none;
+  }
+  .more__link :global(svg:first-child) {
+    color: var(--color-wine);
+  }
+</style>

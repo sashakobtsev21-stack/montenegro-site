@@ -1,0 +1,115 @@
+---
+/**
+ * Button (§10, направление «Полевой журнал»).
+ *   - primary  — солнце #E8A33D фон + сланец-текст (CTA, контраст ≥4.5:1 §15).
+ *     Солнце используется ТОЛЬКО для CTA и AffiliateBox (§10) — не декоративно.
+ *   - secondary — вино-outline (ghost), спокойная альтернатива.
+ * Рендерится как <a> (если есть href) или <button>. Радиус 8 (§10).
+ */
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'secondary';
+  type?: 'button' | 'submit';
+  class?: string;
+  rel?: string;
+  target?: string;
+  ariaLabel?: string;
+}
+
+const {
+  href,
+  variant = 'primary',
+  type = 'button',
+  class: className,
+  rel,
+  target,
+  ariaLabel,
+} = Astro.props;
+
+const Tag = href ? 'a' : 'button';
+const cls = ['btn', `btn--${variant}`, className].filter(Boolean).join(' ');
+---
+
+<Tag
+  class={cls}
+  href={href}
+  rel={rel}
+  target={href ? target : undefined}
+  type={href ? undefined : type}
+  aria-label={ariaLabel}
+>
+  <slot />
+</Tag>
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-6);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: var(--text-base);
+    line-height: 1.2;
+    border-radius: var(--radius-card);
+    border: 1px solid transparent;
+    text-decoration: none;
+    cursor: pointer;
+    /* transform/opacity-only для движения (§7) → ноль CLS. */
+    transition:
+      background-color var(--dur-fast) var(--ease-standard),
+      border-color var(--dur-fast) var(--ease-standard),
+      color var(--dur-fast) var(--ease-standard),
+      box-shadow var(--dur-fast) var(--ease-standard),
+      transform var(--dur-fast) var(--ease-standard);
+  }
+  /* rest → hover: подъём к читателю + мягкая тень. */
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+  /* active: лёгкое нажатие. */
+  .btn:active {
+    transform: scale(var(--press-scale));
+  }
+  /* Анимированное проявление focus-ring (вино, §15). */
+  .btn:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+  /* Стрелка-иконка (если есть в слоте) уезжает вправо на hover (причинность). */
+  .btn :global(svg) {
+    transition: transform var(--dur-fast) var(--ease-standard);
+  }
+  .btn:hover :global(svg) {
+    transform: translateX(3px);
+  }
+
+  /* primary — солнце, текст сланцем (контраст #23282E на #E8A33D ≈ 7.0:1). */
+  .btn--primary {
+    background: var(--cta-bg);
+    color: var(--text-on-cta);
+    border-color: var(--cta-bg);
+  }
+  .btn--primary:hover {
+    /* солнце чуть ярче + солнечная тень. */
+    background: var(--cta-bg-hover);
+    border-color: var(--cta-bg-hover);
+    color: var(--text-on-cta);
+    box-shadow: var(--shadow-cta);
+  }
+
+  /* secondary — вино-outline / ghost. */
+  .btn--secondary {
+    background: transparent;
+    color: var(--link);
+    border-color: var(--border-wine);
+  }
+  .btn--secondary:hover {
+    /* лёгкая заливка тоном + сплошная вино-рамка + мягкая тень. */
+    background: var(--surface-hover);
+    border-color: var(--color-wine);
+    color: var(--link-hover);
+    box-shadow: var(--shadow-raised);
+  }
+</style>

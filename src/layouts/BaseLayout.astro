@@ -1,0 +1,270 @@
+---
+/**
+ * BaseLayout — head/SEO/hreflang, шапка, подвал (SPEC §9).
+ * На R1 это каркас: даёт canonical, взаимные hreflang ru↔uk, OG, базовую
+ * семантику и навигацию. Конкретные шаблоны (Article/Route/Hub) наследуют его в R3.
+ */
+import '../styles/global.css';
+import { t, mirrorPath, DEFAULT_LANG, type Lang } from '../i18n';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  /** <title>; ≤ 60 символов (CLAUDE правило 7). */
+  title: string;
+  /** meta description; ≤ 155 символов (CLAUDE правило 7). */
+  description: string;
+  lang: Lang;
+  /**
+   * Путь на «той же» странице второго языка для hreflang.
+   * Если не передан — берётся текущий путь (для зеркальных заглушек R1 этого хватает).
+   */
+  altPath?: string;
+  /**
+   * OG/Twitter картинка страницы (путь `/images/...` или абс. URL). Шаблоны
+   * передают обложку статьи/места/маршрута; без неё — общий og-default.jpg (§14).
+   */
+  image?: string;
+  /** og:type — 'website' (по умолчанию) или 'article' для статей/маршрутов (§14). */
+  ogType?: string;
+  /**
+   * noindex: тонкая/пустая страница (напр. директория услуг без записей) →
+   * <meta robots noindex,follow>, чтобы её не индексировали (§14). По умолчанию false.
+   */
+  noindex?: boolean;
+  /**
+   * Служебная одностраничная утилита (404/оффлайн), отдаваемая на любой путь:
+   * без canonical и без hreflang (языковых зеркал нет — иначе битые цели), всегда noindex.
+   */
+  utility?: boolean;
+  /**
+   * Языки, на которых СУЩЕСТВУЕТ эта страница (для hreflang, §12). По умолчанию
+   * все 3 (статические страницы/хабы есть на всех языках). Контентные шаблоны
+   * (ArticlePage/RoutePage) передают вычисленный список — en только если перевод есть.
+   */
+  availableLangs?: Lang[];
+}
+
+const {
+  title,
+  description,
+  lang,
+  image,
+  ogType = 'website',
+  noindex = false,
+  utility = false,
+  availableLangs = ['ru', 'uk', 'en'],
+} = Astro.props;
+const OG_LOCALE: Record<Lang, string> = { ru: 'ru_RU', uk: 'uk_UA', en: 'en_US' };
+const dict = t(lang);
+/**
+ * Языки для переключателя в шапке/подвале. На служебной утилите (404) зеркал нет —
+ * показываем только текущий язык, иначе LangSwitcher даст битые /ru/404, /uk/404.
+ */
+const navLangs: Lang[] = utility ? [lang] : availableLangs;
+
+const SITE = Astro.site ?? new URL('https://georgiaguidebook.com');
+const canonical = new URL(Astro.url.pathname, SITE).href;
+
+/**
+ * Взаимные hreflang (§12): для каждого доступного языка — зеркальный путь текущей
+ * страницы (mirrorPath снимает/ставит языковой префикс). x-default → en (DEFAULT_LANG).
+ */
+const path = Astro.url.pathname;
+const hrefForLang = (l: Lang): string => new URL(mirrorPath(path, l), SITE).href;
+/** Per-page OG-картинка: обложка страницы (абсолютизируем) или общий дефолт (§14). */
+const ogImage = image ? new URL(image, SITE).href : new URL('/og-default.jpg', SITE).href;
+
+/**
+ * Рендеримый <title> ≤60 зн. (CLAUDE правило 7). Шаблоны передают title уже с
+ * суффиксом бренда (« — {siteName}»); если с суффиксом длиннее 60 — в <title>
+ * отдаём заголовок без суффикса. og:title для соцсетей оставляем полным.
+ */
+const brandSuffix = ` — ${dict.siteName}`;
+const headTitle =
+  title.length > 60 && title.endsWith(brandSuffix) ? title.slice(0, -brandSuffix.length) : title;
+
+/**
+ * Site-wide JSON-LD (§14): Organization + WebSite со стабильными @id — единый
+ * сигнал издателя для E-E-A-T на всех страницах (раньше узлы были только на
+ * /o-sajte/). Article.publisher (ArticlePage) ссылается на Organization по @id.
+ */
+const orgId = `${SITE.href}#organization`;
+const siteLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'Organization', '@id': orgId, name: dict.siteName, url: SITE.href },
+    {
+      '@type': 'WebSite',
+      '@id': `${SITE.href}#website`,
+      url: SITE.href,
+      name: dict.siteName,
+      inLanguage: lang,
+      publisher: { '@id': orgId },
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    {/* Перф (аудит 2026-06-20): preload дисплей-шрифта Unbounded — он рисует H1/бренд
+        над сгибом (часто LCP-элемент). Латиница нужна всегда (бренд + EN H1), кириллица —
+        на ru/uk (их H1). font-display:swap уже стоит; preload убирает позднюю подмену. */}
+    <link
+      rel="preload"
+      href="/fonts/unbounded-latin-600-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    {lang !== 'en' && (
+      <link
+        rel="preload"
+        href="/fonts/unbounded-cyrillic-600-normal.woff2"
+        as="font"
+        type="font/woff2"
+        crossorigin
+      />
+    )}
+
+    <!-- Google tag (gtag.js) — GA4. Внешний loader + инлайн-инициализация. Под строгим
+         CSP (§18, без 'unsafe-inline') инлайн-скрипт разрешён по sha256-хешу в
+         public/_headers → script-src. Меняешь содержимое инлайна/ID — пересчитай хеш. -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PV88LQSD3W"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-PV88LQSD3W');
+    </script>
+
+    <!--
+      Гейт движения (ui-ux-pro-max §7): СИНХРОННЫЙ внешний модуль со 'self'
+      (script-src 'self', §18 — без inline). Без defer/async и type=module — исполняется
+      до рендера <body>, ставит html.js-anim ТОЛЬКО при разрешённом движении. Это включает
+      «скрытые» начальные состояния reveal/hero без FOUC; без JS / при reduced-motion
+      контент сразу видим и статичен.
+    -->
+    <script is:inline src="/js/anim-init.js"></script>
+
+    <title>{headTitle}</title>
+    <meta name="description" content={description} />
+    {(noindex || utility) && <meta name="robots" content="noindex, nofollow" />}
+    {!utility && <link rel="canonical" href={canonical} />}
+
+    {/* Взаимные hreflang по доступным языкам + x-default → en (DEFAULT_LANG, §12).
+        Служебные утилиты (404) — без hreflang: зеркал нет, иначе битые цели. */}
+    {
+      !utility && (
+        <>
+          {availableLangs.map((l) => (
+            <link rel="alternate" hreflang={l} href={hrefForLang(l)} />
+          ))}
+          <link rel="alternate" hreflang="x-default" href={hrefForLang(DEFAULT_LANG)} />
+        </>
+      )
+    }
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={dict.siteName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content={title} />
+    {/* Размеры указываем только для дефолта (1200×630); per-page обложки разного аспекта. */}
+    {!image && <meta property="og:image:width" content="1200" />}
+    {!image && <meta property="og:image:height" content="630" />}
+    <meta property="og:locale" content={OG_LOCALE[lang]} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    {/* Site-wide JSON-LD: Organization + WebSite (§14, E-E-A-T) */}
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(siteLd)} />
+
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    {/* PWA: манифест + иконки + цвет темы. theme-color = --color-wine (meta требует литерал). */}
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#6b1f2e" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180.png" />
+
+    <!--
+      Preload LCP-критичных шрифтов (§15): cyrillic-сабсеты для ru/uk —
+      Unbounded 600 (H1) и Manrope 400 (body). Латиница и веса 500/600
+      подтянутся по факту использования (font-display: swap, без CLS).
+    -->
+    <link
+      rel="preload"
+      href="/fonts/unbounded-cyrillic-600-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/manrope-cyrillic-400-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    {/*
+      Аналитика (§17, правило 8 «одна аналитика») — соблюдено (2026-06-19):
+      единственная аналитика — Google Analytics 4 (gtag.js, тег в начале <head>).
+      Cloudflare Web Analytics ОТКЛЮЧЕНА владельцем (Real User Measurements → Disable
+      в дашборде), cloudflareinsights убран из CSP (public/_headers).
+      Тег-менеджеры не используем. Этот комментарий — JSX, в HTML не попадает.
+    */}
+  </head>
+  <body>
+    <a href="#main" class="sr-only focus:not-sr-only">{dict.skipToContent}</a>
+    <Header lang={lang} availableLangs={navLangs} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer lang={lang} availableLangs={navLangs} />
+
+    {/* Плавающая «наверх» на длинных страницах (аудит 2026-06-20): шапка не sticky
+        по решению владельца — даём быстрый возврат к навигации/языку/поиску. */}
+    <button type="button" class="to-top" data-to-top aria-label={dict.backToTop} hidden>
+      <svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M12 19V5M5 12l7-7 7 7" />
+      </svg>
+    </button>
+
+    <!--
+      Reveal при скролле + stagger hero — внешний vanilla-модуль со 'self'
+      (script-src 'self', §18), без inline. Деферится как модуль; no-op, если нет
+      html.js-anim или нет [data-reveal] на странице. Движение — transform/opacity (0 CLS).
+    -->
+    <script is:inline type="module" src="/js/reveal.js"></script>
+    {/* Регистрация service worker (PWA, оффлайн) — внешний модуль со 'self' (§18). */}
+    <script is:inline type="module" src="/js/sw-register.js"></script>
+    {/* Свежесть новостей (блок на главной 2 дня / раздел 10 дней) — внешний модуль, §18. */}
+    <script is:inline type="module" src="/js/news-freshness.js"></script>
+    {/* Плавающая «наверх» — показывает/прячет кнопку по скроллу, §18 (self). */}
+    <script is:inline type="module" src="/js/to-top.js"></script>
+  </body>
+</html>

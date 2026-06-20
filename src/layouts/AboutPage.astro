@@ -1,0 +1,244 @@
+---
+/**
+ * AboutPage (§8.5) — «О проекте»: методология и прозрачность справочника.
+ * Сигнал E-E-A-T через объяснение, как мы отбираем (рейтинг >4★ из нескольких
+ * источников) и проверяем места (опытные путешественники, гиды, местные), как
+ * живёт проект (дисклеймер партнёрских ссылок, §18) — без персонального культа
+ * автора (§5). Один компонент для ru/uk; язык пропсом, весь текст из словарей
+ * (§12). Реальных цифр/дат/юрлица не выдумываем (CLAUDE правило 4).
+ *
+ * Состав: Breadcrumbs → H1 → лид → секции H2 → блок-ссылка на «Обратную связь».
+ *
+ * Schema.org (§14): WebPage с publisher-Organization — здесь; BreadcrumbList —
+ * в Breadcrumbs. canonical и взаимные hreflang ru↔uk — в BaseLayout (§7, §12).
+ */
+import { t, sectionHref, type Lang } from '../i18n';
+import { clampDesc } from '../lib/text';
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Icon from '../components/Icon.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const dict = t(lang);
+const about = dict.about;
+
+const pageTitle = `${about.heading} — ${dict.siteName}`;
+const description = clampDesc(about.intro[0]);
+
+const feedbackHref = sectionHref(lang, 'kontakty');
+
+const SITE = Astro.site ?? new URL('https://georgiaguidebook.com');
+const pageUrl = new URL(Astro.url.pathname, SITE).href;
+
+/**
+ * JSON-LD WebPage о методологии справочника + издатель Organization (§14).
+ * Не описываем персону-автора и не приводим выдуманных цифр (правило 4) —
+ * только реальная позиция: справочник с коллективной проверкой.
+ */
+const webPageLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: about.heading,
+  description,
+  url: pageUrl,
+  inLanguage: lang,
+  isPartOf: { '@id': `${SITE.href}#website` },
+  publisher: { '@id': `${SITE.href}#organization` },
+};
+---
+
+<BaseLayout title={pageTitle} description={description} lang={lang}>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(webPageLd)} />
+
+  <article class="about">
+    <div class="container">
+      <Breadcrumbs lang={lang} items={[{ label: about.breadcrumb }]} />
+
+      <header class="head" data-reveal>
+        <h1 class="head__title">{about.heading}</h1>
+        <div class="head__intro">
+          {about.intro.map((p: string) => <p>{p}</p>)}
+        </div>
+      </header>
+
+      <div class="sections">
+        {
+          about.sections.map((section) => (
+            <section class="section" data-reveal>
+              <h2 class="section__heading">{section.heading}</h2>
+              {section.paragraphs.map((p: string) => (
+                <p class="section__text">{p}</p>
+              ))}
+            </section>
+          ))
+        }
+      </div>
+
+      {/* Мост к «Обратной связи»: обновления справочника во многом приходят от читателей. */}
+      <aside class="feedback" aria-labelledby="about-feedback-heading" data-reveal>
+        <span class="feedback__icon">
+          <Icon name="users" size={24} />
+        </span>
+        <div class="feedback__body">
+          <h2 id="about-feedback-heading" class="feedback__heading">{about.feedback.heading}</h2>
+          <p class="feedback__text">{about.feedback.text}</p>
+          <a class="feedback__link" href={feedbackHref}>
+            {about.feedback.link}
+            <Icon name="arrow-right" size={18} />
+          </a>
+        </div>
+      </aside>
+
+      {/* Выход из тупика (аудит 2026-06-20): дорожки в контент путеводителя. */}
+      <nav class="about__explore" aria-label={dict.header.primaryNav} data-reveal>
+        <a class="about__explore-link" href={sectionHref(lang, 'dostoprimechatelnosti')}>
+          {dict.nav.dostoprimechatelnosti}
+          <Icon name="arrow-right" size={16} />
+        </a>
+        <a class="about__explore-link" href={sectionHref(lang, 'goroda')}>
+          {dict.nav.goroda}
+          <Icon name="arrow-right" size={16} />
+        </a>
+        <a class="about__explore-link" href={sectionHref(lang, 'marshruty')}>
+          {dict.nav.marshruty}
+          <Icon name="arrow-right" size={16} />
+        </a>
+      </nav>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .container {
+    max-width: var(--container-content);
+    margin: 0 auto;
+    padding-inline: var(--space-4);
+  }
+  .about {
+    padding-block: var(--space-8) var(--space-12);
+  }
+
+  .head {
+    margin-bottom: var(--space-12);
+  }
+  .head__title {
+    font-size: var(--text-3xl);
+    margin: 0 0 var(--space-6);
+  }
+  @media (min-width: 768px) {
+    .head__title {
+      font-size: var(--text-4xl);
+    }
+  }
+  .head__intro {
+    display: grid;
+    gap: var(--space-4);
+    max-width: var(--container-prose);
+  }
+  .head__intro :global(p) {
+    margin: 0;
+    font-size: var(--text-xl);
+    color: var(--text-body);
+  }
+
+  .sections {
+    display: grid;
+    gap: var(--space-12);
+    max-width: var(--container-prose);
+  }
+  .section__heading {
+    font-size: var(--text-2xl);
+    margin: 0 0 var(--space-4);
+  }
+  .section__text {
+    margin: 0 0 var(--space-4);
+    font-size: var(--text-lg);
+    color: var(--text-body);
+  }
+  .section__text:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Мост к «Обратной связи» — тот же визуальный язык, что у AboutNote (§9). */
+  .feedback {
+    display: flex;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    margin-top: var(--space-16);
+    max-width: var(--container-prose);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-widget);
+  }
+  .feedback__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    flex: none;
+    border-radius: var(--radius-pill);
+    background: var(--surface-page);
+    color: var(--color-wine);
+  }
+  .feedback__heading {
+    font-size: var(--text-lg);
+    margin: 0 0 var(--space-2);
+  }
+  .feedback__text {
+    margin: 0 0 var(--space-3);
+    color: var(--text-muted);
+  }
+  .feedback__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--link);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color var(--dur) var(--ease-standard);
+  }
+  .feedback__link:hover,
+  .feedback__link:focus-visible {
+    color: var(--link-hover);
+  }
+  .feedback__link :global(svg) {
+    flex: none;
+    transition: transform var(--dur) var(--ease-standard);
+  }
+  .feedback__link:hover :global(svg) {
+    transform: translateX(3px);
+  }
+  /* Дорожки в контент путеводителя (выход из тупика) — пилюли-ссылки. */
+  .about__explore {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-8);
+  }
+  .about__explore-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-pill);
+    color: var(--link);
+    font-weight: 500;
+    text-decoration: none;
+    transition:
+      border-color var(--dur) var(--ease-standard),
+      color var(--dur) var(--ease-standard);
+  }
+  .about__explore-link:hover,
+  .about__explore-link:focus-visible {
+    border-color: var(--color-wine);
+    color: var(--link-hover);
+  }
+  .about__explore-link :global(svg) {
+    flex: none;
+  }
+</style>

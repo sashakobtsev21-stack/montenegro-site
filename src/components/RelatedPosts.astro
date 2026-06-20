@@ -1,0 +1,77 @@
+---
+/**
+ * RelatedPosts (§9) — 2–4 связанные статьи карточками (ArticleCard).
+ * Подбор (та же категория, без текущей, детерминированный порядок) делает
+ * вызывающий шаблон (§8.1) и передаёт готовые items. Если связанных нет —
+ * блок не рисуется (внутренняя перелинковка обеспечивается ещё и хабом, §14).
+ */
+import { type Lang } from '../i18n';
+import ArticleCard from './ArticleCard.astro';
+
+export interface RelatedItem {
+  href: string;
+  title: string;
+  description?: string;
+  cover?: { src: string; alt: string };
+  date?: string;
+  verified?: 'verified' | 'updated';
+  verifiedPhoto?: { src: string; alt?: string };
+}
+
+interface Props {
+  lang: Lang;
+  heading: string;
+  items: RelatedItem[];
+}
+
+const { lang, heading, items } = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <section class="related" aria-labelledby="related-heading">
+      <h2 id="related-heading" class="related__heading">
+        {heading}
+      </h2>
+      <div class="related__grid">
+        {items.map((item) => (
+          <ArticleCard
+            lang={lang}
+            href={item.href}
+            title={item.title}
+            description={item.description}
+            cover={item.cover}
+            date={item.date}
+            verified={item.verified}
+            verifiedPhoto={item.verifiedPhoto}
+          />
+        ))}
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .related {
+    margin-block: var(--space-16);
+  }
+  .related__heading {
+    font-size: var(--text-2xl);
+    margin: 0 0 var(--space-6);
+  }
+  .related__grid {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 640px) {
+    .related__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 1024px) {
+    .related__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

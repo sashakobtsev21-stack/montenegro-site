@@ -1,0 +1,8 @@
+# robots.txt — Georgia Guidebook (SPEC §14).
+# Обход разрешён, кроме партнёрских редиректов /go/ (noindex, §16).
+# Карта сайта — индекс, который генерирует @astrojs/sitemap (обе версии ru/uk).
+User-agent: *
+Allow: /
+Disallow: /go/
+
+Sitemap: https://georgiaguidebook.com/sitemap-index.xml

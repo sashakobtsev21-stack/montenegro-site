@@ -1,0 +1,89 @@
+---
+/**
+ * TOC (§9) — оглавление из H2/H3 статьи. Статические якоря (#slug, id у
+ * заголовков проставляет Astro через встроенный rehype-slug) — НОЛЬ JS.
+ * Доступно с клавиатуры (обычные ссылки внутри nav).
+ *
+ * Решение «показывать ли TOC» принимает вызывающий шаблон (для длинных
+ * статий, §8.1) — компонент просто рисует переданные заголовки. H3
+ * визуально отступает под своим H2.
+ */
+import { t, type Lang } from '../i18n';
+
+/** Подмножество astro MarkdownHeading — depth/slug/text. */
+export interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  lang: Lang;
+  headings: Heading[];
+}
+
+const { lang, headings } = Astro.props;
+const dict = t(lang);
+
+/** Только H2/H3 (§9) — H1 это заголовок страницы, H4+ в оглавление не кладём. */
+const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{
+  items.length > 0 && (
+    <nav class="toc" aria-labelledby="toc-heading">
+      <h2 id="toc-heading" class="toc__heading">
+        {dict.article.tocHeading}
+      </h2>
+      <ol class="toc__list">
+        {items.map((h) => (
+          <li class="toc__item" data-depth={h.depth}>
+            <a class="toc__link" href={`#${h.slug}`}>
+              {h.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}
+
+<style>
+  .toc {
+    padding: var(--space-6);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-widget);
+    margin-block: var(--space-8);
+  }
+  .toc__heading {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: var(--text-base);
+    color: var(--text-body);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 var(--space-3);
+  }
+  .toc__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2);
+  }
+  .toc__item[data-depth='3'] {
+    padding-inline-start: var(--space-4);
+  }
+  .toc__link {
+    color: var(--link);
+    text-decoration: none;
+    transition: color var(--dur) var(--ease-standard);
+  }
+  .toc__link:hover,
+  .toc__link:focus-visible {
+    color: var(--link-hover);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+</style>

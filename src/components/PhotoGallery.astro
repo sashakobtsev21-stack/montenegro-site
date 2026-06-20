@@ -1,0 +1,155 @@
+---
+/**
+ * PhotoGallery (§8.1) — сетка фото места + лайтбокс. Прогрессивное улучшение:
+ * без JS фото видны в сетке (2 кол. мобайл / 3 кол. ≥768px), клик по кнопке
+ * просто ничего не делает — деградация без ошибок (§15).
+ *
+ * Перф (§15): каждое фото — webp ≤200 КБ, loading="lazy" decoding="async",
+ * зарезервированный аспект 4:3 (object-fit: cover) → ноль CLS. Кредит CC —
+ * видимая мелкая подпись (юр. атрибуция, §18, обязательна).
+ *
+ * Лайтбокс — внешний vanilla-модуль /js/lightbox.js (script-src 'self', §18 —
+ * без inline). Строки управления (close/prev/next) прокидываются в модуль через
+ * data-атрибуты секции, чтобы он знал i18n (§12). Esc/←/→, фокус-ловушка,
+ * клик по фону, prefers-reduced-motion — на стороне модуля.
+ */
+import { t, type Lang } from '../i18n';
+
+export interface GalleryImage {
+  src: string;
+  alt: string;
+  credit?: string;
+}
+
+interface Props {
+  lang: Lang;
+  images: GalleryImage[];
+  /** Заголовок секции; по умолчанию — из словаря (gallery.heading). */
+  heading?: string;
+}
+
+const { lang, images, heading } = Astro.props;
+const dict = t(lang);
+const g = dict.gallery;
+const title = heading ?? g.heading;
+const headingId = 'gallery-heading';
+---
+
+{
+  images.length > 0 && (
+    <section
+      class="gallery"
+      aria-labelledby={headingId}
+      data-gallery
+      data-close={g.close}
+      data-prev={g.prev}
+      data-next={g.next}
+    >
+      <h2 id={headingId} class="gallery__heading">
+        {title}
+      </h2>
+
+      <div class="gallery__grid">
+        {images.map((img) => (
+          <figure class="gallery__figure">
+            <button
+              type="button"
+              class="gallery__item"
+              data-gallery-item
+              data-full={img.src}
+              data-alt={img.alt}
+              data-credit={img.credit ?? ''}
+            >
+              <img
+                class="gallery__img"
+                src={img.src}
+                alt={img.alt}
+                width="800"
+                height="600"
+                loading="lazy"
+                decoding="async"
+              />
+            </button>
+            <figcaption class="gallery__caption">
+              {/* Описание «что на фото» (аудит READ-3) — aria-hidden, т.к. дублирует
+                  alt картинки (скринридер не читает дважды); видно зрячим. */}
+              <span class="gallery__cap" aria-hidden="true">{img.alt}</span>
+              {img.credit && <span class="gallery__credit">{img.credit}</span>}
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+{/* Внешний vanilla-модуль (self, без inline §18). No-op без [data-gallery]. */}
+<script is:inline type="module" src="/js/lightbox.js"></script>
+
+<style>
+  .gallery {
+    margin-block: var(--space-12);
+    max-width: var(--container-prose);
+  }
+  .gallery__heading {
+    font-size: var(--text-2xl);
+    margin: 0 0 var(--space-6);
+  }
+  .gallery__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+  @media (min-width: 768px) {
+    .gallery__grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-4);
+    }
+  }
+  .gallery__figure {
+    margin: 0;
+  }
+  .gallery__item {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    background: var(--surface-card);
+    cursor: pointer;
+    transition: border-color var(--dur) var(--ease-standard);
+  }
+  .gallery__item:hover,
+  .gallery__item:focus-visible {
+    border-color: var(--border-card-hover);
+  }
+  /* Аспект 4:3 зарезервирован → ноль CLS (§15). */
+  .gallery__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .gallery__caption {
+    margin: var(--space-1) 0 0;
+    display: grid;
+    gap: 2px;
+  }
+  .gallery__cap {
+    font-size: var(--text-sm);
+    color: var(--text-body);
+    line-height: 1.4;
+  }
+  .gallery__credit {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gallery__item {
+      transition: none;
+    }
+  }
+</style>

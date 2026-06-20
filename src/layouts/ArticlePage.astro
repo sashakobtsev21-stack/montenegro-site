@@ -1,0 +1,579 @@
+---
+/**
+ * ArticlePage (§8.1) — шаблон статьи о месте/услуге.
+ * Рендерится из записи коллекции `articles` (§11). Один компонент для ru и uk;
+ * язык и запись приходят пропсами, UI-строки — из словарей (§12).
+ *
+ * Состав (§8.1): Breadcrumbs → H1 → VerifiedBadge → лид → TOC (для длинных) →
+ * тело Markdown (H2/H3) → 1–3 AffiliateBox по frontmatter → AboutNote
+ * → RelatedPosts.
+ *
+ * VerifiedBadge (v3.2): «Проверено · {verifiedAt}» только если verifiedAt задан
+ * (реальная проверка); иначе деградирует до «Обновлено · {updatedAt}».
+ * Конкретику-факты не выдумываем (CLAUDE правило 4) — они приходят из контента.
+ *
+ * Schema.org (§14): Article (+ TouristAttraction для статей о местах с geo) —
+ * здесь; BreadcrumbList — в Breadcrumbs. canonical и
+ * взаимные hreflang ru↔uk — в BaseLayout (зеркальная структура §7, §12).
+ */
+import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
+import { t, formatDate, articleHref, sectionHref, type Lang, type SectionKey } from '../i18n';
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import VerifiedBadge from '../components/VerifiedBadge.astro';
+import TOC from '../components/TOC.astro';
+import AffiliateBox from '../components/AffiliateBox.astro';
+import AboutNote from '../components/AboutNote.astro';
+import RelatedPosts, { type RelatedItem } from '../components/RelatedPosts.astro';
+import Icon from '../components/Icon.astro';
+import MapEmbed from '../components/MapEmbed.astro';
+import AccessFrom from '../components/AccessFrom.astro';
+import VisitInfo from '../components/VisitInfo.astro';
+import PhotoGallery from '../components/PhotoGallery.astro';
+import HotelWidget from '../components/HotelWidget.astro';
+import coverVariants from '../data/cover-variants.json';
+
+interface Props {
+  lang: Lang;
+  entry: CollectionEntry<'articles'>;
+  /** Все статьи этого языка (для подбора RelatedPosts) — передаёт getStaticPaths. */
+  siblings: CollectionEntry<'articles'>[];
+  /** Языки, на которых есть эта статья (slug) — для hreflang (§12), из getStaticPaths. */
+  availableLangs?: Lang[];
+}
+const { lang, entry, siblings, availableLangs = ['ru', 'uk'] } = Astro.props;
+const dict = t(lang);
+const data = entry.data;
+
+/**
+ * Год в заголовке «денежных» гайдов (P1-2): для статей с `yearInTitle` добавляем
+ * ТЕКУЩИЙ год (на сборке) в конец title/h1/schema — всегда свежо, +CTR в поиске,
+ * без «протухания». В карточках-листингах остаётся базовый title (без утечки).
+ */
+const displayTitle = data.yearInTitle ? `${data.title} ${new Date().getFullYear()}` : data.title;
+
+const { Content, headings } = await render(entry);
+
+/**
+ * TOC показываем для длинных/структурированных статей (§8.1: «для длинных»):
+ * > ~1500 слов ИЛИ от 4 заголовков H2/H3 — оглавление реально помогает
+ * навигации только на таких текстах.
+ */
+const wordCount = entry.body ? entry.body.trim().split(/\s+/).filter(Boolean).length : 0;
+const tocHeadingCount = headings.filter((h) => h.depth === 2 || h.depth === 3).length;
+const isLong = wordCount > 1500 || tocHeadingCount >= 4;
+
+/** Дата бейджа: проверка честная — verifiedAt только при реальной проверке (§14). */
+const isVerified = Boolean(data.verifiedAt);
+const badgeDate = formatDate(data.verifiedAt ?? data.updatedAt, lang);
+
+const categoryHeading = dict.nav[data.category as SectionKey];
+const categoryHref = sectionHref(lang, data.category as SectionKey);
+
+/**
+ * RelatedPosts (§9, §14): сначала та же категория, детерминированный порядок
+ * (publishedAt desc, затем slug), максимум 4. Если своих < 4 (мелкие кластеры —
+ * планирование/новости/страховка), добиваем кросс-категорией по свежести, чтобы
+ * блок не пустовал и давал перелинковку между разделами (аудит P2-4).
+ */
+const RELATED_MAX = 4;
+const byRecency = (a: (typeof siblings)[number], b: (typeof siblings)[number]) => {
+  const diff = b.data.publishedAt.getTime() - a.data.publishedAt.getTime();
+  return diff !== 0 ? diff : a.data.slug.localeCompare(b.data.slug);
+};
+const notSelf = (s: (typeof siblings)[number]) => s.id !== entry.id && s.data.draft !== true;
+let relatedPool = siblings
+  .filter((s) => notSelf(s) && s.data.category === data.category)
+  .sort(byRecency)
+  .slice(0, RELATED_MAX);
+if (relatedPool.length < RELATED_MAX) {
+  const have = new Set(relatedPool.map((s) => s.id));
+  const cross = siblings
+    .filter((s) => notSelf(s) && !have.has(s.id) && s.data.category !== data.category)
+    .sort(byRecency)
+    .slice(0, RELATED_MAX - relatedPool.length);
+  relatedPool = relatedPool.concat(cross);
+}
+const related: RelatedItem[] = relatedPool.map((s) => ({
+  href: articleHref(lang, s.data.category, s.data.slug),
+  title: s.data.title,
+  description: s.data.description,
+  cover: s.data.cover,
+  date: formatDate(s.data.verifiedAt ?? s.data.updatedAt, lang),
+  verified: s.data.verifiedAt ? ('verified' as const) : ('updated' as const),
+  verifiedPhoto: s.data.verifiedPhoto,
+}));
+
+const SITE = Astro.site ?? new URL('https://georgiaguidebook.com');
+const pageUrl = new URL(Astro.url.pathname, SITE).href;
+/** Абсолютный URL обложки — только если cover задан (cover опционален, §11). */
+const coverUrl = data.cover ? new URL(data.cover.src, SITE).href : undefined;
+
+/**
+ * schema.org `image` (§14): если есть и обложка, и галерея — отдаём массив
+ * [обложка, ...абсолютные src галереи]; если только обложка — строку; иначе
+ * поле не выводим. Несколько изображений в schema.org помогают rich-результатам.
+ */
+const galleryUrls = data.gallery?.map((g) => new URL(g.src, SITE).href) ?? [];
+const schemaImage = coverUrl
+  ? galleryUrls.length > 0
+    ? [coverUrl, ...galleryUrls]
+    : coverUrl
+  : undefined;
+
+/**
+ * JSON-LD Article (§14). Для статей о конкретных местах с geo добавляем
+ * TouristAttraction вторым узлом (§14). publisher — Organization сайта.
+ */
+const articleLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: displayTitle,
+  description: data.description,
+  ...(schemaImage ? { image: schemaImage } : {}),
+  inLanguage: lang,
+  datePublished: data.publishedAt.toISOString(),
+  dateModified: data.updatedAt.toISOString(),
+  mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl },
+  /** author — Organization (§5: коллективный справочник, не персональный культ). Без author Article не проходит Rich Results. */
+  author: { '@type': 'Organization', '@id': `${SITE.href}#organization` },
+  publisher: { '@id': `${SITE.href}#organization` },
+};
+
+const attractionLd = data.geo
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'TouristAttraction',
+      name: data.title,
+      description: data.description,
+      ...(schemaImage ? { image: schemaImage } : {}),
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: data.geo.coord[0],
+        longitude: data.geo.coord[1],
+      },
+      ...(data.geo.address
+        ? {
+            address: {
+              '@type': 'PostalAddress',
+              streetAddress: data.geo.address,
+              addressCountry: 'GE',
+            },
+          }
+        : {}),
+    }
+  : null;
+---
+
+<BaseLayout
+  title={`${displayTitle} — ${dict.siteName}`}
+  description={data.description}
+  lang={lang}
+  availableLangs={availableLangs}
+  image={data.cover?.src}
+  ogType="article"
+  noindex={data.demo}
+>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(articleLd)} />
+  {
+    attractionLd && (
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(attractionLd)} />
+    )
+  }
+
+  <article class="article">
+    <div class="container">
+      <Breadcrumbs
+        lang={lang}
+        items={[{ label: categoryHeading, href: categoryHref }, { label: data.title }]}
+      />
+
+      <header class="head" data-reveal>
+        <h1 class="head__title">{displayTitle}</h1>
+        <div class="head__badge">
+          <VerifiedBadge
+            lang={lang}
+            date={badgeDate}
+            variant={isVerified ? 'verified' : 'updated'}
+            photo={data.verifiedPhoto}
+            withCaption={isVerified}
+          />
+        </div>
+        <p class="head__lead">{data.description}</p>
+      </header>
+
+      {/* Демо-дисклеймер убран (решение владельца 2026-06-17): демо-карточки
+          показываются как обычные; demo → только noindex (см. noindex выше). */}
+
+      {
+        /*
+         * Обложка места (§8.1). Путь-строка из frontmatter (webp, ≤200 КБ, §15).
+         * Ниже сгиба (после H1/бейджа/лида) → loading="lazy", не грузится в LCP.
+         * Зарезервированное соотношение сторон (width/height + aspect-ratio) → 0 CLS.
+         * coverCredit (§18): видимый кредит автора+лицензии для CC/чужого фото.
+         */
+        data.cover && (
+          <figure class="cover">
+            {data.qualityMark && (
+              <img
+                class="cover__quality"
+                src="/images/quality/seal-gold.webp"
+                alt=""
+                aria-hidden="true"
+                width="72"
+                height="72"
+                loading="eager"
+                decoding="async"
+              />
+            )}
+            <img
+              class="cover__img"
+              src={data.cover.src}
+              srcset={(coverVariants as Record<string, string>)[data.cover.src]}
+              sizes="(max-width: 768px) 100vw, 720px"
+              alt={data.cover.alt}
+              width="1280"
+              height="718"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+            />
+            {data.coverCredit && <figcaption class="cover__credit">{data.coverCredit}</figcaption>}
+          </figure>
+        )
+      }
+
+      {isLong && <TOC lang={lang} headings={headings} />}
+
+      {/* Тело статьи (Markdown H2/H3, id-якоря — встроенный rehype-slug Astro). */}
+      <div class="prose">
+        <Content />
+      </div>
+
+      {
+        /*
+         * Фотогалерея места (§8.1) — после тела, до карты. Сетка webp ≤200 КБ,
+         * lazy, зарезервированный аспект → 0 CLS (§15). Лайтбокс — прогрессивное
+         * улучшение (внешний lightbox.js, §18). Кредиты CC видимы (§18).
+         */
+        data.gallery && data.gallery.length > 0 && (
+          <PhotoGallery lang={lang} images={data.gallery} />
+        )
+      }
+
+      {
+        /*
+         * Карта места (§8.1) — self-hosted Leaflet/OSM (MapEmbed variant=place),
+         * видна СРАЗУ: map-init.js авто-инициализирует карту при появлении во
+         * вьюпорте (IntersectionObserver, rootMargin 200px), без клика «показать
+         * карту» (кнопка остаётся фолбэком без JS). Leaflet грузится lazy
+         * (перф §15), self-host без Google/cookie (§18). 0 CLS (16:9-резерв).
+         */
+        data.geo && (
+          <MapEmbed lang={lang} variant="place" stops={[{ name: data.title, coord: data.geo.coord }]} />
+        )
+      }
+
+      {
+        /*
+         * «Вход и часы работы» (§8.1, VisitInfo) — стоимость и режим работы
+         * места. Только если задан visit (CLAUDE правило 4 — не выдумываем).
+         */
+        data.visit && <VisitInfo lang={lang} visit={data.visit} />
+      }
+
+      {
+        /* Сайт + Instagram заведения (§13) — для статей-мест (клуб/казино). */
+        (data.website || data.instagram) && (
+          <p class="article-website">
+            {data.website && (
+              <a href={data.website} target="_blank" rel="noopener nofollow">
+                <Icon name={data.website.includes('instagram.com') ? 'instagram' : 'globe'} size={18} />
+                <span>{data.website.includes('instagram.com') ? 'Instagram' : dict.eda.website}</span>
+                <Icon name="arrow-right" size={16} />
+              </a>
+            )}
+            {data.instagram && (
+              <a href={data.instagram} target="_blank" rel="noopener nofollow">
+                <Icon name="instagram" size={18} />
+                <span>Instagram</span>
+                <Icon name="arrow-right" size={16} />
+              </a>
+            )}
+          </p>
+        )
+      }
+
+      {
+        /*
+         * «Как доехать» (§8.1) — нативный <details> (0 JS), расстояние/время из
+         * крупных точек въезда. Только если задан accessFrom (CLAUDE правило 4).
+         */
+        data.accessFrom && <AccessFrom lang={lang} accessFrom={data.accessFrom} />
+      }
+
+      {
+        /* AffiliateBox 1–3 по frontmatter (§8.1, §16). Ссылка только через
+           /go/{partner}?c={slug} с rel="sponsored nofollow noopener" — это
+           инкапсулировано в самом компоненте AffiliateBox (CLAUDE правило 2).
+           Дедуп hotel-интента (аудит 2026-06-20): при hotelWidget текстовый
+           бокс trip-hotels убираем — виджет ниже и есть поиск отелей. */
+        data.affiliate.filter((box) => !(data.hotelWidget && box.partner === 'trip-hotels')).length > 0 && (
+          <div class="affiliates" data-reveal>
+            {data.affiliate
+              .filter((box) => !(data.hotelWidget && box.partner === 'trip-hotels'))
+              .slice(0, 3)
+              .map((box) => (
+              <AffiliateBox
+                lang={lang}
+                partner={box.partner}
+                slug={data.slug}
+                title={box.label}
+                label={dict.actions.more}
+                priceFrom={box.priceFrom ? String(box.priceFrom) : undefined}
+              />
+            ))}
+          </div>
+        )
+      }
+
+      {
+        /*
+         * Виджет поиска отелей Trip.com (HotelWidget §8.1, §16) — click-to-load,
+         * до клика ничего стороннего не грузится (перф §15, приватность §18).
+         * Только при флаге hotelWidget (города с высоким спросом на жильё);
+         * дополняет текстовые боксы «Жильё» (/go/), а не заменяет их.
+         */
+        data.hotelWidget && <HotelWidget lang={lang} subid={data.slug} />
+      }
+
+      <AboutNote lang={lang} />
+
+      <RelatedPosts lang={lang} heading={dict.article.relatedHeading} items={related} />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .container {
+    max-width: var(--container-content);
+    margin: 0 auto;
+    padding-inline: var(--space-4);
+  }
+  .article {
+    padding-block: var(--space-8) var(--space-12);
+  }
+
+  .head {
+    margin-bottom: var(--space-8);
+    max-width: var(--container-prose);
+  }
+  .head__title {
+    font-size: var(--text-3xl);
+    margin: 0 0 var(--space-4);
+  }
+  @media (min-width: 768px) {
+    .head__title {
+      font-size: var(--text-4xl);
+    }
+  }
+  .head__badge {
+    margin-bottom: var(--space-6);
+  }
+  .head__lead {
+    margin: 0;
+    font-size: var(--text-xl);
+    color: var(--text-body);
+  }
+
+  /*
+   * Обложка: аспект 1280×718 (≈16:9) зарезервирован → 0 CLS (§15). Картинка
+   * lazy (ниже сгиба). Кредит — видимая мелкая подпись под фото (§18).
+   */
+  .cover {
+    position: relative;
+    margin: 0 0 var(--space-8);
+    max-width: var(--container-prose);
+  }
+  /* Знак качества (медаль) — в правом верхнем углу обложки-героя статьи-места. */
+  .cover__quality {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    z-index: 2;
+    width: 72px;
+    height: 72px;
+    filter: drop-shadow(0 0 8px color-mix(in srgb, var(--color-gold) 80%, transparent))
+      drop-shadow(0 2px 5px color-mix(in srgb, var(--color-slate) 45%, transparent));
+    pointer-events: none;
+  }
+  .cover__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1280 / 718;
+    object-fit: cover;
+    border-radius: var(--radius-widget);
+    background: var(--surface-card);
+  }
+  .cover__credit {
+    margin: var(--space-2) 0 0;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  /* Ссылки на сайт/Instagram заведения (статья-место). */
+  .article-website {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-6);
+    margin: 0 0 var(--space-8);
+  }
+  .article-website a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: 600;
+    color: var(--link);
+    text-decoration: none;
+    transition: color var(--dur) var(--ease-standard);
+  }
+  .article-website a:hover,
+  .article-website a:focus-visible {
+    color: var(--link-hover);
+  }
+  .article-website :global(svg) {
+    flex: none;
+  }
+
+  /* Демо-дисклеймер (R3) */
+  .demo-note {
+    display: flex;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    margin-bottom: var(--space-8);
+    max-width: var(--container-prose);
+    background: var(--surface-card);
+    border: 1px dashed var(--border-card);
+    border-radius: var(--radius-card);
+  }
+  .demo-note__icon {
+    color: var(--color-wine);
+    flex: none;
+    margin-top: 2px;
+  }
+  .demo-note__heading {
+    margin: 0 0 var(--space-1);
+    font-weight: 600;
+    color: var(--text-body);
+  }
+  .demo-note__text {
+    margin: 0;
+    font-size: var(--text-base);
+    color: var(--text-muted);
+  }
+
+  /* TOC и узкие блоки тоже держим в колонке текста. */
+  .article :global(.toc) {
+    max-width: var(--container-prose);
+  }
+
+  /* Проза: узкая читаемая колонка (§10, контент-первый). */
+  .prose {
+    max-width: var(--container-prose);
+    font-size: var(--text-lg);
+    color: var(--text-body);
+  }
+  .prose :global(h2) {
+    font-size: var(--text-2xl);
+    margin: var(--space-12) 0 var(--space-4);
+    scroll-margin-top: var(--space-16);
+  }
+  .prose :global(h3) {
+    font-size: var(--text-xl);
+    margin: var(--space-8) 0 var(--space-3);
+    scroll-margin-top: var(--space-16);
+  }
+  .prose :global(p) {
+    margin: 0 0 var(--space-4);
+  }
+  .prose :global(ul),
+  .prose :global(ol) {
+    margin: 0 0 var(--space-4);
+    padding-inline-start: var(--space-6);
+  }
+  .prose :global(li) {
+    margin-bottom: var(--space-2);
+  }
+  .prose :global(li)::marker {
+    color: var(--color-wine);
+  }
+  .prose :global(a) {
+    color: var(--link);
+    text-underline-offset: 3px;
+  }
+  .prose :global(a:hover) {
+    color: var(--link-hover);
+  }
+  .prose :global(blockquote) {
+    margin: var(--space-6) 0;
+    padding: var(--space-2) var(--space-4);
+    border-inline-start: 3px solid var(--color-wine);
+    color: var(--text-muted);
+  }
+  .prose :global(strong) {
+    color: var(--text-body);
+  }
+
+  /*
+   * Инлайн-фигуры в тексте (§8.1) — фото интегрированы в чтение, а не свалены
+   * в галерею внизу. Изображение на ширину колонки + подпись «что на фото» и
+   * кредит CC под ним. width/height в разметке → зарезервированный аспект,
+   * 0 CLS (§15). loading="lazy" (ниже сгиба). Кредит — мелкий, приглушённый.
+   */
+  .prose :global(figure.figure) {
+    margin: var(--space-8) 0;
+  }
+  .prose :global(figure.figure img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-card);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+  }
+  .prose :global(figure.figure figcaption) {
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--text-muted);
+  }
+  .prose :global(figure.figure .figure__credit) {
+    display: block;
+    margin-top: 2px;
+    opacity: 0.8;
+  }
+  /* Пара фото рядом на широком экране (.figure-row оборачивает 2 figure). */
+  .prose :global(.figure-row) {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    margin: var(--space-8) 0;
+  }
+  .prose :global(.figure-row figure.figure) {
+    margin: 0;
+  }
+  @media (min-width: 640px) {
+    .prose :global(.figure-row) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  /* AffiliateBox-стек */
+  .affiliates {
+    display: grid;
+    gap: var(--space-4);
+    max-width: var(--container-prose);
+    margin-block: var(--space-12);
+  }
+</style>

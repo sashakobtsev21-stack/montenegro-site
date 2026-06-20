@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Знак качества">
+  <defs><radialGradient id="g" cx="50%" cy="34%" r="72%"><stop offset="0" stop-color="#F7DF9A"/><stop offset=".55" stop-color="#D8B05A"/><stop offset="1" stop-color="#A67E2E"/></radialGradient></defs>
+  <path d="M60 12 L102 24 V58 C102 86 84 102 60 110 C36 102 18 86 18 58 V24 Z" fill="url(#g)"/>
+  <path d="M60 19 L95 29 V57 C95 81 80 95 60 102 C40 95 25 81 25 57 V29 Z" fill="#6e2639"/>
+  <path d="M60.0 34.0 L64.7 47.5 L79.0 47.8 L67.6 56.5 L71.8 70.2 L60.0 62.0 L48.2 70.2 L52.4 56.5 L41.0 47.8 L55.3 47.5 Z" fill="url(#g)" stroke="#8a6a28" stroke-width=".5"/>
+  <rect x="34" y="70" width="52" height="14" rx="3" fill="url(#g)"/>
+  <rect x="34" y="70" width="52" height="14" rx="3" fill="none" stroke="#8a6a28" stroke-width=".6"/>
+</svg>

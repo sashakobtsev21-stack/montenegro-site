@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Схематичная обложка маршрута">
+  <rect width="640" height="360" fill="#F2EFE9"/>
+  <path d="M0 360 L200 150 L300 240 L430 90 L560 230 L640 170 L640 360 Z" fill="#6B1F2E" opacity="0.12"/>
+  <path d="M0 360 L160 200 L260 280 L400 140 L540 280 L640 210 L640 360 Z" fill="#6B1F2E" opacity="0.2"/>
+  <circle cx="520" cy="80" r="34" fill="#E8A33D" opacity="0.35"/>
+  <g fill="none" stroke="#23282E" stroke-opacity="0.4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M296 188 l16 -34 l16 34 z"/>
+    <path d="M312 154 l0 -18 m-8 8 l16 0"/>
+  </g>
+</svg>

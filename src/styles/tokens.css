@@ -1,0 +1,172 @@
+/*
+ * Дизайн-токены — Georgia Guidebook (SPEC §10).
+ * Значения утверждены владельцем в §10; R2 (ui-ux-pro-max) их уточнит.
+ * Единственный источник цветов/отступов/радиусов/типографики.
+ * Хардкод hex в компонентах запрещён — только var(--...) отсюда.
+ *
+ * Токены проброшены в Tailwind 4 через @theme в global.css,
+ * чтобы быть доступными как utility-классы (bg-wine, p-16 и т.п.).
+ */
+
+:root {
+  /* --- Палитра (§10) --- */
+  --color-wine: #6b1f2e; /* вино-саперави: акцент / CTA-альтернатива */
+  --color-sun: #e8a33d; /* солнце: CTA, AffiliateBox */
+  --color-slate: #23282e; /* сланец: текст */
+  --color-stone: #f2efe9; /* камень: фон секций */
+  --color-white: #ffffff;
+
+  /* --- Шрифты (§10) --- */
+  /* R1: подключены как заглушка через системный фолбэк; self-host woff2 — R2. */
+  --font-display: 'Unbounded', system-ui, sans-serif; /* только H1/H2 */
+  --font-body: 'Manrope', system-ui, sans-serif; /* текст и UI */
+
+  /* --- Типо-шкала (§10): 14 / 16 / 18 (база) / 22 / 28 / 36 / 48 --- */
+  --text-sm: 0.875rem; /* 14 */
+  --text-base: 1rem; /* 16 */
+  --text-lg: 1.125rem; /* 18 — база контента */
+  --text-xl: 1.375rem; /* 22 */
+  --text-2xl: 1.75rem; /* 28 */
+  --text-3xl: 2.25rem; /* 36 */
+  --text-4xl: 3rem; /* 48 */
+  --leading-body: 1.6; /* line-height для текста (§10) */
+
+  /* --- Spacing, шкала 4px (§10): 4–8–12–16–24–32–48–64–96 --- */
+  --space-1: 0.25rem; /* 4 */
+  --space-2: 0.5rem; /* 8 */
+  --space-3: 0.75rem; /* 12 */
+  --space-4: 1rem; /* 16 */
+  --space-6: 1.5rem; /* 24 */
+  --space-8: 2rem; /* 32 */
+  --space-12: 3rem; /* 48 */
+  --space-16: 4rem; /* 64 */
+  --space-24: 6rem; /* 96 */
+
+  /* --- Радиусы (§10): 8 / 16 / 999 --- */
+  --radius-card: 0.5rem; /* 8 — карточки, кнопки */
+  --radius-widget: 1rem; /* 16 — виджеты */
+  --radius-pill: 999px; /* пилюли */
+
+  /* --- Брейкпоинты (§10): 360 / 768 / 1024 / 1280; mobile-first --- */
+  --breakpoint-xs: 360px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+
+  /*
+   * --- Семантический слой направления «Полевой журнал» (§10, R2) ---
+   * Сырые значения §10 выше НЕ меняются (утверждены владельцем). Здесь —
+   * только их применение: какие роли какой токен играет в редакционной теме.
+   * Светлая тема, максимум 2 акцента на экран, много воздуха.
+   */
+
+  /* Поверхности: фон страницы/секций — камень; карточки/шапка — белый. */
+  --surface-page: var(--color-stone);
+  --surface-card: var(--color-white);
+  --surface-raised: var(--color-white);
+
+  /* Текст. */
+  --text-body: var(--color-slate); /* body — сланец */
+  --text-heading: var(--color-wine); /* H1/H2 — вино-саперави */
+  --text-muted: color-mix(in srgb, var(--color-slate) 70%, var(--color-stone)); /* приглушённый */
+  --text-on-cta: var(--color-slate); /* текст на солнечной кнопке (контраст ≥4.5) */
+  --text-on-wine: var(--color-white); /* текст на вине */
+
+  /* Ссылки — вино. */
+  --link: var(--color-wine);
+  --link-hover: color-mix(in srgb, var(--color-wine) 80%, black);
+
+  /* Разделительные линии — вино/сланец на низкой альфе (тонкие). */
+  --border-hairline: color-mix(in srgb, var(--color-slate) 12%, transparent);
+  --border-wine: color-mix(in srgb, var(--color-wine) 22%, transparent);
+  --border-card: color-mix(in srgb, var(--color-slate) 14%, transparent);
+  --border-card-hover: color-mix(in srgb, var(--color-wine) 35%, transparent);
+
+  /* CTA — солнце ТОЛЬКО для кнопок и AffiliateBox (не декоративно). */
+  --cta-bg: var(--color-sun);
+  --cta-bg-hover: color-mix(in srgb, var(--color-sun) 88%, black);
+  /* Граница CTA/AffiliateBox: солнце на белом = ~2.1:1 — провал WCAG 1.4.11 (UI ≥3:1).
+     Затемнённый вариант для ВИДИМОЙ границы виджета (аудит 2026-06-17, a11y). */
+  --border-cta: #b87520; /* ~3.5:1 на белом */
+
+  /* Ховер-фон плиток/интерактива (лёгкий камень). */
+  --surface-hover: color-mix(in srgb, var(--color-stone) 60%, var(--color-white));
+
+  /*
+   * --- Золото: маркёр платного/партнёрского размещения ---
+   * Решение владельца 2026-06-16: «золотая рамка» — единственный маркёр спонсора
+   * (директории «Услуги»/«Еда», витрина партнёров на главной). Металлик-градиент
+   * (светлое→глубокое золото) для рамки + мягкое золотое свечение. Применяется
+   * ТОЛЬКО к спонсорским/партнёрским элементам, не декоративно.
+   */
+  --color-gold: #c79a3b;
+  --color-gold-light: #ecc874;
+  --color-gold-deep: #9a6f22;
+  /* Золото как ТЕКСТ на светлом фоне (kicker и т.п.): --color-gold даёт ~2.9:1,
+     светлые — хуже. Затемнённый вариант для текста ≥4.5:1 (аудит 2026-06-17, a11y). */
+  --color-gold-text: #8a6118; /* ~4.7:1 на белом */
+  --gold-frame: linear-gradient(
+    135deg,
+    var(--color-gold-light) 0%,
+    var(--color-gold) 42%,
+    var(--color-gold-deep) 72%,
+    var(--color-gold-light) 100%
+  );
+  --gold-glow: 0 6px 20px color-mix(in srgb, var(--color-gold) 28%, transparent);
+
+  /* Фокус (видимый, §15) — вино. */
+  --focus-ring: var(--color-wine);
+
+  /* Переходы интерфейса (150–300 мс, направление). */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+
+  /*
+   * --- Слой движения (ui-ux-pro-max §7, перф-бюджет §15) ---
+   * Только transform/opacity → ноль CLS. Все reveal/transform отключаются
+   * при prefers-reduced-motion (см. global.css). Сдержанно-живо, без баунса.
+   */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1); /* вход элементов (decelerate) */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1); /* hover / смена состояния */
+  --dur-fast: 150ms; /* микро-отклик (hover/press) */
+  --dur: 200ms; /* стандарт UI */
+  --dur-slow: 320ms; /* вход элементов (reveal/stagger) */
+  --press-scale: 0.97; /* нажатие активного элемента */
+
+  /*
+   * Мягкие тени (направление «Полевой журнал»: тень — следствие подъёма
+   * элемента к читателю, не декор). На сланце с низкой альфой, не «глянец».
+   */
+  --shadow-raised:
+    0 1px 2px color-mix(in srgb, var(--color-slate) 6%, transparent),
+    0 6px 16px color-mix(in srgb, var(--color-slate) 9%, transparent);
+  --shadow-cta:
+    0 2px 4px color-mix(in srgb, var(--color-slate) 8%, transparent),
+    0 8px 20px color-mix(in srgb, var(--color-sun) 22%, transparent);
+
+  /*
+   * --- Hero на фото (§6 контраст ≥4.5, §15 LCP) ---
+   * Светлый текст поверх фотографии + тёмный скрим-градиент для контраста.
+   * Скрим на сланце (тёплый near-black), плотнее снизу, где подзаголовок/поиск.
+   */
+  --hero-text: var(--color-white);
+  --hero-text-muted: color-mix(in srgb, var(--color-white) 88%, transparent);
+  /*
+   * Скрим направленный (не глушит всё фото): затемняется СЛЕВА, где текст, и
+   * почти прозрачен справа → фото остаётся ярким/«праздничным» (правка владельца
+   * 2026-06-17). Стопы для левого градиента + лёгкая подложка снизу (кредит).
+   */
+  --hero-scrim-text: color-mix(in srgb, var(--color-slate) 70%, transparent);
+  --hero-scrim-text-2: color-mix(in srgb, var(--color-slate) 50%, transparent);
+  --hero-scrim-text-3: color-mix(in srgb, var(--color-slate) 16%, transparent);
+  --hero-scrim-base: color-mix(in srgb, var(--color-slate) 40%, transparent);
+  /* Усиленная тень текста (двойная): крупный заголовок читается даже на ярком фото. */
+  --hero-text-shadow:
+    0 1px 2px color-mix(in srgb, black 55%, transparent),
+    0 2px 16px color-mix(in srgb, var(--color-slate) 50%, transparent);
+
+  /* Максимальная ширина читаемого контента (контент-первый). */
+  --container-wide: var(--breakpoint-xl); /* 1280 — шапка/футер */
+  --container-content: 72rem; /* ~1152 — секции главной */
+  --container-prose: 42rem; /* ~672 — узкая колонка текста */
+}

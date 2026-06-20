@@ -1,0 +1,177 @@
+---
+/**
+ * AccessFrom (§8.1) — «Как доехать» из крупных точек въезда (Тбилиси, Кутаиси,
+ * Батуми). Нативный <details>/<summary>: НОЛЬ JS, доступно с клавиатуры из
+ * коробки (нативный аккордеон §9), видимый focus задаёт global.css.
+ *
+ * Данные — из frontmatter `accessFrom` (§11). Рисуем строку только для тех
+ * истоков, что заданы; внутри — только те поля (км/время/заметка), что есть
+ * (CLAUDE правило 4 — фактов не выдумываем). Лейблы городов и единицы — из
+ * словаря (§12), без хардкода.
+ */
+import { t, type Lang } from '../i18n';
+import Icon from './Icon.astro';
+
+/** Один исток (значения опциональны — показываем только заданное). */
+export interface AccessOrigin {
+  km?: number;
+  duration?: string;
+  note?: string;
+}
+
+export interface AccessFromData {
+  tbilisi?: AccessOrigin;
+  kutaisi?: AccessOrigin;
+  batumi?: AccessOrigin;
+}
+
+interface Props {
+  lang: Lang;
+  accessFrom: AccessFromData;
+}
+
+const { lang, accessFrom } = Astro.props;
+const dict = t(lang);
+const a = dict.access;
+
+/** Порядок истоков фиксирован (§8.1): Тбилиси → Кутаиси → Батуми. */
+const ORDER = ['tbilisi', 'kutaisi', 'batumi'] as const;
+type OriginKey = (typeof ORDER)[number];
+
+/** Только заданные истоки, в нужном порядке. */
+const rows = ORDER.map((key) => ({ key, data: accessFrom[key] })).filter(
+  (row): row is { key: OriginKey; data: AccessOrigin } => Boolean(row.data),
+);
+
+/** Метрика «≈{km} км · {duration}» — собираем только из заданных полей. */
+function metric(d: AccessOrigin): string {
+  const parts: string[] = [];
+  if (typeof d.km === 'number') parts.push(`≈${d.km} ${a.km}`);
+  if (d.duration) parts.push(d.duration);
+  return parts.join(' · ');
+}
+---
+
+{
+  rows.length > 0 && (
+    <details class="access">
+      <summary class="access__summary">
+        <Icon name="route" size={20} class="access__icon" />
+        <span class="access__heading">{a.heading}</span>
+        {rows.length === 1 && metric(rows[0].data) && (
+          <span class="access__summary-metric">{metric(rows[0].data)}</span>
+        )}
+        <svg
+          class="access__chevron"
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </summary>
+      <ul class="access__list">
+        {rows.map((row) => (
+          <li class="access__row">
+            <b class="access__origin">{a.origins[row.key]}</b>
+            <span class="access__metric">{metric(row.data)}</span>
+            {row.data.note && <span class="access__note">{row.data.note}</span>}
+          </li>
+        ))}
+      </ul>
+    </details>
+  )
+}
+
+<style>
+  .access {
+    margin-block: var(--space-8);
+    max-width: var(--container-prose);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    transition: border-color var(--dur) var(--ease-standard);
+  }
+  .access[open] {
+    border-color: var(--border-card-hover);
+  }
+  .access__summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    font-weight: 600;
+    color: var(--text-body);
+    cursor: pointer;
+    list-style: none;
+  }
+  .access__summary::-webkit-details-marker {
+    display: none;
+  }
+  .access__icon {
+    flex: none;
+    color: var(--color-wine);
+  }
+  .access__heading {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  /* Превью метрики в свёрнутом виде при одном истоке (аудит 2026-06-20). */
+  .access__summary-metric {
+    flex: none;
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+  .access[open] .access__summary-metric {
+    display: none;
+  }
+  .access__chevron {
+    flex: none;
+    color: var(--color-wine);
+    transition: transform var(--dur) var(--ease-standard);
+  }
+  .access[open] .access__chevron {
+    transform: rotate(180deg);
+  }
+
+  .access__list {
+    list-style: none;
+    margin: 0;
+    padding: 0 var(--space-4) var(--space-4);
+    display: grid;
+    gap: var(--space-3);
+  }
+  .access__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-1) var(--space-2);
+  }
+  .access__origin {
+    color: var(--text-body);
+  }
+  .access__metric {
+    color: var(--text-body);
+  }
+  .access__note {
+    flex-basis: 100%;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .access,
+    .access__chevron {
+      transition: none;
+    }
+  }
+</style>

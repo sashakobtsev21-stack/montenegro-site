@@ -1,0 +1,459 @@
+---
+/**
+ * EntertainmentHub (§7, §8.3) — хаб «Развлечения» с фильтром по подкатегории.
+ * Заменяет HubPage для /razvlecheniya/: каталог развлечений (ночная жизнь,
+ * афиша, активный отдых, места) с фильтром по `razvlType`. Механика фильтра —
+ * переиспользуем catalog-filter.js (data-catalog*, ключ `razvl`), как в каталоге
+ * достопримечательностей; без своего JS. Фильтр показывается только если
+ * присутствует >1 подкатегории (иначе скрыт). Заголовок/интро — из nav +
+ * hub.sections.razvlecheniya (§12). Данные — коллекция `articles`,
+ * category=razvlecheniya, нужный язык, не draft (§11). Порядок: featuredOrder →
+ * publishedAt desc → slug (§21). Schema.org (§14): BreadcrumbList.
+ */
+import { getCollectionSafe } from '../loaders/getCollectionSafe';
+import {
+  t,
+  format,
+  formatDate,
+  articleHref,
+  razvlTypeLabel,
+  RAZVL_TYPE_SLUGS,
+  HUB_AFFILIATE_PARTNER,
+  type Lang,
+} from '../i18n';
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ArticleCard, { type CardMeta } from '../components/ArticleCard.astro';
+import AffiliateBox from '../components/AffiliateBox.astro';
+import EmptyHint from '../components/EmptyHint.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const dict = t(lang);
+const e = dict.entertainment;
+const heading = dict.nav.razvlecheniya;
+const intro = dict.hub.sections.razvlecheniya.intro;
+
+const pageTitle = `${heading} — ${dict.siteName}`;
+// Обрезка по границе слова (≤155, без обрыва посередине) — SEO description (§14).
+const description =
+  intro[0].length <= 155 ? intro[0] : intro[0].slice(0, 155).replace(/\s+\S*$/, '');
+
+const places = await getCollectionSafe(
+  'articles',
+  (entry) =>
+    entry.data.lang === lang &&
+    entry.data.category === 'razvlecheniya' &&
+    entry.data.draft !== true,
+);
+
+/** Порядок (§21): ручной featuredOrder → новее → старее → slug. */
+places.sort((a, b) => {
+  const fa = a.data.featuredOrder;
+  const fb = b.data.featuredOrder;
+  if (fa != null || fb != null) {
+    if (fa == null) return 1;
+    if (fb == null) return -1;
+    if (fa !== fb) return fa - fb;
+  }
+  const diff = b.data.publishedAt.getTime() - a.data.publishedAt.getTime();
+  return diff !== 0 ? diff : a.data.slug.localeCompare(b.data.slug);
+});
+
+const hasPlaces = places.length > 0;
+
+interface HubCard {
+  key: string;
+  href: string;
+  title: string;
+  cardDescription: string;
+  cover?: { src: string; alt: string };
+  date: string;
+  verified: 'verified' | 'updated';
+  verifiedPhoto?: { src: string; alt?: string };
+  typeSlug: string;
+  cityKey: string;
+  cityName: string;
+  demo: boolean;
+  meta: CardMeta[];
+  qualityMark: boolean;
+  gallery?: { src: string; alt: string; credit?: string }[];
+}
+
+/** Город места — по суффиксу slug (-tbilisi/-batumi/-kutaisi), иначе «другое». */
+const CITY_NAMES: Record<string, string> = {
+  tbilisi: lang === 'uk' ? 'Тбілісі' : lang === 'en' ? 'Tbilisi' : 'Тбилиси',
+  batumi: lang === 'uk' ? 'Батумі' : lang === 'en' ? 'Batumi' : 'Батуми',
+  kutaisi: lang === 'uk' ? 'Кутаїсі' : lang === 'en' ? 'Kutaisi' : 'Кутаиси',
+  other: lang === 'uk' ? 'Інше' : lang === 'en' ? 'Elsewhere' : 'Другое',
+};
+const CITY_ORDER = ['tbilisi', 'batumi', 'kutaisi', 'other'];
+const cityKeyOf = (slug: string): string =>
+  slug.endsWith('-tbilisi')
+    ? 'tbilisi'
+    : slug.endsWith('-batumi')
+      ? 'batumi'
+      : slug.endsWith('-kutaisi')
+        ? 'kutaisi'
+        : 'other';
+
+const cards: HubCard[] = places.map((entry) => {
+  const d = entry.data;
+  const meta: CardMeta[] = [];
+  if (d.razvlType) {
+    meta.push({ icon: 'sparkles', text: razvlTypeLabel(lang, d.razvlType) });
+  }
+  const cityKey = cityKeyOf(d.slug);
+  return {
+    key: entry.id,
+    href: articleHref(lang, 'razvlecheniya', d.slug),
+    title: d.title,
+    cardDescription: d.description,
+    cover: d.cover,
+    date: formatDate(d.verifiedAt ?? d.updatedAt, lang),
+    verified: d.verifiedAt ? 'verified' : 'updated',
+    verifiedPhoto: d.verifiedPhoto,
+    typeSlug: d.razvlType ?? '',
+    cityKey,
+    cityName: CITY_NAMES[cityKey],
+    demo: d.demo === true,
+    meta,
+    qualityMark: d.qualityMark === true,
+    gallery: d.gallery,
+  };
+});
+
+/** Группы по городам в каноническом порядке (только присутствующие). */
+const cityGroups: { key: string; name: string; items: HubCard[] }[] = [];
+for (const key of CITY_ORDER) {
+  const items = cards.filter((c) => c.cityKey === key);
+  if (items.length > 0) cityGroups.push({ key, name: CITY_NAMES[key], items });
+}
+
+/** Опции фильтра-типа — только реально встречающиеся подкатегории, в каноническом порядке. */
+const present = new Set(places.map((p) => p.data.razvlType).filter(Boolean));
+const typeOptions = RAZVL_TYPE_SLUGS.filter((s) => present.has(s)).map((s) => ({
+  value: s,
+  label: razvlTypeLabel(lang, s),
+}));
+
+/** Фасеты-чипы: Город + Тип (рендерим при ≥2 значениях). data-facet ↔ data-{key} карточки. */
+type Facet = { key: string; label: string; options: { value: string; label: string }[] };
+const facetDefs: Facet[] = [
+  cityGroups.length > 1
+    ? {
+        key: 'city',
+        label: dict.eda.filters.cityLabel,
+        options: cityGroups.map((g) => ({ value: g.name, label: g.name })),
+      }
+    : null,
+  typeOptions.length > 1 ? { key: 'razvl', label: e.typeLabel, options: typeOptions } : null,
+].filter((d): d is Facet => d !== null);
+const hasFilter = facetDefs.length > 0;
+
+/** OG-картинка хаба (§14): обложка первой карточки с фото. */
+const ogImage = cards.find((c) => c.cover)?.cover?.src;
+
+/** ItemList (§14): список развлечений — rich-результаты. */
+const SITE = Astro.site ?? new URL('https://georgiaguidebook.com');
+const itemListLd = hasPlaces
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: heading,
+      itemListElement: cards.map((card, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: card.title,
+        url: new URL(card.href, SITE).href,
+      })),
+    }
+  : null;
+---
+
+<BaseLayout title={pageTitle} description={description} lang={lang} image={ogImage}>
+  {itemListLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(itemListLd)} />}
+  <div class="ent" data-eda>
+    <div class="container">
+      <Breadcrumbs lang={lang} items={[{ label: heading }]} />
+
+      <header class="head" data-reveal>
+        <h1 class="head__title">{heading}</h1>
+        <div class="head__intro">
+          {intro.map((p) => <p>{p}</p>)}
+        </div>
+      </header>
+
+      {
+        hasPlaces && hasFilter && (
+          <div class="filterbar" data-reveal>
+            <div class="filterbar__facets" role="group" aria-label={e.filtersLegend}>
+              {facetDefs.map((def) => (
+                <fieldset class="facet">
+                  <legend class="facet__label">{def.label}</legend>
+                  <div class="facet__chips">
+                    {def.options.map((opt) => (
+                      <button
+                        type="button"
+                        class="chip"
+                        data-eda-chip
+                        data-facet={def.key}
+                        data-value={opt.value}
+                        aria-pressed="false"
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </fieldset>
+              ))}
+            </div>
+            <button type="button" class="filterbar__clear" data-eda-clear hidden>
+              {e.reset}
+            </button>
+          </div>
+        )
+      }
+
+      {
+        hasPlaces && (
+          <p class="count" data-eda-count data-count-template={e.resultsCount} aria-live="polite">
+            {format(e.resultsCount, { count: String(cards.length) })}
+          </p>
+        )
+      }
+
+      {
+        hasPlaces ? (
+          <>
+            {cityGroups.map((group) => (
+              <section class="city-group" data-eda-group={group.key} aria-label={group.name}>
+                <h2 class="city-group__title">{group.name}</h2>
+                <div class="grid">
+                  {group.items.map((card) => (
+                    <div data-eda-card data-city={card.cityName} data-razvl={card.typeSlug}>
+                      <ArticleCard
+                        lang={lang}
+                        href={card.href}
+                        title={card.title}
+                        description={card.cardDescription}
+                        cover={card.cover}
+                        date={card.date}
+                        verified={card.verified}
+                        verifiedPhoto={card.verifiedPhoto}
+                        meta={card.meta}
+                        qualityMark={card.qualityMark}
+                        gallery={card.gallery}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ))}
+            <p class="empty" data-eda-empty hidden>
+              {e.emptyFiltered}
+            </p>
+          </>
+        ) : (
+          <EmptyHint text={dict.hub.empty} />
+        )
+      }
+
+      {
+        /* AffiliateBox раздела (§8.3, §16) — экскурсии/активности (trip-tours);
+           один виджет на страницу (CLAUDE правило 2). slug=razvlecheniya → SubID. */
+        hasPlaces &&
+          (() => {
+            const partner = HUB_AFFILIATE_PARTNER.razvlecheniya;
+            const copy = dict.hubAffiliate.razvlecheniya;
+            if (!partner || !copy) return null;
+            return (
+              <div class="hub-affiliate">
+                <AffiliateBox
+                  lang={lang}
+                  partner={partner}
+                  slug="razvlecheniya"
+                  title={copy.title}
+                  label={dict.actions.more}
+                  note={copy.note}
+                />
+              </div>
+            );
+          })()
+      }
+    </div>
+  </div>
+
+  {/* Внешний vanilla-модуль фильтров (script-src 'self', §18) — без инлайна. */}
+  <script is:inline type="module" src="/js/eda-filter.js"></script>
+  {/* Карусель фото в карточках-миниатюрах (заведения с галереей, напр. Teatro). */}
+  <script is:inline type="module" src="/js/rcard-gallery.js"></script>
+</BaseLayout>
+
+<style>
+  .container {
+    max-width: var(--container-content);
+    margin: 0 auto;
+    padding-inline: var(--space-4);
+  }
+  .ent {
+    padding-block: var(--space-8) var(--space-12);
+  }
+
+  .head {
+    margin-bottom: var(--space-8);
+  }
+  .head__title {
+    font-size: var(--text-3xl);
+    margin: 0 0 var(--space-6);
+  }
+  @media (min-width: 768px) {
+    .head__title {
+      font-size: var(--text-4xl);
+    }
+  }
+  .head__intro {
+    display: grid;
+    gap: var(--space-4);
+    max-width: 68ch;
+  }
+  .head__intro :global(p) {
+    margin: 0;
+    font-size: var(--text-lg);
+    color: var(--text-body);
+  }
+
+  /* Фильтр-бар — чипы (как в /eda/): фасеты Город + Тип. */
+  .filterbar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+  .filterbar__facets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-6);
+  }
+  .facet {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-inline-size: 0;
+  }
+  .facet__label {
+    padding: 0;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+  .facet__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .chip {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-body);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-pill);
+    padding: var(--space-1) var(--space-3);
+    cursor: pointer;
+    transition:
+      border-color var(--dur) var(--ease-standard),
+      background-color var(--dur) var(--ease-standard),
+      color var(--dur) var(--ease-standard);
+  }
+  .chip:hover {
+    border-color: var(--color-wine);
+  }
+  .chip:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+  .chip[aria-pressed='true'] {
+    color: var(--color-white);
+    background: var(--color-wine);
+    border-color: var(--color-wine);
+  }
+  .filterbar__clear {
+    align-self: flex-start;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--link);
+    background: transparent;
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-pill);
+    padding: var(--space-1) var(--space-3);
+    cursor: pointer;
+    transition:
+      border-color var(--dur) var(--ease-standard),
+      color var(--dur) var(--ease-standard);
+  }
+  .filterbar__clear:hover,
+  .filterbar__clear:focus-visible {
+    border-color: var(--color-wine);
+    color: var(--link-hover);
+  }
+
+  .count {
+    margin: 0 0 var(--space-6);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  .city-group {
+    margin-bottom: var(--space-12);
+  }
+  .city-group:last-of-type {
+    margin-bottom: 0;
+  }
+  .city-group[hidden] {
+    display: none;
+  }
+  .city-group__title {
+    font-size: var(--text-2xl);
+    margin: 0 0 var(--space-6);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--border-hairline);
+  }
+  .grid {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 640px) {
+    .grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 1024px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .hub-affiliate {
+    margin-top: var(--space-12);
+  }
+
+  .empty {
+    margin: var(--space-8) 0 0;
+    padding: var(--space-6);
+    background: var(--surface-card);
+    border: 1px dashed var(--border-card);
+    border-radius: var(--radius-card);
+    color: var(--text-muted);
+    text-align: center;
+  }
+</style>

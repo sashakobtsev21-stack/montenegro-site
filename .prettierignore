@@ -1,0 +1,17 @@
+dist/
+.astro/
+node_modules/
+.output/
+*.db
+ruvector.db
+data/
+.swarm/
+.claude-flow/
+package-lock.json
+
+# Self-host сторонних ассетов (Leaflet) — третья сторона, не форматируем (§13).
+public/vendor/
+
+# Документы и агенты — не зона форматирования каркаса (правит владелец/контент-роли).
+*.md
+.claude/

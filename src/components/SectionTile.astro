@@ -1,0 +1,93 @@
+---
+/**
+ * SectionTile (§8.4, §9) — плитка входа в раздел.
+ * Белая поверхность, тонкая рамка, радиус 8, без тени.
+ * Малый Unbounded-заголовок (вино) + 1 строка Manrope + SVG-стрелка.
+ * Ховер — лёгкая смена фона/рамки (150–300мс, направление «Полевой журнал»).
+ */
+import Icon from './Icon.astro';
+import type { IconName } from './iconNames';
+
+interface Props {
+  href: string;
+  title: string;
+  description: string;
+  /** Имя иконки (Icon.astro) слева сверху. */
+  icon?: IconName;
+}
+
+const { href, title, description, icon } = Astro.props;
+---
+
+<a class="tile" href={href}>
+  <div class="tile__head">
+    {icon && <Icon name={icon} size={22} class="tile__icon" />}
+    <h3 class="tile__title">{title}</h3>
+  </div>
+  <p class="tile__desc">{description}</p>
+  <span class="tile__cta" aria-hidden="true">
+    <Icon name="arrow-right" size={20} />
+  </span>
+</a>
+
+<style>
+  .tile {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-6);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-card);
+    text-decoration: none;
+    color: var(--text-body);
+    cursor: pointer;
+    /* transform/opacity + цвет — ноль CLS (§7). */
+    transition:
+      background-color var(--dur) var(--ease-standard),
+      border-color var(--dur) var(--ease-standard),
+      box-shadow var(--dur) var(--ease-standard),
+      transform var(--dur) var(--ease-standard);
+  }
+  /* hover: подъём + вино-рамка + мягкая тень. */
+  .tile:hover {
+    background: var(--surface-hover);
+    border-color: var(--color-wine);
+    box-shadow: var(--shadow-raised);
+    transform: translateY(-3px);
+  }
+  /* active: лёгкое нажатие. */
+  .tile:active {
+    transform: scale(0.99);
+  }
+  .tile__head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .tile__icon {
+    color: var(--color-wine);
+    flex: none;
+  }
+  .tile__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-lg);
+    color: var(--text-heading); /* вино */
+    margin: 0;
+    line-height: 1.2;
+  }
+  .tile__desc {
+    margin: 0;
+    font-size: var(--text-base);
+    color: var(--text-muted);
+  }
+  .tile__cta {
+    margin-top: var(--space-2);
+    color: var(--color-wine);
+    transition: transform var(--dur) var(--ease-standard);
+  }
+  .tile:hover .tile__cta {
+    transform: translateX(var(--space-1));
+  }
+</style>

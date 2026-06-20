@@ -1,0 +1,172 @@
+---
+/**
+ * GoogleMap (§8.1) — карта одной точки места через Google Maps embed, БЕЗ
+ * Leaflet. На странице статьи заменяет MapEmbed (MapEmbed остаётся для
+ * маршрутов §8.2).
+ *
+ * Приватность и перф (§15, §18): в статике рендерится ТОЛЬКО заглушка-кнопка —
+ * ничего от Google не загружается до клика (ни iframe, ни cookie, ни скрипты).
+ * По клику внешний vanilla-модуль /js/gmap.js (script-src 'self', §18 — без
+ * inline) подставляет классический <iframe ...output=embed> (без API-ключа).
+ * frame-src google.com/maps.google.com разрешён в _headers (§18).
+ *
+ * Ноль CLS (§15): зарезервированный аспект 16:9 — заглушка и будущий iframe
+ * занимают одну высоту. Под картой — ссылка «Открыть в Google Картах»
+ * (надёжный фолбэк без JS).
+ *
+ * Доступность (§15): нативная <button> (фокус с клавиатуры, видимый focus-ring);
+ * ссылка на Google Карты доступна всегда; контраст из токенов (без хардкода hex).
+ */
+import { t, type Lang } from '../i18n';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Lang;
+  /** Широта точки (geo.coord[0], §11). */
+  lat: number;
+  /** Долгота точки (geo.coord[1], §11). */
+  lng: number;
+  /** Подпись/title карты (обычно заголовок статьи). */
+  label: string;
+  /** Зум встраиваемой карты (по умолчанию 14 — место с контекстом улиц). */
+  zoom?: number;
+}
+
+const { lang, lat, lng, label, zoom = 14 } = Astro.props;
+const dict = t(lang);
+const m = dict.map;
+
+/** Прямая ссылка «Открыть в Google Картах» (новый api=1 формат). */
+const googleHref = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+---
+
+<figure class="gmap">
+  <div
+    class="gmap__frame"
+    data-gmap
+    data-lat={lat}
+    data-lng={lng}
+    data-zoom={zoom}
+    data-hl={lang}
+    data-title={label}
+  >
+    {/* Заглушка-кнопка: пока её не нажали, Google не подгружается (приватность). */}
+    <button type="button" class="gmap__stub" data-gmap-show>
+      <span class="gmap__stub-icon">
+        <Icon name="map-pin" size={32} />
+      </span>
+      <span class="gmap__stub-text">{m.show}</span>
+    </button>
+  </div>
+
+  <figcaption class="gmap__bar">
+    <a class="gmap__link" href={googleHref} target="_blank" rel="noopener nofollow">
+      <Icon name="arrow-right" size={16} class="gmap__link-icon" />
+      <span>{m.openInGoogle}</span>
+    </a>
+  </figcaption>
+</figure>
+
+{/* Внешний vanilla-модуль (self, без inline §18). No-op без [data-gmap]. */}
+<script is:inline type="module" src="/js/gmap.js"></script>
+
+<style>
+  .gmap {
+    margin: var(--space-8) 0 var(--space-12);
+    max-width: var(--container-prose);
+  }
+  /*
+   * Зарезервированный аспект 16:9 — заглушка и будущий iframe занимают одну
+   * высоту → ноль CLS (§15). Скруглённая рамка из токенов.
+   */
+  .gmap__frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-widget);
+    overflow: hidden;
+    background: var(--surface-page);
+  }
+
+  .gmap__stub {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    width: 100%;
+    height: 100%;
+    padding: var(--space-6);
+    font: inherit;
+    color: var(--text-body);
+    background: var(--surface-page);
+    border: none;
+    cursor: pointer;
+    transition: background-color var(--dur) var(--ease-standard);
+  }
+  .gmap__stub:hover,
+  .gmap__stub:focus-visible {
+    background: var(--surface-hover);
+  }
+  .gmap__stub-icon {
+    display: inline-flex;
+    color: var(--color-wine);
+  }
+  .gmap__stub-text {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-2) var(--space-6);
+    font-weight: 600;
+    color: var(--text-on-cta);
+    background: var(--cta-bg);
+    border-radius: var(--radius-pill);
+  }
+
+  /*
+   * Когда gmap.js вставил iframe, он ставит на .gmap__frame класс is-loaded
+   * → прячем заглушку. iframe растягивается на всю зарезервированную высоту.
+   */
+  .gmap__frame.is-loaded .gmap__stub {
+    display: none;
+  }
+  .gmap__frame :global(iframe) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  /* Бар под картой: в одну строку, перенос на мобиле. */
+  .gmap__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-4);
+    margin-top: var(--space-3);
+  }
+  .gmap__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--link);
+    text-underline-offset: 3px;
+  }
+  .gmap__link:hover,
+  .gmap__link:focus-visible {
+    color: var(--link-hover);
+  }
+  .gmap__link-icon {
+    flex: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gmap__stub {
+      transition: none;
+    }
+  }
+</style>

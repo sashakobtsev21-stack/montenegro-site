@@ -1,0 +1,384 @@
+---
+/**
+ * Header (§9, §10) — направление «Полевой журнал».
+ * Тонкая белая sticky-шапка: сверху utility-полоса с курсом/погодой (RatesBar),
+ * ниже — бренд слева, ОСНОВНЫЕ разделы в строке (десктоп), переключатель языка
+ * и кнопка-меню справа. Кнопка ☰ открывает компактный блок-выпадашку с
+ * остальными разделами (а на мобайле — со всеми). Меню — нативный JS (минимум).
+ *
+ * Раскладка разделов (решение владельца): основные (PRIMARY_TILE_KEYS) вынесены
+ * в строку на десктопе; вторичные — всегда в выпадашке. На мобайле строка
+ * прячется, и в выпадашку попадают все разделы (основные помечены классом
+ * .nav__primary и показываются только на мобайле).
+ */
+import { t, sectionHref, SECTION_KEYS, PRIMARY_TILE_KEYS, type Lang } from '../i18n';
+import LangSwitcher from './LangSwitcher.astro';
+import RatesBar from './RatesBar.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Lang;
+  /** Языки, доступные для текущей страницы (→ LangSwitcher, §12). По умолчанию все 3. */
+  availableLangs?: Lang[];
+}
+const { lang, availableLangs = ['ru', 'uk', 'en'] } = Astro.props;
+const dict = t(lang);
+const homeHref = sectionHref(lang, 'home');
+const currentPath = Astro.url.pathname;
+
+/** Вторичные разделы (всё, кроме основных плиток) — порядок из SECTION_KEYS. */
+const primarySet: readonly string[] = PRIMARY_TILE_KEYS;
+const secondaryKeys = SECTION_KEYS.filter((key) => !primarySet.includes(key));
+---
+
+<header class="site-header" data-header>
+  <RatesBar lang={lang} />
+  <div class="bar">
+    <a href={homeHref} class="brand">
+      <img class="brand__flag" src="/images/ge-flag.svg" width="48" height="32" alt="" aria-hidden="true" />
+      <span>{dict.siteName}</span>
+    </a>
+
+    {/* Основные разделы — в строке (десктоп ≥1024px). */}
+    <nav class="nav-inline" aria-label={dict.header.primaryNav}>
+      <ul>
+        {
+          PRIMARY_TILE_KEYS.map((key) => {
+            const href = sectionHref(lang, key);
+            const isActive = currentPath === href;
+            return (
+              <li>
+                <a class="u-underline" href={href} aria-current={isActive ? 'page' : undefined}>
+                  {dict.nav[key]}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+
+    <div class="bar__lang">
+      <LangSwitcher lang={lang} availableLangs={availableLangs} />
+    </div>
+
+    {/* Кнопка-меню + компактный блок-выпадашка с остальными разделами. */}
+    <div class="menu">
+      <button
+        type="button"
+        class="menu-toggle"
+        aria-expanded="false"
+        aria-controls="primary-nav"
+        data-menu-toggle
+        data-open-label={dict.header.openMenu}
+        data-close-label={dict.header.closeMenu}
+      >
+        <span class="menu-toggle__open"><Icon name="menu" size={24} /></span>
+        <span class="menu-toggle__close"><Icon name="x" size={24} /></span>
+        <span class="sr-only menu-toggle__label">{dict.header.openMenu}</span>
+        <span class="menu-toggle__text" aria-hidden="true">{dict.header.menuShort}</span>
+      </button>
+
+      <nav id="primary-nav" class="nav" aria-label={dict.header.primaryNav} data-nav>
+        <ul>
+          {
+            /* Основные разделы — в выпадашке только на мобайле (на десктопе в строке). */
+            PRIMARY_TILE_KEYS.map((key) => {
+              const href = sectionHref(lang, key);
+              const isActive = currentPath === href;
+              return (
+                <li class="nav__primary">
+                  <a href={href} aria-current={isActive ? 'page' : undefined}>
+                    {dict.nav[key]}
+                  </a>
+                </li>
+              );
+            })
+          }
+          {
+            secondaryKeys.map((key) => {
+              const href = sectionHref(lang, key);
+              const isActive = currentPath === href;
+              return (
+                <li>
+                  <a href={href} aria-current={isActive ? 'page' : undefined}>
+                    {dict.nav[key]}
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<!--
+  Внешний vanilla-модуль из public/js — отдаётся со 'self' (script-src 'self', §18).
+  is:inline + src оставляет тег как есть (без инлайна), чтобы строгий CSP без
+  'unsafe-inline' не блокировал меню. defer-семантика модуля — DOM уже готов.
+-->
+<script is:inline type="module" src="/js/menu.js"></script>
+<!-- Уплотнение шапки при скролле — внешний vanilla-модуль со 'self' (§18), без inline. -->
+<script is:inline type="module" src="/js/header-scroll.js"></script>
+
+<style>
+  .site-header {
+    /* -webkit-sticky — для старых iOS Safari, где без префикса шапка «уезжает»
+       при скролле (Astro не автопрефиксит scoped-стили). */
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--surface-card); /* белый (§10) */
+    border-bottom: 1px solid var(--border-wine); /* тонкая вино-линия */
+    /* При скролле — мягкое уплотнение (тень) через data-scrolled от header-scroll.js.
+       transform/opacity-only: меняется только box-shadow, layout не двигается → 0 CLS. */
+    transition: box-shadow var(--dur) var(--ease-standard);
+  }
+  .site-header[data-scrolled] {
+    box-shadow: var(--shadow-raised);
+  }
+  /* Мобайл: шапка НЕ закреплена — уезжает со страницей при скролле (решение
+     владельца 2026-06-18: закреплённая мешала чтению). НО оставляем
+     position:relative + z-index, иначе пропадает stacking-context и выпадашка
+     меню красится ПОД контентом (выглядит как «меню не открывается»). */
+  @media (max-width: 767px) {
+    .site-header {
+      position: relative;
+      z-index: 50;
+    }
+    .site-header[data-scrolled] {
+      box-shadow: none;
+    }
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    max-width: var(--container-wide);
+    margin: 0 auto;
+    padding: var(--space-3) var(--space-4);
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-xl);
+    color: var(--color-wine);
+    text-decoration: none;
+    white-space: nowrap;
+    /* даёт бренду сжиматься в флексе, чтобы строка шапки не уезжала за экран. */
+    min-width: 0;
+  }
+  /* Флаг Грузии у названия: тонкая рамка, чтобы белый край был виден на белой шапке. */
+  .brand__flag {
+    flex: none;
+    display: block;
+    width: 48px;
+    height: 32px;
+    border: 1px solid var(--border-hairline);
+    border-radius: 2px;
+  }
+
+  /* Основные разделы в строке — только десктоп (≥1024px). */
+  .nav-inline {
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .nav-inline {
+      display: block;
+    }
+  }
+  .nav-inline ul {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .nav-inline a {
+    color: var(--text-body); /* сланец */
+    text-decoration: none;
+    font-size: var(--text-base);
+    font-weight: 500;
+    white-space: nowrap;
+    transition: color var(--dur-fast) var(--ease-standard);
+  }
+  .nav-inline a:hover,
+  .nav-inline a:focus-visible {
+    color: var(--color-wine);
+  }
+  .nav-inline a[aria-current='page'] {
+    color: var(--color-wine);
+    font-weight: 600;
+  }
+
+  /* Группа «язык» прижата вправо (бренд и основные разделы — слева). */
+  .bar__lang {
+    margin-left: auto;
+  }
+
+  /* Кнопка-меню + выпадашка. */
+  .menu {
+    position: relative;
+  }
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    background: transparent;
+    border: 1px solid var(--border-hairline);
+    border-radius: var(--radius-card);
+    color: var(--text-body);
+    cursor: pointer;
+    transition:
+      color var(--dur-fast) var(--ease-standard),
+      border-color var(--dur-fast) var(--ease-standard);
+  }
+  .menu-toggle:hover,
+  .menu-toggle:focus-visible {
+    border-color: var(--color-wine);
+    color: var(--color-wine);
+  }
+  /* Видимая подпись «Menu» на десктопе (аудит NAV-3): безымянный ☰ — антипаттерн
+     discoverability. На мобайле скрыта (тесно), там икона + sr-only-имя. */
+  .menu-toggle__text {
+    display: none;
+    font-weight: 600;
+    font-size: var(--text-sm);
+  }
+  @media (min-width: 768px) {
+    .menu-toggle {
+      width: auto;
+      gap: var(--space-2);
+      padding-inline: var(--space-3);
+    }
+    .menu-toggle__text {
+      display: inline;
+    }
+  }
+  .menu-toggle__open,
+  .menu-toggle__close {
+    display: inline-flex;
+  }
+  /* По умолчанию виден гамбургер; при открытом меню — крестик. */
+  .menu-toggle__close {
+    display: none;
+  }
+  .menu-toggle[aria-expanded='true'] .menu-toggle__open {
+    display: none;
+  }
+  .menu-toggle[aria-expanded='true'] .menu-toggle__close {
+    display: inline-flex;
+  }
+
+  /* Компактный блок-выпадашка справа под кнопкой (НЕ на всю ширину). */
+  .nav {
+    position: absolute;
+    top: calc(100% + var(--space-2));
+    right: 0;
+    min-width: 13rem;
+    max-width: min(20rem, calc(100vw - 2 * var(--space-4)));
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-widget);
+    box-shadow: var(--shadow-raised);
+    padding: var(--space-2);
+    /* Плавное появление; закрыто — приподнято/прозрачно, вне tab-порядка.
+       transform/opacity-only → ноль CLS. */
+    opacity: 0;
+    transform: translateY(-8px);
+    visibility: hidden;
+    transition:
+      opacity var(--dur) var(--ease-standard),
+      transform var(--dur) var(--ease-out),
+      visibility 0s linear var(--dur);
+  }
+  .nav.is-open {
+    opacity: 1;
+    transform: none;
+    visibility: visible;
+    transition:
+      opacity var(--dur) var(--ease-out),
+      transform var(--dur-slow) var(--ease-out),
+      visibility 0s;
+  }
+  .nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .nav a {
+    display: block;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-card);
+    color: var(--text-body);
+    text-decoration: none;
+    font-size: var(--text-base);
+    font-weight: 500;
+    white-space: nowrap;
+    transition:
+      background-color var(--dur-fast) var(--ease-standard),
+      color var(--dur-fast) var(--ease-standard);
+  }
+  .nav a:hover,
+  .nav a:focus-visible {
+    background: var(--surface-hover);
+    color: var(--color-wine);
+  }
+  .nav a[aria-current='page'] {
+    color: var(--color-wine);
+    font-weight: 600;
+  }
+  /* Основные разделы в выпадашке нужны только на мобайле — на десктопе они в строке. */
+  @media (min-width: 1024px) {
+    .nav__primary {
+      display: none;
+    }
+  }
+
+  /*
+   * Компактная шапка на узких экранах (§15: 70%+ трафика — телефоны).
+   * Бренд (широкий шрифт Unbounded) + 3-язычный переключатель + кнопка-меню
+   * не помещались в строку на ~360px и уезжали за экран (горизонтальный скролл).
+   * Тут ужимаем флаг/шрифт/отступы и РАЗРЕШАЕМ перенос названия на 2 строки —
+   * строка шапки больше не переполняет вьюпорт.
+   */
+  @media (max-width: 600px) {
+    .bar {
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+    }
+    /* Бренд — единственный, кто сжимается: язык и кнопка-меню остаются целыми и
+       видимыми, а длинное название при нехватке места переносится на 2 строки. */
+    .brand {
+      font-size: var(--text-base);
+      white-space: normal;
+      line-height: 1.1;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .brand span {
+      min-width: 0;
+    }
+    .brand__flag {
+      width: 32px;
+      height: 21px;
+    }
+    .bar__lang,
+    .menu {
+      flex: 0 0 auto;
+    }
+  }
+</style>

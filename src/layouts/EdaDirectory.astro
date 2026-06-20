@@ -1,0 +1,702 @@
+---
+/**
+ * EdaDirectory (§8.6) — директория «Где поесть».
+ * Один компонент для ru (`/eda/`) и uk (`/uk/eda/`) — язык приходит пропсом,
+ * весь текст из словарей (§12). Данные — из коллекции `restaurants` (§11),
+ * фильтр по lang + не draft.
+ *
+ * Состав (§8.6): H1 + вводный текст → фильтры (город · район · кухня · ценник)
+ * → сетка RestaurantCard. Город — один из фильтров (переключатель),
+ * показывается, только когда городов несколько.
+ *
+ * Фильтрация — нативный vanilla JS (/js/eda-filter.js) по уже отрендеренным
+ * карточкам через data-атрибуты (§15, CSP script-src 'self'). Деградация без
+ * JS — все карточки видны.
+ *
+ * Schema.org (§14): ItemList из Restaurant (name/address/geo/priceRange) +
+ * BreadcrumbList. Чужие рейтинги в разметку НЕ кладём (ToS, §15).
+ *
+ * R3: коллекция наполнена ОБРАЗЦАМИ шаблона (явно помечены «Образец», не
+ * реальные места) — для приёмки директории; на запуске (R4) заменяются
+ * проверенными местами.
+ */
+import { getCollectionSafe } from '../loaders/getCollectionSafe';
+import { clampDesc } from '../lib/text';
+import {
+  t,
+  format,
+  formatDate,
+  sectionHref,
+  articleHref,
+  DEFAULT_LANG,
+  EDA_CITY_PAGES,
+  CUISINE_KEY_SLUGS,
+  type Lang,
+  type CuisineKeySlug,
+} from '../i18n';
+import BaseLayout from './BaseLayout.astro';
+import RestaurantCard from '../components/RestaurantCard.astro';
+import AffiliateBox from '../components/AffiliateBox.astro';
+import Icon from '../components/Icon.astro';
+import EmptyHint from '../components/EmptyHint.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const dict = t(lang);
+
+const pageTitle = `${dict.eda.heading} — ${dict.siteName}`;
+const description = clampDesc(dict.eda.lead);
+
+const SITE = Astro.site ?? new URL('https://georgiaguidebook.com');
+const pageUrl = new URL(Astro.url.pathname, SITE).href;
+const homeUrl = new URL(sectionHref(lang, 'home'), SITE).href;
+
+/** Места этого языка, не черновики (§11). На R3 это образцы шаблона. */
+const places = await getCollectionSafe(
+  'restaurants',
+  (entry) => entry.data.lang === lang && entry.data.draft !== true,
+);
+
+// Кросс-ссылка на «Что попробовать» с фолбэком на ru, если en-перевода ещё нет (§12).
+const articlesAll = await getCollectionSafe('articles', (entry) => entry.data.draft !== true);
+const cuisineHref = articleHref(
+  articlesAll.some(
+    (e) => e.data.lang === lang && e.data.category === 'eda' && e.data.slug === 'chto-poprobovat',
+  )
+    ? lang
+    : DEFAULT_LANG,
+  'eda',
+  'chto-poprobovat',
+);
+
+/**
+ * Спонсорское размещение активно, если флаг стоит и срок не истёк на момент
+ * сборки (§16): платная карточка сама «гаснет» после sponsoredUntil.
+ */
+const buildNow = new Date();
+const isSponsored = (p: (typeof places)[number]): boolean =>
+  p.data.sponsored === true && (!p.data.sponsoredUntil || p.data.sponsoredUntil >= buildNow);
+
+/**
+ * Порядок (§8.6, §16): спонсоры наверх, затем по городу, затем по названию.
+ * Детерминизм сборки сохранён (тай-брейки стабильны).
+ */
+places.sort((a, b) => {
+  const sa = isSponsored(a) ? 0 : 1;
+  const sb = isSponsored(b) ? 0 : 1;
+  if (sa !== sb) return sa - sb;
+  return a.data.city === b.data.city
+    ? a.data.name.localeCompare(b.data.name, lang)
+    : a.data.city.localeCompare(b.data.city, lang);
+});
+
+const hasPlaces = places.length > 0;
+
+/** OG-картинка директории (§14): обложка первого места с фото. */
+const ogImage = places.find((p) => p.data.cover)?.data.cover?.src;
+
+/**
+ * Группировка по городам (§8.6): карточки сгруппированы под заголовком города в
+ * заданном порядке (Тбилиси → Батуми → Кутаиси → По дороге); внутри города
+ * порядок наследуется из places.sort (спонсоры выше, затем по названию).
+ * Заменяет фильтр по городу — город теперь виден как заголовок секции.
+ */
+const CITY_ORDER =
+  lang === 'uk'
+    ? ['Тбілісі', 'Батумі', 'Кутаїсі', 'У дорозі']
+    : lang === 'en'
+      ? ['Tbilisi', 'Batumi', 'Kutaisi', 'En route']
+      : ['Тбилиси', 'Батуми', 'Кутаиси', 'По дороге'];
+const cityRank = (city: string): number => {
+  const i = CITY_ORDER.indexOf(city);
+  return i === -1 ? CITY_ORDER.length : i;
+};
+const cityGroups: { city: string; items: typeof places }[] = [];
+for (const p of places) {
+  let g = cityGroups.find((x) => x.city === p.data.city);
+  if (!g) {
+    g = { city: p.data.city, items: [] };
+    cityGroups.push(g);
+  }
+  g.items.push(p);
+}
+cityGroups.sort(
+  (a, b) => cityRank(a.city) - cityRank(b.city) || a.city.localeCompare(b.city, lang),
+);
+
+/**
+ * Кухня в фильтре — по язык-нейтральному cuisineKey (аудит 2026-06-20): чип
+ * локализуется (dict.eda.cuisineKeys), порядок — канонический CUISINE_KEY_SLUGS,
+ * только реально встречающиеся ключи. Карточка по-прежнему выводит полную строку
+ * p.data.cuisine, а матчинг фильтра идёт по ключу (data-cuisine = cuisineKey).
+ */
+const cuisineKeys: CuisineKeySlug[] = CUISINE_KEY_SLUGS.filter((k) =>
+  places.some((p) => p.data.cuisineKey === k),
+);
+/** Ценники — в фиксированном порядке возрастания, только реально встречающиеся. */
+const PRICE_ORDER = ['₾', '₾₾', '₾₾₾'];
+const prices = PRICE_ORDER.filter((lvl) => places.some((p) => p.data.priceLevel === lvl));
+
+/** Опция фасета: value — для data-атрибута и матчинга, label — видимый текст. */
+type FacetOption = { value: string; label: string };
+
+/**
+ * Фасеты-чипы (§8.6): город · кухня · ценник. Рендерим фасет только при ≥2
+ * значениях. data-facet ↔ data-{facet} на карточке; матчинг по option.value.
+ */
+const filterDefs = [
+  cityGroups.length > 1
+    ? {
+        key: 'city',
+        label: dict.eda.filters.cityLabel,
+        options: cityGroups.map((g) => ({ value: g.city, label: g.city })),
+      }
+    : null,
+  cuisineKeys.length > 1
+    ? {
+        key: 'cuisine',
+        label: dict.eda.filters.cuisineLabel,
+        options: cuisineKeys.map((k) => ({ value: k, label: dict.eda.cuisineKeys[k] })),
+      }
+    : null,
+  prices.length > 1
+    ? {
+        key: 'price',
+        label: dict.eda.filters.priceLabel,
+        options: prices.map((p) => ({ value: p, label: p })),
+      }
+    : null,
+].filter((d): d is { key: string; label: string; options: FacetOption[] } => d !== null);
+
+const hasFilters = filterDefs.length > 0;
+
+/** Маппинг ценника в schema.org priceRange (§14). */
+const priceRangeFor = (lvl: string): string =>
+  lvl === '₾' ? 'inexpensive' : lvl === '₾₾' ? 'moderate' : 'expensive';
+
+/**
+ * JSON-LD (§14): ItemList с Restaurant-элементами + BreadcrumbList.
+ * Чужие рейтинги/отзывы в разметку НЕ кладём (ToS, §15) — только наши поля.
+ */
+const itemListLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: dict.eda.heading,
+  itemListElement: places.map((p, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    item: {
+      '@type': 'Restaurant',
+      name: p.data.name,
+      priceRange: priceRangeFor(p.data.priceLevel),
+      ...(p.data.cuisine ? { servesCuisine: p.data.cuisine } : {}),
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: p.data.city,
+        addressCountry: 'GE',
+        ...(p.data.geo.address ? { streetAddress: p.data.geo.address } : {}),
+      },
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: p.data.geo.coord[0],
+        longitude: p.data.geo.coord[1],
+      },
+      hasMap: p.data.mapUrl,
+    },
+  })),
+};
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: dict.eda.breadcrumbHome,
+      item: homeUrl,
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: dict.nav.eda,
+      item: pageUrl,
+    },
+  ],
+};
+---
+
+<BaseLayout title={pageTitle} description={description} lang={lang} image={ogImage}>
+  {/* schema.org: ItemList(Restaurant) + BreadcrumbList (§14) */}
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
+  {
+    hasPlaces && (
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(itemListLd)} />
+    )
+  }
+
+  <div class="eda" data-eda>
+    <div class="container">
+      {/* Крошки (BreadcrumbList отрисован выше как JSON-LD) */}
+      <nav class="crumbs" aria-label={dict.breadcrumbs.aria}>
+        <a href={sectionHref(lang, 'home')}>{dict.eda.breadcrumbHome}</a>
+        <span class="crumbs__sep" aria-hidden="true">/</span>
+        <span aria-current="page">{dict.nav.eda}</span>
+      </nav>
+
+      <header class="head" data-reveal>
+        <h1 class="head__title">{dict.eda.heading}</h1>
+        <p class="head__lead">{dict.eda.lead}</p>
+        <a class="head__guide" href={cuisineHref}>
+          <Icon name="utensils" size={18} class="head__guide-icon" />
+          <span>{dict.eda.cuisineGuide}</span>
+          <Icon name="arrow-right" size={16} />
+        </a>
+      </header>
+
+      {/* По городам — ссылки на per-city страницы (§8.6, воронка + перелинковка). */}
+      <nav class="cities" aria-label={dict.eda.cityPages.navHeading} data-reveal>
+        <span class="cities__label">{dict.eda.cityPages.navHeading}:</span>
+        <ul class="cities__list">
+          {
+            EDA_CITY_PAGES.map((c) => (
+              <li>
+                <a class="cities__link" href={articleHref(lang, 'eda', c.slug)}>
+                  {dict.eda.cityPages.items[c.key].cityName}
+                  <Icon name="arrow-right" size={14} />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      {/* Дисклеймер: ниже карточки-ОБРАЗЦЫ, не реальные места (CLAUDE правило 4) */}
+      {
+        hasPlaces && (
+          <aside class="selection" role="note" data-reveal>
+            <Icon name="star" size={20} class="selection__icon" />
+            <div>
+              <p class="selection__heading">{dict.eda.selectionHeading}</p>
+              <p class="selection__text">{dict.eda.selectionNote}</p>
+            </div>
+          </aside>
+        )
+      }
+
+      {/* Фильтры — нативный JS (/js/eda-filter.js). Без JS остаются видны, но статичны. */}
+      {
+        hasPlaces && hasFilters && (
+          <div class="filterbar" data-reveal>
+            <div class="filterbar__facets" role="group" aria-label={dict.eda.filtersLegend}>
+              {filterDefs.map((def) => (
+                <fieldset class="facet">
+                  <legend class="facet__label">{def.label}</legend>
+                  <div class="facet__chips">
+                    {def.options.map((opt) => (
+                      <button
+                        type="button"
+                        class="chip"
+                        data-eda-chip
+                        data-facet={def.key}
+                        data-value={opt.value}
+                        aria-pressed="false"
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                  {def.key === 'price' && <p class="facet__hint">{dict.eda.priceHint}</p>}
+                </fieldset>
+              ))}
+            </div>
+            <button type="button" class="filterbar__clear" data-eda-clear hidden>
+              {dict.eda.filters.reset}
+            </button>
+          </div>
+        )
+      }
+
+      {/* Счётчик результатов (обновляет JS); без JS показывает стартовое число */}
+      {
+        hasPlaces && (
+          <p
+            class="count"
+            data-eda-count
+            data-count-template={dict.eda.resultsCount}
+            aria-live="polite"
+          >
+            {format(dict.eda.resultsCount, { count: String(places.length) })}
+          </p>
+        )
+      }
+
+      {
+        hasPlaces ? (
+          <>
+            {cityGroups.map((group) => (
+              <section class="city-group" data-eda-group={group.city}>
+                <h2 class="city-group__title">{group.city}</h2>
+                <div class="grid">
+                  {group.items.map((p) => (
+                    <div
+                      data-eda-card
+                      data-city={p.data.city}
+                      data-district={p.data.district ?? ''}
+                      data-cuisine={p.data.cuisineKey ?? ''}
+                      data-price={p.data.priceLevel}
+                    >
+                      <RestaurantCard
+                        lang={lang}
+                        anchorId={`r-${p.data.slug}`}
+                        name={p.data.name}
+                        priceLevel={p.data.priceLevel}
+                        district={p.data.district}
+                        cuisine={p.data.cuisine}
+                        summary={p.data.summary}
+                        ratingNote={p.data.ratingNote}
+                        mapUrl={p.data.mapUrl}
+                        verifiedDate={formatDate(p.data.verifiedAt, lang)}
+                        cover={p.data.cover}
+                        coverCredit={p.data.coverCredit}
+                        coverIllustrative={p.data.coverIllustrative}
+                        gallery={p.data.gallery}
+                        hours={p.data.hours}
+                        dishes={p.data.dishes}
+                        sponsored={isSponsored(p)}
+                        qualityMark={p.data.qualityMark}
+                        website={p.data.website}
+                        instagram={p.data.instagram}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ))}
+            {/* Пустое состояние фильтрации — показывает JS, если ничего не подошло */}
+            <p class="empty" data-eda-empty hidden>
+              {dict.eda.emptyFiltered}
+            </p>
+          </>
+        ) : (
+          <EmptyHint text={dict.eda.emptyNoData} />
+        )
+      }
+
+      {/* Воронка §16: жильё рядом с проверенными местами (один бокс на хаб). */}
+      {
+        hasPlaces && (
+          <div class="eda-lodging" data-reveal>
+            <AffiliateBox
+              lang={lang}
+              partner="trip-hotels"
+              slug="eda"
+              title={dict.eda.lodgingHeading}
+              label={dict.actions.more}
+              note={dict.eda.lodgingNote}
+            />
+          </div>
+        )
+      }
+    </div>
+  </div>
+
+  {/* Внешние vanilla-модули из public/js (script-src 'self', §18) — без инлайна. */}
+  <script is:inline type="module" src="/js/eda-filter.js"></script>
+  <script is:inline type="module" src="/js/rcard-gallery.js"></script>
+  <script is:inline type="module" src="/js/lightbox.js"></script>
+  <script is:inline type="module" src="/js/card-deeplink.js"></script>
+</BaseLayout>
+
+<style>
+  .container {
+    max-width: var(--container-content);
+    margin: 0 auto;
+    padding-inline: var(--space-4);
+  }
+  .eda {
+    padding-block: var(--space-8) var(--space-12);
+  }
+
+  /* Крошки */
+  .crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    margin-bottom: var(--space-6);
+  }
+  .crumbs a {
+    color: var(--link);
+    text-decoration: none;
+  }
+  .crumbs a:hover,
+  .crumbs a:focus-visible {
+    color: var(--link-hover);
+  }
+  .crumbs__sep {
+    color: var(--border-card);
+  }
+
+  /* Заголовок + лид */
+  .head {
+    margin-bottom: var(--space-8);
+  }
+  .head__title {
+    font-size: var(--text-3xl);
+    margin: 0;
+  }
+  .head__lead {
+    margin: var(--space-4) 0 0;
+    font-size: var(--text-lg);
+    color: var(--text-body);
+    max-width: 62ch;
+  }
+  .head__guide {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+    font-weight: 500;
+    color: var(--link);
+    text-decoration: none;
+    transition: color var(--dur) var(--ease-standard);
+  }
+  .head__guide:hover,
+  .head__guide:focus-visible {
+    color: var(--link-hover);
+  }
+  .head__guide :global(svg) {
+    flex: none;
+  }
+  .head__guide-icon {
+    color: var(--color-wine);
+  }
+  @media (min-width: 768px) {
+    .head__title {
+      font-size: var(--text-4xl);
+    }
+  }
+
+  /* По городам — компактный ряд ссылок на per-city страницы */
+  .cities {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-4);
+    margin-bottom: var(--space-8);
+  }
+  .cities__label {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+  .cities__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-3);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .cities__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-3);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-pill);
+    color: var(--text-body);
+    font-weight: 500;
+    text-decoration: none;
+    transition:
+      border-color var(--dur) var(--ease-standard),
+      color var(--dur) var(--ease-standard);
+  }
+  .cities__link:hover,
+  .cities__link:focus-visible {
+    border-color: var(--color-wine);
+    color: var(--color-wine);
+  }
+  .cities__link :global(svg) {
+    color: var(--color-wine);
+    flex: none;
+  }
+
+  /* Блок «как мы отбираем» — сигнал доверия (§15), не похож на заглушку. */
+  .selection {
+    display: flex;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    margin-bottom: var(--space-8);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-left: 3px solid var(--color-wine);
+    border-radius: var(--radius-card);
+  }
+  .selection__icon {
+    color: var(--color-sun);
+    fill: var(--color-sun);
+    flex: none;
+    margin-top: 2px;
+  }
+  .selection__heading {
+    margin: 0 0 var(--space-1);
+    font-weight: 600;
+    color: var(--text-body);
+  }
+  .selection__text {
+    margin: 0;
+    font-size: var(--text-base);
+    color: var(--text-muted);
+    max-width: 72ch;
+  }
+
+  /* Фильтр-бар — чипы (редизайн §8.6): фасеты город · кухня · ценник. */
+  .filterbar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+  .filterbar__facets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-6);
+  }
+  .facet {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-inline-size: 0;
+  }
+  .facet__label {
+    padding: 0;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+  .facet__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  /* Видимая легенда ценового фильтра (₾/₾₾/₾₾₾) — tooltip на тач не всплывает. */
+  .facet__hint {
+    margin: var(--space-2) 0 0;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .chip {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-body);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-pill);
+    padding: var(--space-1) var(--space-3);
+    cursor: pointer;
+    transition:
+      border-color var(--dur) var(--ease-standard),
+      background-color var(--dur) var(--ease-standard),
+      color var(--dur) var(--ease-standard);
+  }
+  .chip:hover {
+    border-color: var(--color-wine);
+  }
+  .chip[aria-pressed='true'] {
+    color: var(--color-white);
+    background: var(--color-wine);
+    border-color: var(--color-wine);
+  }
+  .filterbar__clear {
+    align-self: flex-start;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--link);
+    background: transparent;
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-pill);
+    padding: var(--space-1) var(--space-3);
+    cursor: pointer;
+    transition:
+      border-color var(--dur) var(--ease-standard),
+      color var(--dur) var(--ease-standard);
+  }
+  .filterbar__clear:hover,
+  .filterbar__clear:focus-visible {
+    border-color: var(--color-wine);
+    color: var(--link-hover);
+  }
+
+  /* Счётчик результатов */
+  .count {
+    margin: 0 0 var(--space-6);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  /* Группа города (§8.6): заголовок + сетка карточек этого города. */
+  .city-group {
+    margin-bottom: var(--space-12);
+  }
+  .city-group:last-of-type {
+    margin-bottom: 0;
+  }
+  .city-group__title {
+    font-size: var(--text-2xl);
+    margin: 0 0 var(--space-6);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--border-hairline);
+  }
+  /* Скрытая группа (все карточки отфильтрованы) — прячет JS. */
+  .city-group[hidden] {
+    display: none;
+  }
+
+  /* Сетка карточек */
+  .grid {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 640px) {
+    .grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 1024px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* Пустые состояния */
+  .empty {
+    margin: var(--space-8) 0 0;
+    padding: var(--space-6);
+    background: var(--surface-card);
+    border: 1px dashed var(--border-card);
+    border-radius: var(--radius-card);
+    color: var(--text-muted);
+    text-align: center;
+  }
+
+  /* Бокс жилья под директорией (воронка §16). */
+  .eda-lodging {
+    margin-top: var(--space-12);
+    max-width: var(--container-prose);
+  }
+
+</style>

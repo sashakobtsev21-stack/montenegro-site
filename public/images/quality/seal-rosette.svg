@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Знак качества">
+  <defs><radialGradient id="g" cx="50%" cy="34%" r="72%"><stop offset="0" stop-color="#F7DF9A"/><stop offset=".55" stop-color="#D8B05A"/><stop offset="1" stop-color="#A67E2E"/></radialGradient></defs>
+  <path d="M50 78 L40 112 L52 104 L58 116 L66 84 Z" fill="#5c1f30"/>
+  <path d="M70 78 L80 112 L68 104 L62 116 L54 84 Z" fill="#5c1f30"/>
+  <path d="M60.0 1.0 L67.8 11.7 L78.8 4.3 L82.5 17.0 L95.4 13.9 L94.5 27.1 L107.6 28.5 L102.3 40.6 L114.2 46.4 L105.0 56.0 L114.2 65.6 L102.3 71.4 L107.6 83.5 L94.5 84.9 L95.4 98.1 L82.5 95.0 L78.8 107.7 L67.8 100.3 L60.0 111.0 L52.2 100.3 L41.2 107.7 L37.5 95.0 L24.6 98.1 L25.5 84.9 L12.4 83.5 L17.7 71.4 L5.8 65.6 L15.0 56.0 L5.8 46.4 L17.7 40.6 L12.4 28.5 L25.5 27.1 L24.6 13.9 L37.5 17.0 L41.2 4.3 L52.2 11.7 Z" fill="url(#g)"/>
+  <circle cx="60" cy="56" r="40" fill="#6e2639" stroke="url(#g)" stroke-width="2.5"/>
+  <path d="M60.0 34.0 L65.3 48.7 L80.9 49.2 L68.6 58.8 L72.9 73.8 L60.0 65.0 L47.1 73.8 L51.4 58.8 L39.1 49.2 L54.7 48.7 Z" fill="url(#g)" stroke="#8a6a28" stroke-width=".5"/>
+</svg>

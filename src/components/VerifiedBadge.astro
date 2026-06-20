@@ -1,0 +1,114 @@
+---
+/**
+ * VerifiedBadge (§9, §10) — signature всего сайта.
+ * Пилюля: камень-фон + сланец-текст + вино-галочка SVG + «Проверено · {дата}».
+ * Проверка — коллективная (опытные путешественники, гиды, местные), не
+ * авторская, поэтому опциональный `photo` трактуется как ФОТО МЕСТА, а не
+ * автора. Без фото — просто пилюля с датой.
+ * Вариант 'updated' даёт «Обновлено · {дата}» (без отсылки к месту).
+ * Опциональный `caption` — мелкая подпись-расшифровка под пилюлей
+ * («опытными путешественниками, гидами и местными»).
+ *
+ * Props типизированы как публичный API (шаблоны R3 передают сюда реальные
+ * verifiedAt/updatedAt). Дата приходит уже отформатированной строкой —
+ * локаль/формат решает вызывающий код, компонент ничего не выдумывает.
+ */
+import { t, format, type Lang } from '../i18n';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Lang;
+  /** Готовая строка даты (например «12 июня 2026»). Обязательна. */
+  date: string;
+  /** 'verified' — «Проверено · {дата}»; 'updated' — «Обновлено · {дата}». */
+  variant?: 'verified' | 'updated';
+  /** Опциональное фото МЕСТА (не автора). Нет — пилюля без миниатюры. */
+  photo?: { src: string; alt?: string };
+  /** Показать мелкую подпись-расшифровку под пилюлей. */
+  withCaption?: boolean;
+  /** Компактный вид: ✓ + «Проверено», без даты/фото/расшифровки (для карточек). */
+  compact?: boolean;
+}
+
+const { lang, date, variant = 'verified', photo, withCaption = false, compact = false } = Astro.props;
+const dict = t(lang);
+
+const isVerified = variant === 'verified';
+const label = compact
+  ? dict.verified.short
+  : format(isVerified ? dict.verified.inPlace : dict.verified.updated, { date });
+const photoAlt = photo?.alt ?? dict.verified.photoAlt;
+const showCaption = withCaption && isVerified && !compact;
+---
+
+<span class="badge-wrap">
+  <span class:list={['badge', { 'badge--compact': compact }]} data-variant={variant}>
+    {
+      !compact && photo && (
+        <img
+          class="badge__photo"
+          src={photo.src}
+          alt={photoAlt}
+          width="28"
+          height="28"
+          loading="lazy"
+        />
+      )
+    }
+    <Icon name="check" size={compact ? 14 : 16} class="badge__check" />
+    <span class="badge__text">{label}</span>
+  </span>
+  {showCaption && <span class="badge__caption">{dict.verified.caption}</span>}
+</span>
+
+<style>
+  .badge-wrap {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-1);
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-3);
+    padding-inline-start: var(--space-2);
+    background: var(--surface-page); /* камень */
+    color: var(--text-body); /* сланец */
+    border: 1px solid var(--border-hairline);
+    border-radius: var(--radius-pill);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    line-height: 1.3;
+  }
+  /* Компактный вид для карточек: плотнее, без даты/фото/расшифровки. */
+  .badge--compact {
+    gap: var(--space-1);
+    padding: 1px var(--space-2);
+    font-weight: 600;
+  }
+  .badge__caption {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    line-height: 1.3;
+    padding-inline-start: var(--space-1);
+  }
+  .badge__photo {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-pill);
+    object-fit: cover;
+    flex: none;
+    margin-inline-start: calc(-1 * var(--space-1));
+  }
+  .badge__check {
+    color: var(--color-wine); /* вино-галочка */
+    flex: none;
+  }
+  .badge__text {
+    /* без nowrap: «Проверено · {дата}» — локализованная строка; на узких экранах
+       пусть переносится, чтобы пилюля не выпирала за край рядом с фото-аватаром. */
+    overflow-wrap: anywhere;
+  }
+</style>

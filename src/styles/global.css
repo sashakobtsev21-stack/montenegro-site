@@ -1,0 +1,230 @@
+/*
+ * Глобальный стиль — точка входа Tailwind 4.
+ * tokens.css — единственный источник значений (§10); здесь они
+ * пробрасываются в Tailwind через @theme, чтобы стать utility-классами.
+ */
+@import './tokens.css';
+@import './fonts.css';
+@import 'tailwindcss';
+
+@theme {
+  /* Палитра (§10) → bg-wine / text-slate / ... */
+  --color-wine: var(--color-wine);
+  --color-sun: var(--color-sun);
+  --color-slate: var(--color-slate);
+  --color-stone: var(--color-stone);
+
+  /* Шрифтовые семейства (§10) → font-display / font-body */
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+
+  /* Брейкпоинты (§10), mobile-first */
+  --breakpoint-xs: 360px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+
+  /* Радиусы (§10) */
+  --radius-card: 0.5rem;
+  --radius-widget: 1rem;
+  --radius-pill: 999px;
+}
+
+:root {
+  color-scheme: light; /* тёмная тема не делается (§10) */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--text-lg);
+  line-height: var(--leading-body);
+  color: var(--text-body);
+  background-color: var(--surface-page); /* камень — «бумажный» фон (§10) */
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* Страховка от случайного горизонтального скролла на мобайле: clip (НЕ hidden)
+     не создаёт скролл-контейнер → не ломает position: sticky шапки (§9). */
+  overflow-x: clip;
+}
+
+/* Заголовки H1/H2 — Unbounded вином, спокойно (направление «Полевой журнал»). */
+h1,
+h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--text-heading);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  /* длинное слово в крупном заголовке не должно давать горизонтальный скролл на ~320px */
+  overflow-wrap: break-word;
+}
+
+h3,
+h4 {
+  font-family: var(--font-body);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-body);
+  overflow-wrap: break-word;
+}
+
+a {
+  color: var(--link);
+}
+
+a:hover {
+  color: var(--link-hover);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Видимый focus на весь сайт (§15, доступность). */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Доступность (§15): класс для визуально скрытого, но доступного скринридерам
+   контента + «skip to content», который проявляется при фокусе. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sr-only.focus\:not-sr-only:focus-visible {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* Плавающая «наверх» на длинных страницах (аудит 2026-06-20). Скрыта (hidden),
+   JS показывает после прокрутки; тач-зона 44px (§6/§15). */
+.to-top {
+  position: fixed;
+  right: var(--space-4);
+  bottom: var(--space-4);
+  z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--color-white);
+  background: var(--color-wine);
+  border: 1px solid color-mix(in srgb, black 18%, var(--color-wine));
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-raised);
+  cursor: pointer;
+  transition: background-color var(--dur) var(--ease-standard);
+}
+.to-top:hover,
+.to-top:focus-visible {
+  background: color-mix(in srgb, var(--color-wine) 85%, black);
+}
+
+/*
+ * --- Слой движения (ui-ux-pro-max §7) ---
+ * Reveal при скролле и stagger-вход hero.
+ *
+ * FOUC-safe инвариант: «скрытое» начальное состояние навешивается ТОЛЬКО когда
+ * есть JS И движение разрешено. Класс `.js-anim` ставит на <html> внешний модуль
+ * (public/js/reveal.js) синхронно ещё до рендера контента — и только если
+ * matchMedia('(prefers-reduced-motion: reduce)') === false. Без JS, при reduced-motion
+ * или до постановки класса контент сразу видим и статичен — ничего не прячется.
+ */
+
+/* Reveal-секции: скрыты только при .js-anim. */
+.js-anim [data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+  /* stagger детей задаёт reveal.js через inline transition-delay (transform/opacity) */
+  will-change: transform, opacity;
+}
+.js-anim [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* Hero-вход: stagger fade+rise, только при .js-anim, проигрывается раз. */
+.js-anim [data-hero-stagger] > * {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: hero-rise var(--dur-slow) var(--ease-out) forwards;
+}
+@keyframes hero-rise {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Анимированное подчёркивание ссылок (::after scaleX 0→1, origin left, §7). */
+.u-underline {
+  position: relative;
+}
+.u-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1.5px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 160ms var(--ease-standard);
+}
+.u-underline:hover::after,
+.u-underline:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/*
+ * Доступность (§15): уважаем prefers-reduced-motion на весь сайт.
+ * Глушим длительности И отменяем «скрытые» начальные состояния reveal/hero, чтобы
+ * при reduce контент был статичен и сразу видим (страховка поверх JS-гейта).
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .js-anim [data-reveal],
+  .js-anim [data-hero-stagger] > * {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+}

@@ -1,0 +1,25 @@
+---
+/**
+ * EmptyHint (§9) — ненавязчивая подсказка для пустого/наполняемого раздела.
+ * НЕ явный блок-плейсхолдер (карточка с иконкой по центру), а тихая строка-намёк
+ * сбоку: приглушённый текст с тонким вино-акцентом слева, без рамки и центрирования.
+ * Решение владельца 2026-06-16 («раздел наполняется» — подсказкой, не блоком).
+ */
+interface Props {
+  text: string;
+}
+const { text } = Astro.props;
+---
+
+<p class="empty-hint" role="note">{text}</p>
+
+<style>
+  .empty-hint {
+    margin: var(--space-4) 0 0;
+    max-width: 60ch;
+    padding: var(--space-1) 0 var(--space-1) var(--space-3);
+    border-left: 2px solid var(--border-wine);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+</style>

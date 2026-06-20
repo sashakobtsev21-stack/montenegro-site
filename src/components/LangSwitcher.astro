@@ -1,0 +1,99 @@
+---
+/**
+ * LangSwitcher (§9, §12) — переключатель языков на ту же страницу другого языка.
+ * Показывает все ДОСТУПНЫЕ для страницы языки (availableLangs): текущий — активный,
+ * остальные — ссылки на зеркальный путь (mirrorPath). en появляется только там,
+ * где перевод есть (контентные шаблоны передают availableLangs).
+ */
+import { t, format, mirrorPath, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  availableLangs?: Lang[];
+}
+const { lang, availableLangs = ['ru', 'uk', 'en'] } = Astro.props;
+const dict = t(lang);
+
+/** Короткий лейбл + эндоним языка (для кнопки и aria-label). */
+const LANG_META: Record<Lang, { label: string; name: string }> = {
+  ru: { label: 'РУ', name: 'Русский' },
+  uk: { label: 'УК', name: 'Українська' },
+  en: { label: 'EN', name: 'English' },
+};
+
+const path = Astro.url.pathname;
+const others = availableLangs.filter((l) => l !== lang);
+---
+
+<div class="lang" aria-label={dict.lang.label}>
+  <span class="lang__current" aria-current="true">{LANG_META[lang].label}</span>
+  {
+    others.map((l) => (
+      <>
+        <span class="lang__sep" aria-hidden="true">|</span>
+        <a
+          class="lang__link u-underline"
+          hreflang={l}
+          href={mirrorPath(path, l)}
+          lang={l}
+          aria-label={format(dict.lang.switchTo, { lang: LANG_META[l].name })}
+        >
+          {LANG_META[l].label}
+        </a>
+      </>
+    ))
+  }
+</div>
+
+<style>
+  .lang {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+  .lang__current {
+    /* активная «пилюля» состояния — мягкая вино-заливка, плавный переход. */
+    color: var(--color-wine);
+    background: color-mix(in srgb, var(--color-wine) 10%, transparent);
+    border-radius: var(--radius-pill);
+    padding: 2px var(--space-2);
+    transition:
+      background-color var(--dur) var(--ease-standard),
+      color var(--dur) var(--ease-standard);
+  }
+  .lang__sep {
+    color: var(--text-muted);
+  }
+  .lang__link {
+    color: var(--link);
+    text-decoration: none;
+    padding: 2px var(--space-2);
+    transition: color 160ms var(--ease-standard);
+  }
+  .lang__link:hover,
+  .lang__link:focus-visible {
+    color: var(--link-hover);
+  }
+
+  /* Узкие экраны: компактнее, чтобы строка шапки помещалась (бренд+язык+меню). */
+  @media (max-width: 600px) {
+    .lang {
+      font-size: 0.8125rem;
+      gap: var(--space-1);
+    }
+    /* Тач-зона ≥44px (смена языка — частое первичное действие, §6/§15). */
+    .lang__current,
+    .lang__link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 0 var(--space-2);
+    }
+    /* На тач разделители убираем — крупные тап-зоны + gap разводят языки. */
+    .lang__sep {
+      display: none;
+    }
+  }
+</style>

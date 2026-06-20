@@ -1,0 +1,409 @@
+---
+/**
+ * AttractionsCatalog (§8.3) — каталог «Что посмотреть».
+ * Один компонент для ru (`/dostoprimechatelnosti/`) и uk
+ * (`/uk/dostoprimechatelnosti/`); язык пропсом, текст из словарей (§12).
+ * Заменяет HubPage для этого раздела: каталог с фильтрами по типу/региону
+ * (образец механики — EdaDirectory §8.6). Мастер-карта на главном экране убрана
+ * по решению владельца — у каждой статьи остаётся своя карта.
+ *
+ * Данные — коллекция `articles`, category=dostoprimechatelnosti, нужный язык,
+ * не draft (§11). Состав: Breadcrumbs → H1 → вводный текст → фильтры (тип +
+ * регион, нативный JS /js/catalog-filter.js по уже отрендеренным карточкам через
+ * data-атрибуты; без JS все видны) → сетка ArticleCard с чипами тип/регион
+ * (переиспользуем ArticleCard `meta`, как для маршрутов) → пустое/разрежённое
+ * состояние.
+ *
+ * Schema.org (§14): BreadcrumbList (через Breadcrumbs). Карточки и карта —
+ * data-driven, ручных списков нет.
+ */
+import { getCollectionSafe } from '../loaders/getCollectionSafe';
+import { clampDesc } from '../lib/text';
+import {
+  t,
+  format,
+  formatDate,
+  articleHref,
+  attractionTypeLabel,
+  regionLabel,
+  ATTRACTION_TYPE_SLUGS,
+  REGION_SLUGS,
+  type Lang,
+} from '../i18n';
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ArticleCard, { type CardMeta } from '../components/ArticleCard.astro';
+import Icon from '../components/Icon.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const dict = t(lang);
+const c = dict.catalog;
+
+const pageTitle = `${c.heading} — ${dict.siteName}`;
+const description = clampDesc(c.intro[0]);
+
+/** Достопримечательности этого языка, не черновики (§11). */
+const places = await getCollectionSafe(
+  'articles',
+  (entry) =>
+    entry.data.lang === lang &&
+    entry.data.category === 'dostoprimechatelnosti' &&
+    entry.data.draft !== true,
+);
+
+/** Детерминированный порядок (§21): новее → старее, при равенстве по slug. */
+places.sort((a, b) => {
+  const diff = b.data.publishedAt.getTime() - a.data.publishedAt.getTime();
+  return diff !== 0 ? diff : a.data.slug.localeCompare(b.data.slug);
+});
+
+const hasPlaces = places.length > 0;
+
+/** Карточка каталога: данные для ArticleCard + data-атрибуты фильтра. */
+interface CatalogCard {
+  key: string;
+  href: string;
+  title: string;
+  cardDescription: string;
+  /** Обложка опциональна (§11): часть мест каталога без фото — карточка без картинки. */
+  cover?: { src: string; alt: string };
+  date: string;
+  verified: 'verified' | 'updated';
+  verifiedPhoto?: { src: string; alt?: string };
+  /** Слаг типа/региона (для data-атрибутов фильтра); пусто, если не задан. */
+  typeSlug: string;
+  regionSlug: string;
+  /** Чипы тип/регион для ArticleCard meta (лейблы локализованы). */
+  meta: CardMeta[];
+  gallery?: { src: string; alt: string; credit?: string }[];
+}
+
+const cards: CatalogCard[] = places.map((entry) => {
+  const d = entry.data;
+  const meta: CardMeta[] = [];
+  if (d.attractionType) {
+    meta.push({ icon: 'compass', text: attractionTypeLabel(lang, d.attractionType) });
+  }
+  if (d.region) {
+    meta.push({ icon: 'map-pin', text: regionLabel(lang, d.region) });
+  }
+  return {
+    key: entry.id,
+    href: articleHref(lang, 'dostoprimechatelnosti', d.slug),
+    title: d.title,
+    cardDescription: d.description,
+    cover: d.cover,
+    date: formatDate(d.verifiedAt ?? d.updatedAt, lang),
+    verified: d.verifiedAt ? 'verified' : 'updated',
+    verifiedPhoto: d.verifiedPhoto,
+    typeSlug: d.attractionType ?? '',
+    regionSlug: d.region ?? '',
+    meta,
+    gallery: d.gallery,
+  };
+});
+
+/**
+ * Опции фильтров — только реально встречающиеся слаги, в каноническом порядке
+ * (ATTRACTION_TYPE_SLUGS / REGION_SLUGS), чтобы порядок был детерминирован и
+ * не зависел от порядка карточек. value = слаг (совпадает с data-атрибутом).
+ */
+interface FilterOption {
+  value: string;
+  label: string;
+}
+interface FilterDef {
+  key: string;
+  label: string;
+  options: FilterOption[];
+}
+
+const presentTypes = new Set(places.map((p) => p.data.attractionType).filter(Boolean));
+const presentRegions = new Set(places.map((p) => p.data.region).filter(Boolean));
+
+const typeOptions: FilterOption[] = ATTRACTION_TYPE_SLUGS.filter((s) => presentTypes.has(s)).map(
+  (s) => ({ value: s, label: attractionTypeLabel(lang, s) }),
+);
+const regionOptions: FilterOption[] = REGION_SLUGS.filter((s) => presentRegions.has(s)).map(
+  (s) => ({
+    value: s,
+    label: regionLabel(lang, s),
+  }),
+);
+
+/** Фильтр показываем, только если есть из чего выбирать (>1 значения). */
+const filterDefs: FilterDef[] = [
+  typeOptions.length > 1 ? { key: 'type', label: c.typeLabel, options: typeOptions } : null,
+  regionOptions.length > 1 ? { key: 'region', label: c.regionLabel, options: regionOptions } : null,
+].filter((d): d is FilterDef => d !== null);
+const hasFilters = filterDefs.length > 0;
+
+/** OG-картинка каталога (§14): обложка первой достопримечательности с фото. */
+const ogImage = cards.find((c) => c.cover)?.cover?.src;
+
+/** ItemList (§14): структурированный список достопримечательностей — rich-результаты. */
+const SITE = Astro.site ?? new URL('https://georgiaguidebook.com');
+const itemListLd = hasPlaces
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: c.heading,
+      itemListElement: places.map((entry, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        item: {
+          '@type': 'TouristAttraction',
+          name: entry.data.title,
+          url: new URL(articleHref(lang, 'dostoprimechatelnosti', entry.data.slug), SITE).href,
+          ...(entry.data.geo
+            ? {
+                geo: {
+                  '@type': 'GeoCoordinates',
+                  latitude: entry.data.geo.coord[0],
+                  longitude: entry.data.geo.coord[1],
+                },
+              }
+            : {}),
+        },
+      })),
+    }
+  : null;
+---
+
+<BaseLayout title={pageTitle} description={description} lang={lang} image={ogImage}>
+  {itemListLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(itemListLd)} />}
+  <div class="catalog" data-catalog>
+    <div class="container">
+      <Breadcrumbs lang={lang} items={[{ label: dict.nav.dostoprimechatelnosti }]} />
+
+      <header class="head" data-reveal>
+        <h1 class="head__title">{c.heading}</h1>
+        <div class="head__intro">
+          {c.intro.map((p) => <p>{p}</p>)}
+        </div>
+      </header>
+
+      {/* Фильтры — нативный JS (/js/catalog-filter.js). Без JS видны, но статичны. */}
+      {
+        hasPlaces && hasFilters && (
+          <form class="filters" data-reveal aria-label={c.filtersLegend}>
+            {filterDefs.map((def) => (
+              <label class="filters__field">
+                <span class="filters__label">{def.label}</span>
+                <select class="filters__select" data-catalog-filter={def.key}>
+                  <option value="">{c.anyOption}</option>
+                  {def.options.map((opt) => (
+                    <option value={opt.value}>{opt.label}</option>
+                  ))}
+                </select>
+              </label>
+            ))}
+            <button type="button" class="filters__reset" data-catalog-reset>
+              {c.reset}
+            </button>
+          </form>
+        )
+      }
+
+      {/* Счётчик результатов (обновляет JS); без JS — стартовое число. */}
+      {
+        hasPlaces && (
+          <p
+            class="count"
+            data-catalog-count
+            data-count-template={c.resultsCount}
+            aria-live="polite"
+          >
+            {format(c.resultsCount, { count: String(cards.length) })}
+          </p>
+        )
+      }
+
+      <section class="list" aria-labelledby="catalog-list-heading">
+        <h2 id="catalog-list-heading" class="list__heading">{c.listHeading}</h2>
+        {
+          hasPlaces ? (
+            <>
+              <div class="grid">
+                {cards.map((card) => (
+                  <div data-catalog-card data-type={card.typeSlug} data-region={card.regionSlug}>
+                    <ArticleCard
+                      lang={lang}
+                      href={card.href}
+                      title={card.title}
+                      description={card.cardDescription}
+                      cover={card.cover}
+                      date={card.date}
+                      verified={card.verified}
+                      verifiedPhoto={card.verifiedPhoto}
+                      meta={card.meta}
+                      gallery={card.gallery}
+                    />
+                  </div>
+                ))}
+              </div>
+              {/* Пустое состояние фильтрации — показывает JS, если ничего не подошло. */}
+              <p class="empty" data-catalog-empty hidden>
+                {c.emptyFiltered}
+              </p>
+            </>
+          ) : (
+            <div class="empty-block">
+              <Icon name="mountain" size={28} class="empty-block__icon" />
+              <p class="empty-block__text">{c.emptyNoData}</p>
+            </div>
+          )
+        }
+      </section>
+    </div>
+  </div>
+
+  {/* Внешний vanilla-модуль фильтров (script-src 'self', §18) — без инлайна. */}
+  <script is:inline type="module" src="/js/catalog-filter.js"></script>
+  {/* Карусель фото в карточках-миниатюрах (места с галереей). */}
+  <script is:inline type="module" src="/js/rcard-gallery.js"></script>
+</BaseLayout>
+
+<style>
+  .container {
+    max-width: var(--container-content);
+    margin: 0 auto;
+    padding-inline: var(--space-4);
+  }
+  .catalog {
+    padding-block: var(--space-8) var(--space-12);
+  }
+
+  .head {
+    margin-bottom: var(--space-8);
+  }
+  .head__title {
+    font-size: var(--text-3xl);
+    margin: 0 0 var(--space-6);
+  }
+  @media (min-width: 768px) {
+    .head__title {
+      font-size: var(--text-4xl);
+    }
+  }
+  .head__intro {
+    display: grid;
+    gap: var(--space-4);
+    max-width: 68ch;
+  }
+  .head__intro :global(p) {
+    margin: 0;
+    font-size: var(--text-lg);
+    color: var(--text-body);
+  }
+
+  /* Фильтры (та же механика и вид, что у директории еды). */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+  .filters__field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+  }
+  .filters__label {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-body);
+  }
+  .filters__select {
+    appearance: none;
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    color: var(--text-body);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-card);
+    padding: var(--space-2) var(--space-4) var(--space-2) var(--space-3);
+    cursor: pointer;
+    transition: border-color var(--dur) var(--ease-standard);
+  }
+  .filters__select:hover {
+    border-color: var(--color-wine);
+  }
+  .filters__reset {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--link);
+    background: transparent;
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-card);
+    padding: var(--space-2) var(--space-4);
+    cursor: pointer;
+    transition:
+      border-color var(--dur) var(--ease-standard),
+      color var(--dur) var(--ease-standard);
+  }
+  .filters__reset:hover,
+  .filters__reset:focus-visible {
+    border-color: var(--color-wine);
+    color: var(--link-hover);
+  }
+
+  .count {
+    margin: 0 0 var(--space-6);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  .list__heading {
+    font-size: var(--text-2xl);
+    margin: 0 0 var(--space-6);
+  }
+  .grid {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 640px) {
+    .grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 1024px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .empty {
+    margin: var(--space-8) 0 0;
+    padding: var(--space-6);
+    background: var(--surface-card);
+    border: 1px dashed var(--border-card);
+    border-radius: var(--radius-card);
+    color: var(--text-muted);
+    text-align: center;
+  }
+  .empty-block {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-8);
+    background: var(--surface-card);
+    border: 1px dashed var(--border-card);
+    border-radius: var(--radius-card);
+  }
+  .empty-block__icon {
+    color: var(--color-wine);
+    flex: none;
+  }
+  .empty-block__text {
+    margin: 0;
+    color: var(--text-muted);
+  }
+</style>

@@ -1,0 +1,42 @@
+name: Daily news rebuild
+
+# Зачем: список новостей фильтруется по дате СБОРКИ (NewsPage: Date.now() −
+# publishedAt ≤ 10 дней) + клиентский фильтр свежести. Между деплоями серверный
+# список/sitemap «застывают». Этот workflow раз в сутки делает ПУСТОЙ коммит в
+# main → Cloudflare Workers Build видит push и пересобирает сайт → старые новости
+# (>10 дней) уходят из ленты и sitemap, серверный список снова свежий.
+#
+# Почему пустой коммит, а не Deploy Hook: Cloudflare **Workers Builds** (наш
+# деплой, git-connected) НЕ поддерживает deploy hooks — сборку триггерит только
+# git push. Поэтому пушим пустой коммит. Настройка владельцу НЕ нужна (работает на
+# стандартном GITHUB_TOKEN). Проверить вручную: Actions → этот workflow → Run workflow.
+#
+# Альтернатива без пустых коммитов (если не нравятся записи в истории): деплой
+# из Actions через `wrangler deploy` + секрет CLOUDFLARE_API_TOKEN — см. HANDOFF.md.
+
+on:
+  schedule:
+    - cron: '0 5 * * *' # ежедневно 05:00 UTC
+  workflow_dispatch: {} # ручной запуск из вкладки Actions
+
+permissions:
+  contents: write # нужно для git push пустого коммита
+
+concurrency:
+  group: daily-news-rebuild
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    name: Empty commit → Cloudflare rebuild
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - name: Push empty commit (triggers Cloudflare build)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit --allow-empty -m "chore(news): ежедневный rebuild ленты новостей [auto]"
+          git push

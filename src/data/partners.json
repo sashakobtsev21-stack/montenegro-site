@@ -1,0 +1,46 @@
+{
+  "$schema-note": "Карта партнёров для /go/ (SPEC §16). Ключ — партнёр из URL /go/{partner}. urlTemplate — целевой URL с плейсхолдером {subid}, куда подставляется ?c={slug} клика (SubID для атрибуции). Прямые URL партнёрок в контенте запрещены — только через /go/. Подключено: Trip.com (Allianceid 8701645, SID 319548076, trip_sub3 D17960553); {subid} идёт в trip_sub1. Localrent, Aviasales, Airalo — трекинг-ссылки Travelpayouts (*.tpx.gr) с SubID: {subid} подставляется в ?sub_id= (slug-источник клика). ⚠️ EKTA — ВРЕМЕННО прямой URL ektatraveling.com (без атрибуции): присланная tpx.gr-ссылка вела на VisitorsCoverage (p=4552) с ошибкой «marker is not subscribed»; заменить на корректную трекинг-ссылку EKTA из кабинета Travelpayouts (вступить в программу EKTA), тогда вернуть ?sub_id={subid}+allowSubId:true. Авиабилеты — aviasales (trip-flights не используется). Trip.com (carhire/hotels/tours/transfers) без изменений (Booking на ревью). См. SPEC §16.",
+  "fallback": "/",
+  "partners": {
+    "trip-carhire": {
+      "urlTemplate": "https://www.trip.com/carhire/?Allianceid=8701645&SID=319548076&trip_sub1={subid}&trip_sub3=D17960553",
+      "allowSubId": true
+    },
+    "trip-flights": {
+      "urlTemplate": "https://www.trip.com/flights/?Allianceid=8701645&SID=319548076&trip_sub1={subid}&trip_sub3=D17960553",
+      "allowSubId": true
+    },
+    "trip-hotels": {
+      "urlTemplate": "https://www.trip.com/hotels?Allianceid=8701645&SID=319548076&trip_sub1={subid}&trip_sub3=D17960553",
+      "allowSubId": true
+    },
+    "trip-transfers": {
+      "urlTemplate": "https://www.trip.com/airport-transfers/?Allianceid=8701645&SID=319548076&trip_sub1={subid}&trip_sub3=D17960553",
+      "allowSubId": true
+    },
+    "trip-tours": {
+      "urlTemplate": "https://www.trip.com/package-tours/list?tab=1261&kwd=Georgia&poid=&poitype=&kwdfrom=srch&Allianceid=8701645&SID=319548076&trip_sub1={subid}&trip_sub3=D17960553",
+      "allowSubId": true
+    },
+    "safetywing": {
+      "urlTemplate": "https://safetywing.com/?referenceID=26545532&utm_source=26545532&utm_medium=Ambassador",
+      "allowSubId": false
+    },
+    "airalo": {
+      "urlTemplate": "https://airalo.tpx.gr/TzzHNa8l?sub_id={subid}",
+      "allowSubId": true
+    },
+    "ekta": {
+      "urlTemplate": "https://ektatraveling.com/",
+      "allowSubId": false
+    },
+    "localrent": {
+      "urlTemplate": "https://localrent.tpx.gr/UQ6UCamv?sub_id={subid}",
+      "allowSubId": true
+    },
+    "aviasales": {
+      "urlTemplate": "https://aviasales.tpx.gr/LvwXGMXr?sub_id={subid}",
+      "allowSubId": true
+    }
+  }
+}

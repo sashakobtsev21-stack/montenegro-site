@@ -1,0 +1,613 @@
+---
+/**
+ * RestaurantCard (§9) — карточка места в директории «Где поесть» (§8.6).
+ * Направление «Полевой журнал»: белая поверхность, тонкая рамка, радиус 8,
+ * hover-подъём на transform/opacity (ноль CLS, как у ArticleCard/SectionTile).
+ *
+ * Состав (§8.6): название (Unbounded) → строка-мета (район · кухня · ценник
+ * ₾/₾₾/₾₾₾) → 1–2 строки нашего описания (summary) → строка-ориентир рейтинга
+ * (ratingNote, текстом) → VerifiedBadge «Проверено · {дата}» → ссылка «На карте».
+ *
+ * ВАЖНО (ToS, §15): чужие рейтинги и число отзывов дословно НЕ публикуем —
+ * сюда приходит уже наш текст-ориентир («высокий рейтинг 4.X+ по {источникам}»)
+ * + ссылка на карту, где читатель видит актуальную оценку источника сам.
+ *
+ * Опц. фото МЕСТА (не автора) — через astro:assets (webp/avif, lazy, ≤200КБ,
+ * §15). У образцов R3 фото нет → карточка рендерится без миниатюры.
+ *
+ * Props типизированы как публичный API: директория передаёт сюда поля записи
+ * коллекции `restaurants` (§11), дата уже отформатирована строкой (формат/локаль
+ * решает вызывающий код).
+ */
+import { t, format, type Lang } from '../i18n';
+import Icon from './Icon.astro';
+import VerifiedBadge from './VerifiedBadge.astro';
+import coverVariants from '../data/cover-variants.json';
+
+interface Props {
+  lang: Lang;
+  name: string;
+  /** Ценник-ориентир: ₾ / ₾₾ / ₾₾₾ (§11). */
+  priceLevel: string;
+  district?: string;
+  cuisine?: string;
+  /** Наше честное описание места, 1–2 строки (§8.6). */
+  summary: string;
+  /** Текст-ориентир рейтинга «4.X+ по {источникам}» — НЕ чужие цифры (§15). */
+  ratingNote: string;
+  /** Ссылка на место на карте (OSM/Google). Внешняя. */
+  mapUrl: string;
+  /** Готовая строка даты «Проверено · {date}» (§9) — хранится, в карточке НЕ показывается (всегда компактная метка). */
+  verifiedDate: string;
+  /** Опц. обложка места: путь к webp + alt (§18). Нет — карточка без миниатюры. */
+  cover?: { src: string; alt: string };
+  /** Опц. часы работы (§8.6) — строка из надёжного источника. */
+  hours?: string;
+  /** Опц. цены на основные позиции (§8.6) — ориентиры, не прайс-лист. */
+  dishes?: { name: string; price: string; note?: string }[];
+  /** Спонсорское размещение (§16) → бейдж «Партнёр». */
+  sponsored?: boolean;
+  /** Атрибуция обложки (CC/чужое фото, §18). */
+  coverCredit?: string;
+  /** Обложка — жанровая иллюстрация (не фото самого заведения, §15) → бейдж «Иллюстрация». */
+  coverIllustrative?: boolean;
+  /** Доп. фото места для переключаемой галереи (§8.6): {src,alt,credit?}. */
+  gallery?: { src: string; alt: string; credit?: string }[];
+  /** Якорь карточки для глубоких ссылок из витрины (`#r-{slug}`) — переход
+   *  центрирует и подсвечивает это место (`/js/card-deeplink.js`). */
+  anchorId?: string;
+  /** Знак качества (золотая медаль) на обложке — ТОЛЬКО по запросу владельца. */
+  qualityMark?: boolean;
+  /** Личный сайт заведения — кнопка «Сайт» рядом с «На карте». */
+  website?: string;
+  /** Instagram заведения — кнопка «Instagram». */
+  instagram?: string;
+}
+
+const {
+  lang,
+  name,
+  priceLevel,
+  district,
+  cuisine,
+  summary,
+  ratingNote,
+  mapUrl,
+  verifiedDate,
+  cover,
+  hours,
+  dishes,
+  sponsored = false,
+  coverCredit,
+  coverIllustrative = false,
+  gallery,
+  anchorId,
+  qualityMark = false,
+  website,
+  instagram,
+} = Astro.props;
+const dict = t(lang);
+
+const mapAria = format(dict.eda.onMapAria, { name });
+/** Ссылка-кнопка заведения: Instagram (если ссылка на инстаграм) или «Сайт». */
+const isInstagram = !!website && website.includes('instagram.com');
+
+/**
+ * Слайды переключаемой галереи (§8.6): обложка + доп. фото, максимум 5.
+ * Фото только свои или CC/с разрешения заведения (§18, копирайт). Нет фото —
+ * блок не рисуется. Переключение — внешний модуль /js/rcard-gallery.js (CSP self).
+ */
+const slides = [
+  ...(cover ? [{ src: cover.src, alt: cover.alt, credit: coverCredit }] : []),
+  ...(gallery ?? []),
+].slice(0, 5);
+---
+
+<article class="rcard" id={anchorId}>
+  {qualityMark && (
+    <img
+      class="rcard__quality"
+      src="/images/quality/seal-gold.webp"
+      alt=""
+      aria-hidden="true"
+      width="62"
+      height="62"
+      loading="lazy"
+      decoding="async"
+    />
+  )}
+  {
+    slides.length > 0 && (
+      <div
+        class="rcard__gallery"
+        data-rcard-gallery
+        data-gallery
+        data-close={dict.gallery.close}
+        data-prev={dict.gallery.prev}
+        data-next={dict.gallery.next}
+      >
+        {slides.map((s, i) => (
+          <figure class="rcard__slide" data-rcard-slide hidden={i !== 0}>
+            <button
+              type="button"
+              class="rcard__zoom"
+              data-gallery-item
+              data-full={s.src}
+              data-alt={s.alt}
+              data-credit={s.credit ?? ''}
+              aria-label={s.alt}
+            >
+            <img
+              class="rcard__photo"
+              src={s.src}
+              srcset={(coverVariants as Record<string, string>)[s.src]}
+              sizes="(max-width: 600px) 100vw, 380px"
+              alt={s.alt}
+              width="640"
+              height="360"
+              loading="lazy"
+              decoding="async"
+            />
+            </button>
+            {s.credit && <figcaption class="rcard__credit">{s.credit}</figcaption>}
+          </figure>
+        ))}
+        {coverIllustrative && (
+          <span class="rcard__illustrative">{dict.eda.illustrativeBadge}</span>
+        )}
+        {slides.length > 1 && (
+          <>
+            <button
+              type="button"
+              class="rcard__nav rcard__nav--prev"
+              data-rcard-prev
+              aria-label={dict.gallery.prev}
+            >
+              <Icon name="arrow-right" size={18} />
+            </button>
+            <button
+              type="button"
+              class="rcard__nav rcard__nav--next"
+              data-rcard-next
+              aria-label={dict.gallery.next}
+            >
+              <Icon name="arrow-right" size={18} />
+            </button>
+            <div class="rcard__dots" aria-hidden="true">
+              {slides.map((_, i) => (
+                <span class:list={['rcard__dot', { 'is-active': i === 0 }]} data-rcard-dot />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+    )
+  }
+  <div class="rcard__body">
+    {sponsored && <span class="rcard__sponsored">{dict.eda.sponsoredBadge}</span>}
+    <h3 class="rcard__name">{name}</h3>
+
+    <div class="rcard__badges">
+      {district && <span class="rcard__badge">{district}</span>}
+      {cuisine && <span class="rcard__badge">{cuisine}</span>}
+      <span class="rcard__badge rcard__badge--price" title={dict.eda.priceHint}>{priceLevel}</span>
+    </div>
+
+    <p class="rcard__summary">{summary}</p>
+
+    {
+      dishes && dishes.length > 0 && (
+        <div class="rcard__dishes">
+          <p class="rcard__dishes-label">
+            {dict.eda.dishesLabel}
+            <span class="rcard__dishes-hint"> · {dict.eda.dishesHint}</span>
+          </p>
+          <ul class="rcard__dishes-list">
+            {dishes.slice(0, 4).map((d) => (
+              <li class="rcard__dish">
+                <span class="rcard__dish-name">{d.name}</span>
+                <span class="rcard__dish-price">{d.price}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+
+    {
+      hours && (
+        <p class="rcard__hours">
+          <Icon name="clock" size={16} class="rcard__hours-icon" />
+          <span>
+            <span class="sr-only">{dict.eda.hoursLabel}: </span>
+            {hours}
+          </span>
+        </p>
+      )
+    }
+
+    <p class="rcard__rating">
+      <Icon name="star" size={16} class="rcard__star" />
+      <span>{ratingNote}</span>
+    </p>
+
+    <div class="rcard__foot">
+      <VerifiedBadge lang={lang} date={verifiedDate} />
+      <a
+        class="rcard__map"
+        href={mapUrl}
+        target="_blank"
+        rel="noopener nofollow"
+        aria-label={mapAria}
+      >
+        <Icon name="map-pin" size={16} />
+        <span>{dict.eda.onMap}</span>
+        <Icon name="arrow-right" size={16} class="rcard__map-arrow" />
+      </a>
+      {website && (
+        <a class="rcard__map rcard__site" href={website} target="_blank" rel="noopener nofollow">
+          <Icon name={isInstagram ? 'instagram' : 'globe'} size={16} />
+          <span>{isInstagram ? 'Instagram' : dict.eda.website}</span>
+        </a>
+      )}
+      {instagram && (
+        <a class="rcard__map rcard__site" href={instagram} target="_blank" rel="noopener nofollow">
+          <Icon name="instagram" size={16} />
+          <span>Instagram</span>
+        </a>
+      )}
+    </div>
+  </div>
+</article>
+
+<style>
+  .rcard {
+    position: relative; /* контекст для знака качества, выходящего за рамку */
+    display: flex;
+    flex-direction: column;
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-card);
+    color: var(--text-body);
+    /* отступ при скролле-к-якорю из витрины (под sticky-шапку). */
+    scroll-margin-top: 96px;
+    scroll-margin-bottom: 24px;
+    /* transform/opacity + цвет — ноль CLS (§15). */
+    transition:
+      border-color var(--dur) var(--ease-standard),
+      box-shadow var(--dur) var(--ease-standard),
+      opacity var(--dur) var(--ease-standard),
+      transform var(--dur) var(--ease-standard);
+  }
+  /* hover-подъём как у других карточек (ArticleCard/SectionTile). */
+  .rcard:hover {
+    border-color: var(--color-wine);
+    box-shadow: var(--shadow-raised);
+    transform: translateY(-3px);
+  }
+  /* Глубокая ссылка из витрины (#r-{slug}): подсветка целевого места +
+     затемнение остальных (класс на <body> ставит /js/card-deeplink.js). */
+  .rcard.is-spotlight {
+    border-color: var(--color-wine);
+    box-shadow:
+      0 0 0 2px color-mix(in srgb, var(--color-gold) 75%, transparent),
+      0 0 22px color-mix(in srgb, var(--color-gold) 65%, transparent),
+      var(--shadow-raised);
+    animation: rcard-spotlight 1.1s var(--ease-standard) 3;
+  }
+  :global(body.is-dimmed) .rcard:not(.is-spotlight) {
+    opacity: 0.32;
+  }
+  @keyframes rcard-spotlight {
+    0%,
+    100% {
+      box-shadow:
+        0 0 0 2px color-mix(in srgb, var(--color-gold) 60%, transparent),
+        0 0 14px color-mix(in srgb, var(--color-gold) 40%, transparent),
+        var(--shadow-raised);
+    }
+    50% {
+      box-shadow:
+        0 0 0 3px color-mix(in srgb, var(--color-gold) 90%, transparent),
+        0 0 30px color-mix(in srgb, var(--color-gold) 80%, transparent),
+        var(--shadow-raised);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rcard.is-spotlight {
+      animation: none;
+    }
+  }
+  /*
+   * Переключаемая галерея (§8.6): фикс. аспект 16:9 → 0 CLS (§15); слайды
+   * абсолютно спозиционированы, активный — без [hidden]. Стрелки/точки поверх.
+   */
+  .rcard__gallery {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: var(--surface-page);
+    overflow: hidden;
+    /* Карточка больше не клипует (знак качества выходит за рамку) — скругляем
+       верхние углы галереи сами, чтобы фото повторяло радиус карточки. */
+    border-radius: calc(var(--radius-card) - 1px) calc(var(--radius-card) - 1px) 0 0;
+  }
+  .rcard__slide {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+  }
+  .rcard__slide[hidden] {
+    display: none;
+  }
+  .rcard__photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  /* Кредит CC поверх фото (§18) — мелкая подпись в углу. */
+  .rcard__credit {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 3px var(--space-2);
+    font-size: 13px;
+    line-height: 1.3;
+    color: var(--color-white);
+    /* Плотный скрим, чтобы белый кредит читался над любым фото (контраст ≥4.5, §6). */
+    background: color-mix(in srgb, var(--color-slate) 72%, transparent);
+    text-shadow: 0 1px 2px color-mix(in srgb, var(--color-slate) 60%, transparent);
+  }
+  /* Бейдж «Иллюстрация» (§15): обложка — жанровое фото блюда, не само заведение. */
+  .rcard__illustrative {
+    position: absolute;
+    top: var(--space-2);
+    left: var(--space-2);
+    z-index: 3;
+    padding: 2px var(--space-2);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-white);
+    background: color-mix(in srgb, var(--color-slate) 70%, transparent);
+    border-radius: var(--radius-pill);
+  }
+  /* Стрелки переключения — прозрачные, проявляются при наведении/фокусе на
+     карточку (сплошной белый фон выглядел грубо). */
+  .rcard__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: var(--color-white);
+    background: color-mix(in srgb, var(--color-slate) 38%, transparent);
+    border: none;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    opacity: 0;
+    transition:
+      opacity var(--dur) var(--ease-standard),
+      background-color var(--dur) var(--ease-standard);
+  }
+  .rcard:hover .rcard__nav,
+  .rcard:focus-within .rcard__nav {
+    opacity: 1;
+  }
+  .rcard__nav:hover,
+  .rcard__nav:focus-visible {
+    opacity: 1;
+    background: color-mix(in srgb, var(--color-slate) 62%, transparent);
+  }
+  /* На тач-устройствах :hover ненадёжен — держим стрелки видимыми. */
+  @media (hover: none) {
+    .rcard__nav {
+      opacity: 1;
+      /* На тач держим контрастный фон (белый глиф ≥3:1, §6). */
+      background: color-mix(in srgb, var(--color-slate) 62%, transparent);
+    }
+  }
+  .rcard__nav--prev {
+    left: var(--space-2);
+  }
+  .rcard__nav--prev :global(svg) {
+    transform: rotate(180deg);
+  }
+  .rcard__nav--next {
+    right: var(--space-2);
+  }
+  /* Точки-индикаторы. */
+  .rcard__dots {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: var(--space-2);
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+  }
+  .rcard__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--color-white) 60%, transparent);
+    box-shadow: 0 0 2px color-mix(in srgb, var(--color-slate) 40%, transparent);
+  }
+  .rcard__dot.is-active {
+    background: var(--color-white);
+  }
+  .rcard__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-4);
+  }
+  /* Бейдж спонсорского размещения (§16) — честная пометка «Партнёр». */
+  .rcard__sponsored {
+    align-self: flex-start;
+    display: inline-block;
+    padding: 2px var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-on-cta);
+    background: var(--cta-bg);
+    border-radius: var(--radius-pill);
+  }
+  .rcard__name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-lg);
+    color: var(--text-heading); /* вино */
+    margin: 0;
+    line-height: 1.2;
+  }
+  /* Цены на основные позиции (§8.6) — ориентиры, не прайс-лист. */
+  .rcard__dishes {
+    margin: var(--space-1) 0;
+  }
+  .rcard__dishes-label {
+    margin: 0 0 var(--space-1);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-body);
+  }
+  .rcard__dishes-hint {
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+  .rcard__dishes-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 2px;
+  }
+  .rcard__dish {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .rcard__dish-price {
+    color: var(--text-body);
+    white-space: nowrap;
+  }
+  .rcard__hours {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .rcard__hours-icon {
+    color: var(--color-wine);
+    flex: none;
+  }
+  .rcard__badges {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0;
+  }
+  .rcard__badge {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    background: var(--surface-page);
+    border: 1px solid var(--border-hairline);
+    border-radius: var(--radius-pill);
+    padding: 1px var(--space-2);
+  }
+  .rcard__badge--price {
+    font-weight: 600;
+    color: var(--text-body);
+    letter-spacing: 0.02em;
+  }
+  .rcard__summary {
+    margin: 0;
+    font-size: var(--text-base);
+    color: var(--text-body);
+  }
+  .rcard__rating {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .rcard__star {
+    color: var(--color-sun);
+    fill: var(--color-sun); /* заполненная звезда-ориентир */
+    flex: none;
+  }
+  .rcard__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-top: var(--space-1);
+  }
+  .rcard__map {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--link);
+    text-decoration: none;
+    transition: color var(--dur) var(--ease-standard);
+  }
+  .rcard__map:hover,
+  .rcard__map:focus-visible {
+    color: var(--link-hover);
+  }
+  .rcard__map :global(svg) {
+    flex: none;
+  }
+  .rcard__map-arrow {
+    transition: transform var(--dur) var(--ease-standard);
+  }
+  .rcard__map:hover .rcard__map-arrow {
+    transform: translateX(3px);
+  }
+  /* Тач-зона ссылок-действий («На карте»/«Сайт»/Instagram) ≥44px (§6/§15). */
+  @media (max-width: 600px) {
+    .rcard__map {
+      min-height: 44px;
+    }
+  }
+  /* Кнопка-зум: клик по фото открывает лайтбокс (§8.1). */
+  .rcard__zoom {
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: zoom-in;
+  }
+  /* Знак качества (медаль) — выходит ЗА правый верхний угол карточки (как в
+     витрине), с золотым свечением. Карточка не клипует (overflow убран). */
+  /* Размер знака ФИКСИРОВАН и одинаков с витриной (62px) — см. CONTENT_GUIDE. */
+  .rcard__quality {
+    position: absolute;
+    top: -16px;
+    right: -14px;
+    z-index: 4;
+    width: 62px;
+    height: 62px;
+    filter: drop-shadow(0 0 6px color-mix(in srgb, var(--color-gold) 82%, transparent))
+      drop-shadow(0 2px 4px color-mix(in srgb, var(--color-slate) 45%, transparent));
+    pointer-events: none;
+  }
+</style>

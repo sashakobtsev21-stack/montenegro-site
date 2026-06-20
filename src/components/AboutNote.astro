@@ -1,0 +1,116 @@
+---
+/**
+ * AboutNote (§9) — пара блоков внизу статьи/маршрута/хаба, ОДИНАКОВОГО размера:
+ *  • слева — «как мы отбираем и проверяем места» (→ /o-sajte/);
+ *  • справа — «Заметили неточность?» (→ /kontakty/, мост к обратной связи).
+ * 2 колонки на десктопе (равная высота), стек на мобайле. Раньше блок обратной
+ * связи был только на /o-sajte/ — теперь он рядом на каждой статье. Строки — из
+ * словаря (§12); рендерится в ArticlePage/RoutePage/InsuranceHub/RelocationHub.
+ */
+import { t, sectionHref, type Lang } from '../i18n';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const dict = t(lang);
+const aboutHref = sectionHref(lang, 'o-sajte');
+const feedbackHref = sectionHref(lang, 'kontakty');
+---
+
+<div class="bottom-notes">
+  <aside class="bnote" aria-labelledby="bnote-about-heading">
+    <span class="bnote__icon"><Icon name="shield" size={22} /></span>
+    <div class="bnote__body">
+      <h2 id="bnote-about-heading" class="bnote__heading">{dict.article.about.heading}</h2>
+      <p class="bnote__text">{dict.article.about.text}</p>
+      <a class="bnote__link" href={aboutHref}>
+        {dict.article.about.link}
+        <Icon name="arrow-right" size={16} />
+      </a>
+    </div>
+  </aside>
+  <aside class="bnote" aria-labelledby="bnote-feedback-heading">
+    <span class="bnote__icon"><Icon name="users" size={22} /></span>
+    <div class="bnote__body">
+      <h2 id="bnote-feedback-heading" class="bnote__heading">{dict.about.feedback.heading}</h2>
+      <p class="bnote__text">{dict.about.feedback.text}</p>
+      <a class="bnote__link" href={feedbackHref}>
+        {dict.about.feedback.link}
+        <Icon name="arrow-right" size={16} />
+      </a>
+    </div>
+  </aside>
+</div>
+
+<style>
+  .bottom-notes {
+    display: grid;
+    gap: var(--space-4);
+    margin-block: var(--space-12);
+  }
+  @media (min-width: 768px) {
+    .bottom-notes {
+      grid-template-columns: 1fr 1fr;
+      align-items: stretch;
+    }
+  }
+  /* Две карточки одинакового размера (одна редакционная сетка). */
+  .bnote {
+    display: flex;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-widget);
+  }
+  .bnote__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    flex: none;
+    border-radius: var(--radius-pill);
+    background: var(--surface-page);
+    color: var(--color-wine);
+  }
+  .bnote__body {
+    min-width: 0;
+  }
+  .bnote__heading {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: var(--text-base);
+    color: var(--text-body);
+    margin: 0 0 var(--space-2);
+  }
+  .bnote__text {
+    margin: 0 0 var(--space-4);
+    font-size: var(--text-sm);
+    line-height: var(--leading-body);
+    color: var(--text-muted);
+  }
+  .bnote__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--link);
+    font-weight: 500;
+    font-size: var(--text-sm);
+    text-decoration: none;
+    transition: color var(--dur) var(--ease-standard);
+  }
+  .bnote__link:hover,
+  .bnote__link:focus-visible {
+    color: var(--link-hover);
+  }
+  .bnote__link :global(svg) {
+    flex: none;
+    transition: transform var(--dur) var(--ease-standard);
+  }
+  .bnote__link:hover :global(svg) {
+    transform: translateX(3px);
+  }
+</style>

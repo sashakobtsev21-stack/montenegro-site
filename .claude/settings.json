@@ -1,0 +1,10 @@
+{
+  "enabledPlugins": {
+    "ruflo-core@ruflo": true,
+    "ruflo-swarm@ruflo": true,
+    "ruflo-testgen@ruflo": true,
+    "ruflo-security-audit@ruflo": true,
+    "ruflo-docs@ruflo": true,
+    "ui-ux-pro-max@ui-ux-pro-max-skill": true
+  }
+}

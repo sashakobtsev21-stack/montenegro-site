@@ -1,0 +1,380 @@
+---
+/**
+ * ArticleCard (§9) — карточка статьи в сетках хабов и главной (§8.3, §8.4).
+ * Плоская, белая, тонкая рамка, радиус 8: обложка сверху → Unbounded-заголовок
+ * вином → строка VerifiedBadge → 1 строка описания.
+ *
+ * Два режима:
+ *  - обычный: вся карточка — одна ссылка `<a>` (как было);
+ *  - КАРУСЕЛЬ (когда передан `gallery` и слайдов >1): листание фото в миниатюре
+ *    (стрелки на наведении + свайп, /js/rcard-gallery.js). Тогда корень —
+ *    `<article>`, фото и тело — отдельные ссылки на статью, а стрелки/точки —
+ *    кнопки вне ссылки (хаб должен подключить /js/rcard-gallery.js).
+ */
+import { t, type Lang } from '../i18n';
+import VerifiedBadge from './VerifiedBadge.astro';
+import Icon from './Icon.astro';
+import type { IconName } from './iconNames';
+import coverVariants from '../data/cover-variants.json';
+
+/** Опциональная мета-строка карточки (например дни/км маршрута, §8.3). */
+export interface CardMeta {
+  icon: IconName;
+  text: string;
+}
+
+interface Props {
+  lang: Lang;
+  href: string;
+  title: string;
+  description?: string;
+  cover?: { src: string; alt: string };
+  /** Готовая строка даты для VerifiedBadge. */
+  date?: string;
+  verified?: 'verified' | 'updated';
+  verifiedPhoto?: { src: string; alt?: string };
+  /** Доп. мета-чипы (дни/км/бюджет маршрута) — опц., карточка маршрута в хабе. */
+  meta?: CardMeta[];
+  /** Знак качества (медаль) — ТОЛЬКО по запросу владельца (как у заведений). */
+  qualityMark?: boolean;
+  /** Доп. фото для карусели в миниатюре (помимо cover). Хаб подключает /js/rcard-gallery.js. */
+  gallery?: { src: string; alt: string; credit?: string }[];
+}
+
+const {
+  lang,
+  href,
+  title,
+  description,
+  cover,
+  date,
+  verified = 'updated',
+  verifiedPhoto,
+  meta = [],
+  qualityMark = false,
+  gallery,
+} = Astro.props;
+const dict = t(lang);
+
+/** Слайды карусели: обложка + доп. фото (макс. 5). Карусель — только если >1. */
+const slides = [
+  ...(cover ? [{ src: cover.src, alt: cover.alt }] : []),
+  ...(gallery ?? []),
+].slice(0, 5);
+const hasCarousel = slides.length > 1;
+const variants = coverVariants as Record<string, string>;
+---
+
+{
+  hasCarousel ? (
+    <article class="card card--carousel">
+      {qualityMark && (
+        <img
+          class="card__quality"
+          src="/images/quality/seal-gold.webp"
+          alt=""
+          aria-hidden="true"
+          width="62"
+          height="62"
+          loading="lazy"
+          decoding="async"
+        />
+      )}
+      <div class="card__media card__media--carousel" data-rcard-gallery>
+        <a class="card__slides" href={href} aria-label={title}>
+          {slides.map((s, i) => (
+            <figure class="card__slide" data-rcard-slide hidden={i !== 0}>
+              <img
+                class="card__cover"
+                src={s.src}
+                srcset={variants[s.src]}
+                sizes="(max-width: 600px) 100vw, 380px"
+                alt={s.alt}
+                loading="lazy"
+                decoding="async"
+                width="640"
+                height="360"
+              />
+            </figure>
+          ))}
+        </a>
+        <button type="button" class="card__nav card__nav--prev" data-rcard-prev aria-label={dict.gallery.prev}>
+          <Icon name="arrow-right" size={18} />
+        </button>
+        <button type="button" class="card__nav card__nav--next" data-rcard-next aria-label={dict.gallery.next}>
+          <Icon name="arrow-right" size={18} />
+        </button>
+        <div class="card__dots" aria-hidden="true">
+          {slides.map((_, i) => (
+            <span class:list={['card__dot', { 'is-active': i === 0 }]} data-rcard-dot />
+          ))}
+        </div>
+      </div>
+      <a class="card__bodylink" href={href}>
+        <div class="card__body">
+          <h3 class="card__title">{title}</h3>
+          {meta.length > 0 && (
+            <ul class="card__meta">
+              {meta.map((m: CardMeta) => (
+                <li class="card__meta-item">
+                  <Icon name={m.icon} size={15} class="card__meta-icon" />
+                  <span>{m.text}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+          {date && <VerifiedBadge lang={lang} date={date} variant={verified} photo={verifiedPhoto} />}
+          {description && <p class="card__desc">{description}</p>}
+        </div>
+      </a>
+    </article>
+  ) : (
+    <a class="card" href={href}>
+      {qualityMark && (
+        <img
+          class="card__quality"
+          src="/images/quality/seal-gold.webp"
+          alt=""
+          aria-hidden="true"
+          width="62"
+          height="62"
+          loading="lazy"
+          decoding="async"
+        />
+      )}
+      {cover && (
+        <span class="card__media">
+          <img
+            class="card__cover"
+            src={cover.src}
+            srcset={variants[cover.src]}
+            sizes="(max-width: 600px) 100vw, 380px"
+            alt={cover.alt}
+            loading="lazy"
+            decoding="async"
+            width="640"
+            height="360"
+          />
+        </span>
+      )}
+      <div class="card__body">
+        <h3 class="card__title">{title}</h3>
+        {meta.length > 0 && (
+          <ul class="card__meta">
+            {meta.map((m: CardMeta) => (
+              <li class="card__meta-item">
+                <Icon name={m.icon} size={15} class="card__meta-icon" />
+                <span>{m.text}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+        {date && <VerifiedBadge lang={lang} date={date} variant={verified} photo={verifiedPhoto} />}
+        {description && <p class="card__desc">{description}</p>}
+      </div>
+    </a>
+  )
+}
+
+<style>
+  .card {
+    position: relative; /* контекст для знака качества, выходящего за рамку */
+    display: flex;
+    flex-direction: column;
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-card);
+    text-decoration: none;
+    color: var(--text-body);
+    cursor: pointer;
+    /* transform/opacity + цвет — ноль CLS (§7). */
+    transition:
+      border-color var(--dur) var(--ease-standard),
+      background-color var(--dur) var(--ease-standard),
+      box-shadow var(--dur) var(--ease-standard),
+      transform var(--dur) var(--ease-standard);
+  }
+  /* hover: подъём + вино-рамка + мягкая тень. */
+  .card:hover {
+    border-color: var(--color-wine);
+    box-shadow: var(--shadow-raised);
+    transform: translateY(-3px);
+  }
+  /* active: лёгкое нажатие. */
+  .card:active {
+    transform: scale(0.99);
+  }
+  /* Медиа-обёртка: clip обложки (карточка больше не overflow:hidden, чтобы знак
+     качества мог выходить за рамку). Скругляем верхние углы под радиус карточки. */
+  .card__media {
+    display: block;
+    overflow: hidden;
+    border-radius: calc(var(--radius-card) - 1px) calc(var(--radius-card) - 1px) 0 0;
+  }
+  .card__cover {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+    /* лёгкий zoom обложки на hover (overflow:hidden у .card__media обрезает). */
+    transition: transform var(--dur-slow) var(--ease-standard);
+  }
+  .card:hover .card__cover {
+    transform: scale(1.03);
+  }
+  /* Знак качества (медаль) — выходит за правый верхний угол, фикс. 62px (как везде). */
+  .card__quality {
+    position: absolute;
+    top: -14px;
+    right: -14px;
+    z-index: 4;
+    width: 62px;
+    height: 62px;
+    filter: drop-shadow(0 0 6px color-mix(in srgb, var(--color-gold) 82%, transparent))
+      drop-shadow(0 2px 4px color-mix(in srgb, var(--color-slate) 45%, transparent));
+    pointer-events: none;
+  }
+
+  /* --- Вариант с каруселью фото (миниатюра в хабе) --- */
+  .card__media--carousel {
+    position: relative;
+    aspect-ratio: 16 / 9;
+  }
+  .card__slides {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+  .card__slide {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+  }
+  .card__slide[hidden] {
+    display: none;
+  }
+  .card--carousel .card__cover {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+  }
+  /* Стрелки листания — полупрозрачные, проявляются на наведении/фокусе. */
+  .card__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: var(--color-white);
+    background: color-mix(in srgb, var(--color-slate) 38%, transparent);
+    border: none;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    opacity: 0;
+    transition:
+      opacity var(--dur) var(--ease-standard),
+      background-color var(--dur) var(--ease-standard);
+  }
+  .card--carousel:hover .card__nav,
+  .card--carousel:focus-within .card__nav {
+    opacity: 1;
+  }
+  .card__nav:hover,
+  .card__nav:focus-visible {
+    opacity: 1;
+    background: color-mix(in srgb, var(--color-slate) 62%, transparent);
+  }
+  @media (hover: none) {
+    .card__nav {
+      opacity: 1;
+    }
+  }
+  .card__nav--prev {
+    left: var(--space-2);
+  }
+  .card__nav--prev :global(svg) {
+    transform: rotate(180deg);
+  }
+  .card__nav--next {
+    right: var(--space-2);
+  }
+  .card__dots {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: var(--space-2);
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+  }
+  .card__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--color-white) 60%, transparent);
+    box-shadow: 0 0 2px color-mix(in srgb, var(--color-slate) 40%, transparent);
+  }
+  .card__dot.is-active {
+    background: var(--color-white);
+  }
+  .card__bodylink {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-4);
+  }
+  .card__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-lg);
+    color: var(--text-heading);
+    margin: 0;
+    line-height: 1.2;
+  }
+  /* Мета-чипы (дни/км маршрута) — компактная строка под заголовком. */
+  .card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .card__meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .card__meta-icon {
+    color: var(--color-wine);
+    flex: none;
+  }
+  .card__desc {
+    margin: 0;
+    font-size: var(--text-base);
+    color: var(--text-muted);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card,
+    .card__cover,
+    .card__nav {
+      transition: none;
+    }
+    .card:hover .card__cover {
+      transform: none;
+    }
+  }
+</style>

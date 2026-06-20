@@ -1,0 +1,458 @@
+---
+/**
+ * ServicesDirectory (§7, /relokatsiya/uslugi/) — директория «Услуги» для
+ * живущих в Грузии (риелторы, клининг, переезд, ремонт, документы, переводчики).
+ * Один компонент для ru/uk (язык пропсом, текст из словарей §12). Данные —
+ * коллекция `services`, нужный язык, не draft (§11). Фильтр по рубрике —
+ * переиспользуем catalog-filter.js (data-catalog*, как в §8.3/§8.6), без своего
+ * JS. Платное размещение `sponsored` → ЗОЛОТАЯ РАМКА как единственный маркёр
+ * (решение владельца 2026-06-16), без бейджа; истекает по sponsoredUntil на
+ * дату сборки. Пустое состояние — честное «наполняется» (CLAUDE правило 4),
+ * без фейковых карточек.
+ *
+ * Schema.org (§14): BreadcrumbList (через Breadcrumbs); canonical/hreflang — в
+ * BaseLayout (§7, §12).
+ */
+import { getCollectionSafe } from '../loaders/getCollectionSafe';
+import {
+  t,
+  sectionHref,
+  serviceRubricLabel,
+  SERVICE_RUBRIC_SLUGS,
+  format,
+  formatDate,
+  type Lang,
+} from '../i18n';
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Icon from '../components/Icon.astro';
+import VerifiedBadge from '../components/VerifiedBadge.astro';
+import EmptyHint from '../components/EmptyHint.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const dict = t(lang);
+const u = dict.uslugi;
+
+const pageTitle = `${u.heading} — ${dict.siteName}`;
+// Обрезка по границе слова (≤155, без обрыва посередине) — SEO description (§14).
+const description =
+  u.intro[0].length <= 155 ? u.intro[0] : u.intro[0].slice(0, 155).replace(/\s+\S*$/, '');
+
+const now = Date.now();
+
+/** Услуги этого языка, не черновики (§11). */
+const all = await getCollectionSafe(
+  'services',
+  (entry) => entry.data.lang === lang && entry.data.draft !== true,
+);
+
+/** Активное спонсорство: sponsored и (нет даты окончания ИЛИ ещё не истекло). */
+const isSponsored = (d: { sponsored: boolean; sponsoredUntil?: Date }): boolean =>
+  d.sponsored && (!d.sponsoredUntil || d.sponsoredUntil.getTime() >= now);
+
+/** Порядок (§16/§21): активные спонсоры наверху (рамка), затем по имени. */
+const items = [...all].sort((a, b) => {
+  const sa = isSponsored(a.data) ? 0 : 1;
+  const sb = isSponsored(b.data) ? 0 : 1;
+  if (sa !== sb) return sa - sb;
+  return a.data.name.localeCompare(b.data.name, lang === 'uk' ? 'uk' : lang === 'en' ? 'en' : 'ru');
+});
+
+const hasItems = items.length > 0;
+/** Реальные (не demo) услуги — demo-примеры не индексируем (noindex остаётся). */
+const hasRealItems = items.some((e) => !e.data.demo);
+
+interface ServiceCard {
+  key: string;
+  name: string;
+  rubricSlug: string;
+  rubricLabel: string;
+  city?: string;
+  summary: string;
+  url?: string;
+  contact?: string;
+  sponsored: boolean;
+  demo: boolean;
+  /** Дата сверки → компактная метка «Проверено» (только у реально сверенных). */
+  verifiedDate?: string;
+}
+
+const cards: ServiceCard[] = items.map((entry) => {
+  const d = entry.data;
+  return {
+    key: entry.id,
+    name: d.name,
+    rubricSlug: d.rubric,
+    rubricLabel: serviceRubricLabel(lang, d.rubric),
+    city: d.city,
+    summary: d.summary,
+    url: d.url,
+    contact: d.contact,
+    sponsored: isSponsored(d),
+    demo: d.demo,
+    verifiedDate: d.verifiedAt ? formatDate(d.verifiedAt, lang) : undefined,
+  };
+});
+
+/** Опции фильтра — только реально встречающиеся рубрики, в каноническом порядке. */
+const present = new Set(items.map((i) => i.data.rubric));
+const rubricOptions = SERVICE_RUBRIC_SLUGS.filter((s) => present.has(s)).map((s) => ({
+  value: s,
+  label: serviceRubricLabel(lang, s),
+}));
+const hasFilter = rubricOptions.length > 1;
+
+const relHref = sectionHref(lang, 'relokatsiya');
+---
+
+<BaseLayout title={pageTitle} description={description} lang={lang} noindex={!hasRealItems}>
+  <div class="uslugi" data-catalog>
+    <div class="container">
+      <Breadcrumbs
+        lang={lang}
+        items={[{ label: dict.relocation.breadcrumb, href: relHref }, { label: u.breadcrumb }]}
+      />
+
+      <header class="head" data-reveal>
+        <h1 class="head__title">{u.heading}</h1>
+        <div class="head__intro">
+          {u.intro.map((p) => <p>{p}</p>)}
+        </div>
+      </header>
+
+      {
+        hasItems && hasFilter && (
+          <form class="filters" data-reveal aria-label={u.filtersLegend}>
+            <label class="filters__field">
+              <span class="filters__label">{u.rubricLabel}</span>
+              <select class="filters__select" data-catalog-filter="rubric">
+                <option value="">{u.anyOption}</option>
+                {rubricOptions.map((opt) => (
+                  <option value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
+            </label>
+            <button type="button" class="filters__reset" data-catalog-reset>
+              {u.reset}
+            </button>
+          </form>
+        )
+      }
+
+      {
+        hasItems && (
+          <p
+            class="count"
+            data-catalog-count
+            data-count-template={u.resultsCount}
+            aria-live="polite"
+          >
+            {format(u.resultsCount, { count: String(cards.length) })}
+          </p>
+        )
+      }
+
+      <section class="list" aria-labelledby="uslugi-list-heading">
+        <h2 id="uslugi-list-heading" class="list__heading">{u.listHeading}</h2>
+        {
+          hasItems ? (
+            <>
+              <div class="grid">
+                {cards.map((card) => (
+                  <article
+                    class:list={['card', { 'card--sponsored': card.sponsored }]}
+                    data-catalog-card
+                    data-rubric={card.rubricSlug}
+                  >
+                    <div class="card__top">
+                      <span class="card__rubric">{card.rubricLabel}</span>
+                      {card.city && <span class="card__city">{card.city}</span>}
+                    </div>
+                    <h3 class="card__name">{card.name}</h3>
+                    {card.verifiedDate && (
+                      <VerifiedBadge lang={lang} date={card.verifiedDate} compact />
+                    )}
+                    <p class="card__summary">{card.summary}</p>
+                    {(card.url || card.contact) && (
+                      <div class="card__contacts">
+                        {card.url && /^https?:\/\//.test(card.url) && (
+                          <a
+                            class="card__link"
+                            href={card.url}
+                            target="_blank"
+                            rel={
+                              card.sponsored ? 'sponsored nofollow noopener' : 'nofollow noopener'
+                            }
+                          >
+                            <Icon name="arrow-right" size={16} />
+                            <span class="u-underline">{u.siteLabel}</span>
+                          </a>
+                        )}
+                        {card.contact && (
+                          <span class="card__contact">
+                            {u.contactLabel}: {card.contact}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </article>
+                ))}
+              </div>
+              <p class="empty" data-catalog-empty hidden>
+                {u.emptyFiltered}
+              </p>
+            </>
+          ) : (
+            <EmptyHint text={u.emptyNoData} />
+          )
+        }
+      </section>
+
+      {/* CTA «Разместить бизнес» — пока через почту (страница /reklama/ с прайсом — позже). */}
+      <section class="cta" data-reveal aria-labelledby="uslugi-cta-heading">
+        <h2 id="uslugi-cta-heading" class="cta__heading">{u.ctaHeading}</h2>
+        <p class="cta__text">{u.ctaText}</p>
+        <a class="cta__btn" href={dict.contacts.channels.emailUrl}>
+          <Icon name="mail" size={18} />
+          {u.ctaLabel}
+        </a>
+      </section>
+    </div>
+  </div>
+
+  {/* Внешний vanilla-модуль фильтров (script-src 'self', §18) — без инлайна. */}
+  <script is:inline type="module" src="/js/catalog-filter.js"></script>
+</BaseLayout>
+
+<style>
+  .container {
+    max-width: var(--container-content);
+    margin: 0 auto;
+    padding-inline: var(--space-4);
+  }
+  .uslugi {
+    padding-block: var(--space-8) var(--space-12);
+  }
+
+  .head {
+    margin-bottom: var(--space-8);
+  }
+  .head__title {
+    font-size: var(--text-3xl);
+    margin: 0 0 var(--space-6);
+  }
+  @media (min-width: 768px) {
+    .head__title {
+      font-size: var(--text-4xl);
+    }
+  }
+  .head__intro {
+    display: grid;
+    gap: var(--space-4);
+    max-width: 68ch;
+  }
+  .head__intro :global(p) {
+    margin: 0;
+    font-size: var(--text-lg);
+    color: var(--text-body);
+  }
+
+  /* Фильтр — та же механика/вид, что у каталога и директории еды. */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+  .filters__field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+  }
+  .filters__label {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-body);
+  }
+  .filters__select {
+    appearance: none;
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    color: var(--text-body);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-card);
+    padding: var(--space-2) var(--space-4) var(--space-2) var(--space-3);
+    cursor: pointer;
+    transition: border-color var(--dur) var(--ease-standard);
+  }
+  .filters__select:hover {
+    border-color: var(--color-wine);
+  }
+  .filters__select:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+    border-color: var(--color-wine);
+  }
+  .filters__reset {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--link);
+    background: transparent;
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-card);
+    padding: var(--space-2) var(--space-4);
+    cursor: pointer;
+    transition:
+      border-color var(--dur) var(--ease-standard),
+      color var(--dur) var(--ease-standard);
+  }
+  .filters__reset:hover,
+  .filters__reset:focus-visible {
+    border-color: var(--color-wine);
+    color: var(--link-hover);
+  }
+
+  .count {
+    margin: 0 0 var(--space-6);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  .list__heading {
+    font-size: var(--text-2xl);
+    margin: 0 0 var(--space-6);
+  }
+  .grid {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 640px) {
+    .grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 1024px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* Карточка услуги; платная — золотая рамка (единственный маркёр, §16). */
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-card);
+  }
+  .card--sponsored {
+    border: 2px solid var(--color-sun);
+  }
+  .card__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-3);
+  }
+  .card__rubric {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-wine);
+  }
+  .card__city {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .card__name {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: var(--text-lg);
+    color: var(--text-body);
+    margin: 0;
+  }
+  .card__summary {
+    margin: 0;
+    color: var(--text-muted);
+  }
+  .card__contacts {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-4);
+    margin-top: var(--space-1);
+    font-size: var(--text-sm);
+  }
+  .card__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--link);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .card__link:hover,
+  .card__link:focus-visible {
+    color: var(--link-hover);
+  }
+  .card__contact {
+    color: var(--text-muted);
+    /* contact — свободная строка (email/URL/телефон без пробелов): не даём ей
+       распирать карточку на узких экранах. */
+    overflow-wrap: anywhere;
+    min-width: 0;
+  }
+
+  .empty {
+    margin: var(--space-8) 0 0;
+    padding: var(--space-6);
+    background: var(--surface-card);
+    border: 1px dashed var(--border-card);
+    border-radius: var(--radius-card);
+    color: var(--text-muted);
+    text-align: center;
+  }
+
+  /* CTA «Ваш сервис здесь?» — приглашение бизнесам (через почту). */
+  .cta {
+    margin-top: var(--space-12);
+    padding: var(--space-6);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-widget);
+    max-width: var(--container-prose);
+  }
+  .cta__heading {
+    font-size: var(--text-xl);
+    margin: 0 0 var(--space-2);
+  }
+  .cta__text {
+    margin: 0 0 var(--space-4);
+    color: var(--text-muted);
+  }
+  .cta__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-6);
+    background: var(--cta-bg);
+    color: var(--text-on-cta);
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: var(--radius-card);
+    transition: background-color var(--dur) var(--ease-standard);
+  }
+  .cta__btn:hover,
+  .cta__btn:focus-visible {
+    background: var(--cta-bg-hover);
+  }
+</style>

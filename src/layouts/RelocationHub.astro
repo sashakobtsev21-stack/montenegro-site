@@ -1,0 +1,489 @@
+---
+/**
+ * RelocationHub (§7, §8.3 — выделенный контент-хаб раздела «Релокация»,
+ * паттерн InsuranceHub). Главная /relokatsiya/: практическое обустройство в
+ * Грузии. Фазовый запуск (решение владельца 2026-06-15):
+ *  - НЕ-регуляторные шаги (жильё, связь, банк, транспорт, страховка) — наш текст;
+ *  - регуляторика (виза/ВНЖ/налоги/бизнес) — НЕ перепечатываем меняющиеся правила
+ *    (CLAUDE правило 4), а ведём на ОФИЦИАЛЬНЫЕ госисточники + дисклеймер.
+ *
+ * Регуляторный Callout с бейджем «Обновлено · {date}» (VerifiedBadge
+ * variant='updated') и оговоркой про актуальность; официальные источники — в
+ * подвале (§14). AffiliateBox — жильё на первое время (trip-hotels, §16).
+ *
+ * Один компонент для ru/uk; язык пропсом, весь текст из словарей (§12).
+ * Schema.org (§14): BreadcrumbList (через Breadcrumbs). canonical и взаимные
+ * hreflang ru↔uk — в BaseLayout (§7, §12). FAQ нет (убран со всего сайта).
+ */
+import { t, sectionHref, articleHref, formatDate, type Lang, type SectionKey } from '../i18n';
+import { clampDesc } from '../lib/text';
+import { getCollectionSafe } from '../loaders/getCollectionSafe';
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import VerifiedBadge from '../components/VerifiedBadge.astro';
+import AboutNote from '../components/AboutNote.astro';
+import AffiliateBox from '../components/AffiliateBox.astro';
+import Icon from '../components/Icon.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const dict = t(lang);
+const rl = dict.relocation;
+
+const pageTitle = `${rl.breadcrumb} — ${dict.siteName}`;
+const description = clampDesc(rl.intro[0]);
+
+/** Видимая дата бейджа «Обновлено · {date}» (§9): updatedIso из словаря, UTC. */
+const updatedDate = formatDate(new Date(`${rl.updatedIso}T00:00:00Z`), lang);
+
+/** Детальные под-статьи релокации (category=relokatsiya) — перечень-секция в хабе. */
+const guides = (
+  await getCollectionSafe(
+    'articles',
+    (e) =>
+      e.data.lang === lang &&
+      e.data.category === 'relokatsiya' &&
+      e.data.draft !== true &&
+      e.data.demo !== true,
+  )
+).sort((a, b) => a.data.slug.localeCompare(b.data.slug));
+---
+
+<BaseLayout title={pageTitle} description={description} lang={lang}>
+  <article class="rel">
+    <div class="container">
+      <Breadcrumbs lang={lang} items={[{ label: rl.breadcrumb }]} />
+
+      <header class="head" data-reveal>
+        <h1 class="head__title">{rl.heading}</h1>
+        <div class="head__intro">
+          {rl.intro.map((p: string) => <p>{p}</p>)}
+        </div>
+      </header>
+
+      {/* Регуляторный дисклеймер — вверху, акцент вином + бейдж «Обновлено». */}
+      <section class="callout" data-reveal aria-labelledby="rel-callout-heading">
+        <div class="callout__top">
+          <span class="callout__icon">
+            <Icon name="shield" size={24} />
+          </span>
+          <h2 id="rel-callout-heading" class="callout__heading">{rl.callout.heading}</h2>
+        </div>
+        <VerifiedBadge lang={lang} date={updatedDate} variant="updated" />
+        <p class="callout__text">{rl.callout.disclaimer}</p>
+        <p class="callout__source">{rl.callout.sourceNote}</p>
+      </section>
+
+      {/* Практические шаги обустройства — карточки (не-регуляторика). */}
+      <section class="block" data-reveal aria-labelledby="rel-steps-heading">
+        <h2 id="rel-steps-heading" class="block__heading">{rl.steps.heading}</h2>
+        <div class="steps">
+          {
+            rl.steps.items.map((s) => (
+              <article class="step">
+                <h3 class="step__title">{s.title}</h3>
+                <p class="step__text">{s.text}</p>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
+      {/* Детальные гайды по обустройству — под-статьи category=relokatsiya. */}
+      {
+        guides.length > 0 && (
+          <section class="block" data-reveal aria-labelledby="rel-guides-heading">
+            <h2 id="rel-guides-heading" class="block__heading">{rl.guides.heading}</h2>
+            <p class="block__lead">{rl.guides.lead}</p>
+            <ul class="links">
+              {guides.map((g) => (
+                <li>
+                  <a class="link" href={articleHref(lang, 'relokatsiya', g.data.slug)}>
+                    <span class="link__label">{g.data.title}</span>
+                    <span class="link__text">{g.data.description}</span>
+                    <Icon name="arrow-right" size={18} />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+
+      {/* Под-директория «Услуги» (§7) — сервисы для жизни в Грузии (риелторы/клининг/…). */}
+      <section class="block" data-reveal aria-labelledby="rel-uslugi-heading">
+        <h2 id="rel-uslugi-heading" class="block__heading">{rl.uslugi.heading}</h2>
+        <ul class="links">
+          <li>
+            <a class="link" href={`${sectionHref(lang, 'relokatsiya')}uslugi/`}>
+              <span class="link__label">{rl.uslugi.cta}</span>
+              <span class="link__text">{rl.uslugi.text}</span>
+              <Icon name="arrow-right" size={18} />
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      {/* AffiliateBox: жильё на первое время + eSIM (§16, 1–3 бокса на стр.). */}
+      <div class="affiliate-slot" data-reveal>
+        <AffiliateBox
+          lang={lang}
+          partner="trip-hotels"
+          slug="relokatsiya"
+          title={rl.affiliate.title}
+          label={rl.affiliate.label}
+          note={rl.affiliate.note}
+        />
+        <AffiliateBox
+          lang={lang}
+          partner="airalo"
+          slug="relokatsiya"
+          title={rl.esim.title}
+          label={rl.esim.label}
+          note={rl.esim.note}
+        />
+      </div>
+
+      {/* Внутренняя перелинковка на профильные разделы (воронка §14). */}
+      <section class="block" data-reveal aria-labelledby="rel-links-heading">
+        <h2 id="rel-links-heading" class="block__heading">{rl.links.heading}</h2>
+        <p class="block__lead">{rl.links.lead}</p>
+        <ul class="links">
+          {
+            rl.links.items.map((l) => (
+              <li>
+                <a class="link" href={sectionHref(lang, l.section as SectionKey)}>
+                  <span class="link__label">{dict.nav[l.section as SectionKey]}</span>
+                  <span class="link__text">{l.text}</span>
+                  <Icon name="arrow-right" size={18} />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      {/* Регуляторика → официальные госисточники (внешние ссылки, rel nofollow). */}
+      <section class="block" data-reveal aria-labelledby="rel-reg-heading">
+        <h2 id="rel-reg-heading" class="block__heading">{rl.regulatory.heading}</h2>
+        <p class="block__lead">{rl.regulatory.lead}</p>
+        <ul class="reg">
+          {
+            rl.regulatory.items.map((it) => (
+              <li class="reg__item">
+                <span class="reg__topic">{it.topic}</span>
+                <a
+                  class="reg__link"
+                  href={it.url}
+                  target="_blank"
+                  rel="nofollow noopener"
+                  aria-label={`${it.org} — ${rl.regulatory.linkLabel}`}
+                >
+                  <Icon name="building" size={16} class="reg__icon" />
+                  <span class="u-underline">{it.org}</span>
+                  <Icon name="arrow-right" size={16} />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      {/* Практические нюансы — чек-лист. */}
+      <section class="block" data-reveal aria-labelledby="rel-notes-heading">
+        <h2 id="rel-notes-heading" class="block__heading">{rl.notes.heading}</h2>
+        <ul class="checks">
+          {
+            rl.notes.items.map((item: string) => (
+              <li class="checks__item">
+                <Icon name="check" size={20} class="checks__icon" />
+                <span>{item}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      {/* Как мы отбираем/проверяем + ссылка на /o-sajte/ (E-E-A-T, §9). */}
+      <AboutNote lang={lang} />
+
+      {/* Источники (§14): регуляторная тема — первоисточники в подвале страницы. */}
+      <footer class="sources" data-reveal aria-labelledby="rel-sources-heading">
+        <h2 id="rel-sources-heading" class="sources__heading">{rl.sources.heading}</h2>
+        <ul class="sources__list">
+          {rl.sources.items.map((s: string) => <li>{s}</li>)}
+        </ul>
+      </footer>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .container {
+    max-width: var(--container-content);
+    margin: 0 auto;
+    padding-inline: var(--space-4);
+  }
+  .rel {
+    padding-block: var(--space-8) var(--space-12);
+  }
+
+  .head {
+    margin-bottom: var(--space-12);
+  }
+  .head__title {
+    font-size: var(--text-3xl);
+    margin: 0 0 var(--space-6);
+    max-width: 22ch;
+  }
+  @media (min-width: 768px) {
+    .head__title {
+      font-size: var(--text-4xl);
+    }
+  }
+  .head__intro {
+    display: grid;
+    gap: var(--space-4);
+    max-width: var(--container-prose);
+  }
+  .head__intro :global(p) {
+    margin: 0;
+    font-size: var(--text-xl);
+    color: var(--text-body);
+  }
+
+  /* Callout «важное» (§9): регуляторный дисклеймер, акцент вином (§10). */
+  .callout {
+    display: grid;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    margin-bottom: var(--space-16);
+    max-width: var(--container-prose);
+    background: var(--surface-card);
+    border: 1px solid var(--border-wine);
+    border-inline-start: 4px solid var(--color-wine);
+    border-radius: var(--radius-widget);
+  }
+  .callout__top {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .callout__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    flex: none;
+    border-radius: var(--radius-pill);
+    background: var(--surface-page);
+    color: var(--color-wine);
+  }
+  .callout__heading {
+    font-size: var(--text-xl);
+    margin: 0;
+  }
+  .callout__text {
+    margin: 0;
+    color: var(--text-body);
+  }
+  .callout__source {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  .block {
+    max-width: var(--container-prose);
+    margin-bottom: var(--space-16);
+  }
+  .block__heading {
+    font-size: var(--text-2xl);
+    margin: 0 0 var(--space-6);
+  }
+  .block__lead {
+    margin: 0 0 var(--space-6);
+    color: var(--text-muted);
+  }
+  .affiliate-slot {
+    display: grid;
+    gap: var(--space-4);
+    max-width: var(--container-prose);
+    margin-bottom: var(--space-16);
+  }
+
+  /* Карточки шагов обустройства (не-регуляторика). */
+  .steps {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 640px) {
+    .steps {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .step {
+    padding: var(--space-6);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-card);
+  }
+  .step__title {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: var(--text-lg);
+    color: var(--text-body);
+    margin: 0 0 var(--space-2);
+  }
+  .step__text {
+    margin: 0;
+    color: var(--text-muted);
+  }
+
+  /* Перелинковка на разделы — карточки-ссылки (как section-link на главной). */
+  .links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-3);
+  }
+  .link {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    column-gap: var(--space-3);
+    row-gap: var(--space-1);
+    padding: var(--space-3) var(--space-4);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-card);
+    text-decoration: none;
+    color: var(--text-body);
+    transition:
+      border-color var(--dur) var(--ease-standard),
+      background-color var(--dur) var(--ease-standard),
+      transform var(--dur) var(--ease-standard);
+  }
+  .link:hover,
+  .link:focus-visible {
+    border-color: var(--color-wine);
+    background: var(--surface-hover);
+    transform: translateY(-2px);
+  }
+  .link__label {
+    grid-column: 1;
+    grid-row: 1;
+    font-weight: 600;
+    color: var(--color-wine);
+  }
+  .link__text {
+    grid-column: 1;
+    grid-row: 2;
+    min-width: 0;
+    color: var(--text-muted);
+  }
+  .link :global(svg) {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    color: var(--color-wine);
+    align-self: center;
+    transition: transform var(--dur) var(--ease-standard);
+  }
+  .link:hover :global(svg) {
+    transform: translateX(3px);
+  }
+
+  /* Регуляторика — строки «тема → официальный сайт» (внешние ссылки). */
+  .reg {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-3);
+  }
+  .reg__item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: var(--space-2) var(--space-4);
+    padding: var(--space-4);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-card);
+  }
+  .reg__topic {
+    font-weight: 500;
+    color: var(--text-body);
+  }
+  .reg__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--link);
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color var(--dur) var(--ease-standard);
+  }
+  .reg__link:hover,
+  .reg__link:focus-visible {
+    color: var(--link-hover);
+  }
+  .reg__link :global(svg) {
+    flex: none;
+  }
+  .reg__icon {
+    color: var(--color-wine);
+  }
+
+  /* Списки нюансов — иконка-маркер вином. */
+  .checks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-3);
+  }
+  .checks__item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    font-size: var(--text-lg);
+    color: var(--text-body);
+  }
+  .checks__icon {
+    color: var(--color-wine);
+    flex: none;
+    margin-top: var(--space-1);
+  }
+
+  /* Источники — приглушённый подвал страницы (§14). */
+  .sources {
+    max-width: var(--container-prose);
+    margin-top: var(--space-12);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--border-hairline);
+  }
+  .sources__heading {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: var(--text-base);
+    color: var(--text-muted);
+    margin: 0 0 var(--space-3);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .sources__list {
+    margin: 0;
+    padding-inline-start: var(--space-6);
+    display: grid;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+</style>

@@ -1,0 +1,298 @@
+---
+/**
+ * NewsPage (§8) — раздел «Новости» в формате ХРОНОЛОГИЧЕСКОЙ ЛЕНТЫ, а не сетки
+ * карточек (как остальные хабы). Новости тайм-чувствительны, поэтому:
+ *  - порядок строго от свежих к старым (publishedAt desc);
+ *  - заметная дата у каждой записи + группировка по месяцам;
+ *  - одноколоночная лента (дата + заголовок + лид + опц. миниатюра), узкая
+ *    читаемая колонка — визуально отличается от сеток городов/еды/каталога.
+ *
+ * Данные — коллекция `articles`, category=novosti, нужный язык, не draft (§11).
+ * Один компонент для ru/uk; язык пропсом, текст из словарей (§12).
+ * Schema.org (§14): BreadcrumbList (Breadcrumbs). Article-узлы — на самих статьях.
+ */
+import { getCollectionSafe } from '../loaders/getCollectionSafe';
+import { clampDesc } from '../lib/text';
+import { t, formatDate, articleHref, type Lang } from '../i18n';
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import EmptyHint from '../components/EmptyHint.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const dict = t(lang);
+const intro = dict.hub.sections.novosti?.intro ?? [];
+
+const pageTitle = `${dict.nav.novosti} — ${dict.siteName}`;
+const description = clampDesc((intro[0] ?? dict.nav.novosti));
+
+/** Новости этого языка, не черновики (§11); свежие сверху. */
+const items = await getCollectionSafe(
+  'articles',
+  (entry) =>
+    entry.data.lang === lang && entry.data.category === 'novosti' && entry.data.draft !== true,
+);
+items.sort((a, b) => {
+  const diff = b.data.publishedAt.getTime() - a.data.publishedAt.getTime();
+  return diff !== 0 ? diff : a.data.slug.localeCompare(b.data.slug);
+});
+
+/**
+ * Раздел хранит свежее за 10 дней (§8): серверный фильтр по дате СБОРКИ +
+ * клиентский /js/news-freshness.js между сборками. Старые новости остаются
+ * доступны по прямой ссылке (CLAUDE правило 3 — не плодим 404), но не в ленте.
+ * Полное авто-удаление при ежедневной пересборке — Cloudflare Deploy Hook (позже).
+ */
+const NEWS_SECTION_WINDOW = 10;
+const visibleItems = items.filter(
+  (entry) => Math.floor((Date.now() - entry.data.publishedAt.getTime()) / 86400000) <= NEWS_SECTION_WINDOW,
+);
+const hasNews = visibleItems.length > 0;
+
+/** Локаль для заголовков месяцев («Июнь 2026»). */
+const LOCALE: Record<Lang, string> = { ru: 'ru-RU', uk: 'uk-UA', en: 'en-US' };
+const monthLabel = (d: Date): string => {
+  const s = new Intl.DateTimeFormat(LOCALE[lang], {
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(d);
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
+
+/** Группировка по месяцам (порядок сохраняется — лента уже отсортирована desc). */
+interface NewsGroup {
+  label: string;
+  items: typeof items;
+}
+const groups: NewsGroup[] = [];
+for (const entry of visibleItems) {
+  const label = monthLabel(entry.data.publishedAt);
+  let g = groups.find((x) => x.label === label);
+  if (!g) {
+    g = { label, items: [] };
+    groups.push(g);
+  }
+  g.items.push(entry);
+}
+---
+
+<BaseLayout title={pageTitle} description={description} lang={lang}>
+  <div class="news">
+    <div class="container">
+      <Breadcrumbs lang={lang} items={[{ label: dict.nav.novosti }]} />
+
+      <header class="head" data-reveal>
+        <h1 class="head__title">{dict.nav.novosti}</h1>
+        {
+          intro.length > 0 && (
+            <div class="head__intro">
+              {intro.map((p: string) => (
+                <p>{p}</p>
+              ))}
+            </div>
+          )
+        }
+      </header>
+
+      {
+        hasNews ? (
+          <div class="feed" data-news-feed data-news-window="10">
+            {groups.map((group) => (
+              <section class="feed__group" data-news-group aria-label={group.label}>
+                <h2 class="feed__month">{group.label}</h2>
+                <ol class="feed__list">
+                  {group.items.map((entry) => {
+                    const d = entry.data;
+                    const href = articleHref(lang, 'novosti', d.slug);
+                    return (
+                      <li
+                        class:list={['news-item', { 'news-item--featured': entry === visibleItems[0] }]}
+                        data-news-item
+                        data-published={d.publishedAt.toISOString().slice(0, 10)}
+                      >
+                        {d.cover && (
+                          <a class="news-item__thumb" href={href} tabindex="-1" aria-hidden="true">
+                            <img
+                              src={d.cover.src}
+                              alt={d.cover.alt}
+                              width="240"
+                              height="160"
+                              loading="lazy"
+                              decoding="async"
+                            />
+                          </a>
+                        )}
+                        <div class="news-item__body">
+                          <time class="news-item__date" datetime={d.publishedAt.toISOString()}>
+                            {formatDate(d.publishedAt, lang)}
+                          </time>
+                          <h3 class="news-item__title">
+                            <a href={href}>{d.title}</a>
+                          </h3>
+                          <p class="news-item__desc">{d.description}</p>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ol>
+              </section>
+            ))}
+            <p class="news-empty" data-news-empty hidden>{dict.newsFeed.recentEmpty}</p>
+          </div>
+        ) : (
+          <EmptyHint text={dict.hub.empty} />
+        )
+      }
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .container {
+    max-width: var(--container-content);
+    margin: 0 auto;
+    padding-inline: var(--space-4);
+  }
+  .news {
+    padding-block: var(--space-8) var(--space-12);
+  }
+
+  .head {
+    margin-bottom: var(--space-8);
+    max-width: var(--container-prose);
+  }
+  .head__title {
+    font-size: var(--text-3xl);
+    margin: 0 0 var(--space-4);
+  }
+  @media (min-width: 768px) {
+    .head__title {
+      font-size: var(--text-4xl);
+    }
+  }
+  .head__intro {
+    display: grid;
+    gap: var(--space-3);
+  }
+  .head__intro :global(p) {
+    margin: 0;
+    font-size: var(--text-lg);
+    color: var(--text-body);
+  }
+
+  /* Лента — узкая читаемая колонка (отличается от сеток разделов). */
+  .feed {
+    max-width: var(--container-prose);
+  }
+  .feed__group {
+    margin-bottom: var(--space-12);
+  }
+  /* Заголовок месяца — приглушённый, с разделителем. */
+  .feed__month {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin: 0 0 var(--space-4);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--border-hairline);
+  }
+  .feed__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  /* Запись новости: миниатюра (опц.) + тело; дата над заголовком. */
+  .news-item {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+    padding-bottom: var(--space-6);
+    border-bottom: 1px solid var(--border-hairline);
+  }
+  .news-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  @media (min-width: 560px) {
+    /* С миниатюрой — две колонки: фото слева, текст справа. */
+    .news-item:has(.news-item__thumb) {
+      grid-template-columns: 200px 1fr;
+      align-items: start;
+    }
+  }
+  /* Топ-история (свежайшая) — крупная карточка: широкое фото сверху + большой
+     заголовок, выделяет главное в ленте (аудит VIS-7). */
+  .news-item--featured,
+  .news-item--featured.news-item:has(.news-item__thumb) {
+    grid-template-columns: 1fr;
+  }
+  .news-item--featured .news-item__thumb img {
+    aspect-ratio: 16 / 7;
+  }
+  .news-item--featured .news-item__title {
+    font-size: var(--text-2xl);
+  }
+  @media (min-width: 768px) {
+    .news-item--featured .news-item__title {
+      font-size: var(--text-3xl);
+    }
+  }
+  .news-item__thumb {
+    display: block;
+    border-radius: var(--radius-card);
+    overflow: hidden;
+  }
+  .news-item__thumb img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    background: var(--surface-card);
+  }
+  .news-item__body {
+    min-width: 0;
+  }
+  .news-item__date {
+    display: block;
+    font-size: var(--text-sm);
+    color: var(--color-wine);
+    font-weight: 600;
+    margin-bottom: var(--space-1);
+  }
+  .news-item__title {
+    font-size: var(--text-xl);
+    line-height: 1.25;
+    margin: 0 0 var(--space-2);
+  }
+  .news-item__title a {
+    color: var(--text-heading);
+    text-decoration: none;
+  }
+  .news-item__title a:hover,
+  .news-item__title a:focus-visible {
+    color: var(--link-hover);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .news-item__desc {
+    margin: 0;
+    color: var(--text-muted);
+  }
+
+  /* Клиентское пустое состояние: все новости старше окна (показывает news-freshness.js). */
+  .news-empty {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: var(--text-lg);
+  }
+</style>

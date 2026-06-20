@@ -1,0 +1,35 @@
+---
+/**
+ * Динамический маршрут статьи (uk): /uk/{category}/{slug}/ (§7, §8.1, §12).
+ * Зеркало ru-маршрута: тот же slug и категория, только uk-записи коллекции.
+ * availableLangs — языки, на которых есть этот slug (для hreflang, §12).
+ */
+import type { GetStaticPaths } from 'astro';
+import { getCollectionSafe } from '../../../loaders/getCollectionSafe';
+import ArticlePage from '../../../layouts/ArticlePage.astro';
+
+export const getStaticPaths = (async () => {
+  const all = await getCollectionSafe('articles', (entry) => entry.data.draft !== true);
+  const ORDER = ['ru', 'uk', 'en'] as const;
+  const uk = all.filter((entry) => entry.data.lang === 'uk');
+  return uk.map((entry) => ({
+    params: { category: entry.data.category, slug: entry.data.slug },
+    props: {
+      entry,
+      siblings: uk,
+      availableLangs: ORDER.filter((l) =>
+        all.some(
+          (e) =>
+            e.data.lang === l &&
+            e.data.slug === entry.data.slug &&
+            e.data.category === entry.data.category,
+        ),
+      ),
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+const { entry, siblings, availableLangs } = Astro.props;
+---
+
+<ArticlePage lang="uk" entry={entry} siblings={siblings} availableLangs={availableLangs} />

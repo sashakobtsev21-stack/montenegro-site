@@ -1,0 +1,113 @@
+---
+/**
+ * VisitInfo (§8.1) — компактный блок «Вход и часы работы» места. Ноль JS.
+ * Данные — из frontmatter `visit` (§11). Все поля опциональны: показываем
+ * только заданное (CLAUDE правило 4 — факты не выдумываем). Цены/часы —
+ * только из надёжного источника; `checkedAt` показывает дату актуальности.
+ * Метки — из словаря (§12). Стиль — карточка дизайн-системы (токены §10).
+ */
+import { t, formatDate, type Lang } from '../i18n';
+import Icon from './Icon.astro';
+
+export interface VisitData {
+  price?: string;
+  hours?: string;
+  note?: string;
+  checkedAt?: Date;
+}
+
+interface Props {
+  lang: Lang;
+  visit: VisitData;
+}
+
+const { lang, visit } = Astro.props;
+const dict = t(lang);
+const v = dict.visit;
+const hasContent = Boolean(visit.price || visit.hours || visit.note);
+---
+
+{
+  hasContent && (
+    <section class="visit" aria-labelledby="visit-heading">
+      <h2 id="visit-heading" class="visit__heading">
+        <Icon name="coins" size={20} class="visit__icon" />
+        <span>{v.heading}</span>
+      </h2>
+      <dl class="visit__list">
+        {visit.price && (
+          <div class="visit__row">
+            <dt class="visit__term">{v.price}</dt>
+            <dd class="visit__val">{visit.price}</dd>
+          </div>
+        )}
+        {visit.hours && (
+          <div class="visit__row">
+            <dt class="visit__term">{v.hours}</dt>
+            <dd class="visit__val">{visit.hours}</dd>
+          </div>
+        )}
+      </dl>
+      {visit.note && <p class="visit__note">{visit.note}</p>}
+      {visit.checkedAt && (
+        <p class="visit__checked">
+          {v.checked}: {formatDate(visit.checkedAt, lang)}
+        </p>
+      )}
+    </section>
+  )
+}
+
+<style>
+  .visit {
+    margin-block: var(--space-8);
+    max-width: var(--container-prose);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-card);
+    padding: var(--space-4);
+  }
+  .visit__heading {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin: 0 0 var(--space-3);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--text-body);
+  }
+  .visit__icon {
+    flex: none;
+    color: var(--color-wine);
+  }
+  .visit__list {
+    margin: 0;
+    display: grid;
+    gap: var(--space-2);
+  }
+  .visit__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-1) var(--space-2);
+  }
+  .visit__term {
+    margin: 0;
+    min-width: 9rem;
+    color: var(--text-muted);
+  }
+  .visit__val {
+    margin: 0;
+    color: var(--text-body);
+  }
+  .visit__note {
+    margin: var(--space-3) 0 0;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .visit__checked {
+    margin: var(--space-2) 0 0;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+</style>

@@ -1,0 +1,17 @@
+{
+  // Cloudflare Workers (Static Assets) — хостинг Georgia Guidebook (SPEC §13).
+  // Статика из ./dist отдаётся системой ассетов; динамика — только /go/
+  // в worker/index.ts (SPEC §16). Наличие этого файла не даёт `wrangler deploy`
+  // запускать авто-`astro add cloudflare` (SSR-адаптер/KV/Images нам не нужны).
+  "name": "montenegro-site",
+  "compatibility_date": "2026-06-10",
+  "main": "./worker/index.ts",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+  },
+  "observability": {
+    "enabled": true,
+  },
+}

@@ -1,0 +1,90 @@
+---
+/**
+ * AffiliateBox (§9, §16) — партнёрский виджет: жёлтая (солнце) рамка,
+ * цена в заголовке, ОДНА кнопка → /go/{partner}?c={slug}.
+ *
+ * Жёсткие правила (CLAUDE правило 2, §16):
+ *   - ссылка только через /go/{partner}?c={slug}; прямые URL партнёрок запрещены;
+ *   - rel="sponsored nofollow noopener" обязателен.
+ * Солнце (#E8A33D) — единственное «декоративно» допустимое место наряду с CTA (§10).
+ *
+ * На R2 не инстанцируется (partners.json пуст до R4) — компонент готов для R3+.
+ */
+import { t, type Lang } from '../i18n';
+import Button from './Button.astro';
+
+interface Props {
+  lang: Lang;
+  /** Ключ партнёра из partners.json (§16). */
+  partner: string;
+  /** slug текущей статьи → ?c={slug} (SubID, §16). */
+  slug: string;
+  /** Заголовок предложения. */
+  title: string;
+  /** Подпись на кнопке. */
+  label: string;
+  /** Необязательная цена «от» (валюта решается контентом). */
+  priceFrom?: string;
+  /** Короткое пояснение под заголовком. */
+  note?: string;
+}
+
+const { lang, partner, slug, title, label, priceFrom, note } = Astro.props;
+const dict = t(lang);
+const goHref = `/go/${partner}?c=${encodeURIComponent(slug)}`;
+---
+
+<aside class="affiliate" aria-labelledby={`aff-${partner}-${slug}`}>
+  <div class="affiliate__head">
+    <h3 id={`aff-${partner}-${slug}`} class="affiliate__title">{title}</h3>
+    {priceFrom && <span class="affiliate__price">{priceFrom}</span>}
+  </div>
+  {note && <p class="affiliate__note">{note}</p>}
+  <Button href={goHref} variant="primary" rel="sponsored nofollow noopener" target="_blank"
+    >{label}</Button
+  >
+  {/* Раскрытие партнёрства рядом с CTA (§18) — на каждой статье с боксом, не только в футере. */}
+  <p class="affiliate__disclosure">{dict.actions.affiliateDisclosure}</p>
+</aside>
+
+<style>
+  .affiliate {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    background: var(--surface-card);
+    border: 2px solid var(--border-cta); /* затемнённое золото-CTA: видимая рамка ≥3:1 (§9, a11y) */
+    border-radius: var(--radius-widget); /* 16 — виджет (§10) */
+  }
+  .affiliate__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2) var(--space-3);
+  }
+  .affiliate__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-lg);
+    color: var(--text-heading);
+    margin: 0;
+  }
+  .affiliate__price {
+    font-weight: 600;
+    color: var(--text-body);
+  }
+  .affiliate__note {
+    margin: 0;
+    font-size: var(--text-base);
+    color: var(--text-muted);
+  }
+  .affiliate :global(.btn) {
+    align-self: flex-start;
+  }
+  .affiliate__disclosure {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+</style>

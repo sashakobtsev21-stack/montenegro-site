@@ -1,0 +1,182 @@
+---
+/**
+ * ContactsPage (§7, §25) — «Обратная связь».
+ * Каркас без форм (§18: форм на сайте нет → нет спама и хранения ПД). Объясняет,
+ * о чём писать, и даёт реальный контакт — почту сайта info@georgiaguidebook.com.
+ * Контакт — mailto-ссылка; строки — из словарей (§12).
+ *
+ * Один компонент для ru/uk; язык пропсом, весь текст из словарей (§12).
+ *
+ * Schema.org (§14): BreadcrumbList — в Breadcrumbs. canonical и взаимные
+ * hreflang ru↔uk — в BaseLayout (§7, §12).
+ */
+import { t, type Lang } from '../i18n';
+import { clampDesc } from '../lib/text';
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Icon from '../components/Icon.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const dict = t(lang);
+const contacts = dict.contacts;
+
+const pageTitle = `${contacts.heading} — ${dict.siteName}`;
+const description = clampDesc(contacts.intro[0]);
+---
+
+<BaseLayout title={pageTitle} description={description} lang={lang}>
+  <article class="contacts">
+    <div class="container">
+      <Breadcrumbs lang={lang} items={[{ label: contacts.breadcrumb }]} />
+
+      <header class="head" data-reveal>
+        <h1 class="head__title">{contacts.heading}</h1>
+        <div class="head__intro">
+          {contacts.intro.map((p: string) => <p>{p}</p>)}
+        </div>
+      </header>
+
+      <section class="reasons" data-reveal aria-labelledby="contacts-reasons-heading">
+        <h2 id="contacts-reasons-heading" class="reasons__heading">{contacts.reasonsHeading}</h2>
+        <ul class="reasons__list">
+          {
+            contacts.reasons.map((reason: string) => (
+              <li class="reasons__item">
+                <Icon name="check" size={20} class="reasons__check" />
+                <span>{reason}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      {
+        /*
+        Реальный контакт обратной связи — почта сайта (§18: форм нет → нет спама
+        и хранения ПД). Один адрес для предложений, рекламы и вопросов;
+        mailto открывает почтовый клиент.
+      */
+      }
+      <section class="channels" data-reveal aria-labelledby="contacts-channels-heading">
+        <span class="channels__icon">
+          <Icon name="mail" size={24} />
+        </span>
+        <div class="channels__body">
+          <h2 id="contacts-channels-heading" class="channels__heading">
+            {contacts.channels.heading}
+          </h2>
+          <p class="channels__line">
+            {contacts.channels.emailLabel}{' '}
+            <a class="channels__link u-underline" href={contacts.channels.emailUrl}>
+              {contacts.channels.email}
+            </a>
+          </p>
+        </div>
+      </section>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .container {
+    max-width: var(--container-content);
+    margin: 0 auto;
+    padding-inline: var(--space-4);
+  }
+  .contacts {
+    padding-block: var(--space-8) var(--space-12);
+  }
+
+  .head {
+    margin-bottom: var(--space-12);
+  }
+  .head__title {
+    font-size: var(--text-3xl);
+    margin: 0 0 var(--space-6);
+  }
+  @media (min-width: 768px) {
+    .head__title {
+      font-size: var(--text-4xl);
+    }
+  }
+  .head__intro {
+    display: grid;
+    gap: var(--space-4);
+    max-width: var(--container-prose);
+  }
+  .head__intro :global(p) {
+    margin: 0;
+    font-size: var(--text-xl);
+    color: var(--text-body);
+  }
+
+  .reasons {
+    max-width: var(--container-prose);
+    margin-bottom: var(--space-12);
+  }
+  .reasons__heading {
+    font-size: var(--text-2xl);
+    margin: 0 0 var(--space-6);
+  }
+  .reasons__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-3);
+  }
+  .reasons__item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    font-size: var(--text-lg);
+    color: var(--text-body);
+  }
+  .reasons__check {
+    color: var(--color-wine);
+    flex: none;
+    margin-top: var(--space-1);
+  }
+
+  /* Плашка контакта — тот же визуальный язык, что у AboutNote (§9). */
+  .channels {
+    display: flex;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    max-width: var(--container-prose);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-widget);
+  }
+  .channels__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    flex: none;
+    border-radius: var(--radius-pill);
+    background: var(--surface-page);
+    color: var(--color-wine);
+  }
+  .channels__heading {
+    font-size: var(--text-lg);
+    margin: 0 0 var(--space-2);
+  }
+  .channels__line {
+    margin: 0;
+    color: var(--text-body);
+    max-width: 60ch;
+  }
+  .channels__link {
+    color: var(--link);
+    font-weight: 600;
+  }
+  .channels__link:hover,
+  .channels__link:focus-visible {
+    color: var(--link-hover);
+  }
+</style>

@@ -1,0 +1,460 @@
+---
+/**
+ * InsuranceHub (§8.3 — выделенный контент-хаб раздела «Страховки»).
+ * Главная /strahovka/: действующие правила страховки для въезда в Грузию +
+ * описание сервисов покупки. Тема регуляторная, поэтому:
+ *  - заметный Callout «Действующие правила» с бейджем «Обновлено · {date}»
+ *    (VerifiedBadge variant='updated') и явной оговоркой про актуальность;
+ *  - источники (sources) в подвале страницы.
+ *
+ * AffiliateBox: SafetyWing через /go/safetywing (CLAUDE правило 2, §16). Сервисы
+ * только описаны, цены — ориентиры без точных сумм. Спорные/неподтверждённые
+ * данные как факт НЕ публикуем (бриф п.4/п.6): «$5000/$30000» и расходящиеся
+ * штрафы за экстрим в текст не вынесены, запрет «российских страховок» —
+ * подан как практичная рекомендация, а не правило.
+ *
+ * Один компонент для ru/uk; язык пропсом, весь текст из словарей (§12).
+ *
+ * Schema.org (§14): BreadcrumbList (через Breadcrumbs).
+ * canonical и взаимные hreflang ru↔uk — в BaseLayout (§7, §12).
+ */
+import { t, sectionHref, formatDate, type Lang } from '../i18n';
+import { clampDesc } from '../lib/text';
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import VerifiedBadge from '../components/VerifiedBadge.astro';
+import AboutNote from '../components/AboutNote.astro';
+import AffiliateBox from '../components/AffiliateBox.astro';
+import Icon from '../components/Icon.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const dict = t(lang);
+const ins = dict.insurance;
+
+const pageTitle = `${ins.breadcrumb} — ${dict.siteName}`;
+const description = clampDesc(ins.intro[0]);
+
+/**
+ * Видимая дата бейджа «Обновлено · {date}» (§9). updatedIso из словаря —
+ * единый «момент проверки правил» для обеих версий; форматируется по локали.
+ * UTC, чтобы день не «съезжал» между окружениями сборки.
+ */
+const updatedDate = formatDate(new Date(`${ins.updatedIso}T00:00:00Z`), lang);
+
+const rentalHref = sectionHref(lang, 'arenda-avto');
+/** Мост хаб→подробный гайд-статья (перелинковка §14, аудит 2026-06-17 P0-3). */
+const guideHref = `${sectionHref(lang, 'strahovka')}kak-vybrat-strahovku/`;
+---
+
+<BaseLayout title={pageTitle} description={description} lang={lang}>
+  <article class="ins">
+    <div class="container">
+      <Breadcrumbs lang={lang} items={[{ label: ins.breadcrumb }]} />
+
+      <header class="head" data-reveal>
+        <h1 class="head__title">{ins.heading}</h1>
+        <div class="head__intro">
+          {ins.intro.map((p: string) => <p>{p}</p>)}
+        </div>
+      </header>
+
+      {/* Заметный Callout «Действующие правила» — регуляторика с бейджем и оговоркой. */}
+      <section class="callout" data-reveal aria-labelledby="ins-callout-heading">
+        <div class="callout__top">
+          <span class="callout__icon">
+            <Icon name="shield" size={24} />
+          </span>
+          <h2 id="ins-callout-heading" class="callout__heading">{ins.callout.heading}</h2>
+        </div>
+        <VerifiedBadge lang={lang} date={updatedDate} variant="updated" />
+        <p class="callout__text">{ins.callout.disclaimer}</p>
+        <p class="callout__source">{ins.callout.sourceNote}</p>
+      </section>
+
+      {ins.photos[0] && (
+        <figure class="figure ins-figure" data-reveal>
+          <img
+            src={ins.photos[0].src}
+            alt={ins.photos[0].alt}
+            width="1280"
+            height="718"
+            loading="lazy"
+            decoding="async"
+          />
+          <figcaption>
+            {ins.photos[0].caption} <span class="figure__credit">{ins.photos[0].credit}</span>
+          </figcaption>
+        </figure>
+      )}
+
+      {/* Что нужно знать — требования к полису. */}
+      <section class="block" data-reveal aria-labelledby="ins-req-heading">
+        <h2 id="ins-req-heading" class="block__heading">{ins.requirements.heading}</h2>
+        <ul class="checks">
+          {
+            ins.requirements.items.map((item: string) => (
+              <li class="checks__item">
+                <Icon name="check" size={20} class="checks__icon" />
+                <span>{item}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      {/* Штраф — базовая сумма + оговорка про экстрим (точные суммы «уточняйте»). */}
+      <section class="block" data-reveal aria-labelledby="ins-penalty-heading">
+        <h2 id="ins-penalty-heading" class="block__heading">{ins.penalty.heading}</h2>
+        <div class="prose">
+          {ins.penalty.paragraphs.map((p: string) => <p>{p}</p>)}
+        </div>
+        {ins.photos[1] && (
+          <figure class="figure ins-figure ins-figure--portrait" data-reveal>
+            <img
+              src={ins.photos[1].src}
+              alt={ins.photos[1].alt}
+              width="760"
+              height="1009"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>
+              {ins.photos[1].caption} <span class="figure__credit">{ins.photos[1].credit}</span>
+            </figcaption>
+          </figure>
+        )}
+      </section>
+
+      {/* Сервисы покупки — карточки без цен и без прямых ссылок (кнопки /go/ — R4). */}
+      <section class="block" data-reveal aria-labelledby="ins-services-heading">
+        <h2 id="ins-services-heading" class="block__heading">{ins.services.heading}</h2>
+        <p class="block__lead">{ins.services.lead}</p>
+        <div class="services">
+          {
+            ins.services.items.map((svc) => (
+              <article class="svc">
+                <h3 class="svc__name">{svc.name}</h3>
+                <p class="svc__note">{svc.note}</p>
+                <p class="svc__text">{svc.text}</p>
+                <p class="svc__cta" role="note">
+                  <Icon name="clock" size={16} class="svc__cta-icon" />
+                  <span>{ins.services.ctaPlaceholder}</span>
+                </p>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
+      {/* Мост на подробный гайд-статью (перелинковка хаб→статья §14). */}
+      <p class="guide-link" data-reveal>
+        <a class="rental-link" href={guideHref}>
+          <Icon name="arrow-right" size={18} />
+          <span class="u-underline">{ins.guideLink}</span>
+        </a>
+      </p>
+
+      {/* Партнёрский бокс: SafetyWing (туристическая медстраховка) через /go/ (§16). */}
+      <div class="affiliate-slot" data-reveal>
+        <AffiliateBox
+          lang={lang}
+          partner="safetywing"
+          slug="strahovka"
+          title={ins.affiliate.title}
+          label={ins.affiliate.label}
+          note={ins.affiliate.note}
+        />
+      </div>
+
+      {/* Нюансы — практические оговорки + мост к разделу аренды (отдельная страховка). */}
+      <section class="block" data-reveal aria-labelledby="ins-notes-heading">
+        <h2 id="ins-notes-heading" class="block__heading">{ins.notes.heading}</h2>
+        <ul class="checks">
+          {
+            ins.notes.items.map((item: string) => (
+              <li class="checks__item">
+                <Icon name="map-pin" size={20} class="checks__icon" />
+                <span>{item}</span>
+              </li>
+            ))
+          }
+        </ul>
+        <a class="rental-link" href={rentalHref}>
+          <Icon name="car" size={18} />
+          <span class="u-underline">{ins.notes.rentalLink}</span>
+          <Icon name="arrow-right" size={18} />
+        </a>
+      </section>
+
+      {/* Что делать при страховом случае — практические шаги (как заявлять). */}
+      <section class="block" data-reveal aria-labelledby="ins-claims-heading">
+        <h2 id="ins-claims-heading" class="block__heading">{ins.claims.heading}</h2>
+        <ul class="checks">
+          {
+            ins.claims.items.map((item: string) => (
+              <li class="checks__item">
+                <Icon name="check" size={20} class="checks__icon" />
+                <span>{item}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      {/* Как мы отбираем/проверяем + ссылка на /o-sajte/ (E-E-A-T, §9). */}
+      <AboutNote lang={lang} />
+
+      {/* Источники (§14): регуляторная тема — первоисточники в подвале страницы. */}
+      <footer class="sources" data-reveal aria-labelledby="ins-sources-heading">
+        <h2 id="ins-sources-heading" class="sources__heading">{ins.sources.heading}</h2>
+        <ul class="sources__list">
+          {ins.sources.items.map((s: string) => <li>{s}</li>)}
+        </ul>
+      </footer>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .container {
+    max-width: var(--container-content);
+    margin: 0 auto;
+    padding-inline: var(--space-4);
+  }
+  .ins {
+    padding-block: var(--space-8) var(--space-12);
+  }
+
+  .head {
+    margin-bottom: var(--space-12);
+  }
+  .head__title {
+    font-size: var(--text-3xl);
+    margin: 0 0 var(--space-6);
+    max-width: 20ch;
+  }
+  @media (min-width: 768px) {
+    .head__title {
+      font-size: var(--text-4xl);
+    }
+  }
+  .head__intro {
+    display: grid;
+    gap: var(--space-4);
+    max-width: var(--container-prose);
+  }
+  .head__intro :global(p) {
+    margin: 0;
+    font-size: var(--text-xl);
+    color: var(--text-body);
+  }
+
+  /*
+   * Callout «важное» (§9 CalloutBox): акцентная рамка вином, чтобы регуляторные
+   * правила сразу читались как ключевой блок. Один акцентный цвет — вино (§10).
+   */
+  .callout {
+    display: grid;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    margin-bottom: var(--space-16);
+    max-width: var(--container-prose);
+    background: var(--surface-card);
+    border: 1px solid var(--border-wine);
+    border-inline-start: 4px solid var(--color-wine);
+    border-radius: var(--radius-widget);
+  }
+  .callout__top {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .callout__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    flex: none;
+    border-radius: var(--radius-pill);
+    background: var(--surface-page);
+    color: var(--color-wine);
+  }
+  .callout__heading {
+    font-size: var(--text-xl);
+    margin: 0;
+  }
+  .callout__text {
+    margin: 0;
+    color: var(--text-body);
+  }
+  .callout__source {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  .block {
+    max-width: var(--container-prose);
+    margin-bottom: var(--space-16);
+  }
+  .block__heading {
+    font-size: var(--text-2xl);
+    margin: 0 0 var(--space-6);
+  }
+  .block__lead {
+    margin: 0 0 var(--space-6);
+    color: var(--text-muted);
+  }
+  .affiliate-slot {
+    max-width: var(--container-prose);
+    margin-bottom: var(--space-16);
+  }
+  .guide-link {
+    max-width: var(--container-prose);
+    margin: 0 0 var(--space-16);
+    font-size: var(--text-lg);
+  }
+
+  /* Списки требований/нюансов — иконка-маркер вином (как в ContactsPage.reasons). */
+  .checks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-3);
+  }
+  .checks__item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    font-size: var(--text-lg);
+    color: var(--text-body);
+    overflow-wrap: anywhere;
+  }
+  .checks__icon {
+    color: var(--color-wine);
+    flex: none;
+    margin-top: var(--space-1);
+  }
+
+  .prose {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .prose :global(p) {
+    margin: 0;
+    font-size: var(--text-lg);
+    color: var(--text-body);
+  }
+
+  /* Сетка карточек сервисов (без CTA-кнопок: партнёрки — R4). */
+  .services {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 640px) {
+    .services {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .svc {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-6);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-card);
+  }
+  .svc__name {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: var(--text-lg);
+    color: var(--text-body);
+    margin: 0 0 var(--space-1);
+  }
+  .svc__note {
+    margin: 0 0 var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--color-wine);
+  }
+  .svc__text {
+    margin: 0 0 var(--space-4);
+    color: var(--text-muted);
+    flex: 1;
+  }
+  /* Плейсхолдер вместо кнопки «оформить» (CLAUDE правило 2: без прямых ссылок). */
+  .svc__cta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0;
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--border-hairline);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .svc__cta-icon {
+    color: var(--color-wine);
+    flex: none;
+  }
+
+  .rental-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-6);
+    color: var(--link);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color var(--dur) var(--ease-standard);
+  }
+  .rental-link:hover,
+  .rental-link:focus-visible {
+    color: var(--link-hover);
+  }
+  .rental-link :global(svg) {
+    flex: none;
+  }
+
+  /* Источники — приглушённый подвал страницы (§14). */
+  .sources {
+    max-width: var(--container-prose);
+    margin-top: var(--space-12);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--border-hairline);
+  }
+  .sources__heading {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: var(--text-base);
+    color: var(--text-muted);
+    margin: 0 0 var(--space-3);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .sources__list {
+    margin: 0;
+    padding-inline-start: var(--space-6);
+    display: grid;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    /* длинные URL первоисточников (matsne.gov.ge/...) не должны давать перелив на ~320px */
+    overflow-wrap: anywhere;
+  }
+
+  /* Фото раздела: по ширине prose-колонки; вертикальное — уже и по центру. */
+  .ins-figure {
+    max-width: var(--container-prose);
+    margin-block: var(--space-12);
+  }
+  .ins-figure--portrait :global(img) {
+    max-width: min(420px, 100%);
+    margin-inline: auto;
+  }
+</style>

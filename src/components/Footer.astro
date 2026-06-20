@@ -1,0 +1,131 @@
+---
+/**
+ * Footer (§9, §18) — дисклеймер о партнёрских ссылках, навигация, LangSwitcher, ©.
+ * Направление «Полевой журнал»: камень-фон, тонкая вино-линия сверху, спокойно.
+ */
+import { t, sectionHref, ALL_SECTION_KEYS, type Lang } from '../i18n';
+import LangSwitcher from './LangSwitcher.astro';
+
+interface Props {
+  lang: Lang;
+  /** Языки, доступные для текущей страницы (→ LangSwitcher, §12). По умолчанию все 3. */
+  availableLangs?: Lang[];
+}
+const { lang, availableLangs = ['ru', 'uk', 'en'] } = Astro.props;
+const dict = t(lang);
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="inner">
+    <div class="top">
+      <div class="brand-col">
+        <p class="brand">{dict.siteName}</p>
+        <p class="note">{dict.footer.note}</p>
+        <LangSwitcher lang={lang} availableLangs={availableLangs} />
+      </div>
+      <nav class="nav" aria-label={dict.footer.navHeading}>
+        <p class="nav__heading">{dict.footer.navHeading}</p>
+        <ul>
+          {
+            ALL_SECTION_KEYS.map((key) => (
+              <li>
+                <a class="u-underline" href={sectionHref(lang, key)}>
+                  {dict.nav[key]}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+
+    <p class="disclaimer">{dict.footer.disclaimer}</p>
+    <p class="copy">© {year} {dict.siteName}</p>
+    <p class="creator">{dict.footer.creatorPrefix} {dict.footer.creator}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--space-24);
+    border-top: 1px solid var(--border-wine);
+    background: var(--surface-card); /* белый — отделяет от камень-фона страницы */
+  }
+  .inner {
+    max-width: var(--container-wide);
+    margin: 0 auto;
+    padding: var(--space-12) var(--space-4) var(--space-8);
+    font-size: var(--text-sm);
+    color: var(--text-body);
+  }
+  .top {
+    display: grid;
+    gap: var(--space-8);
+    margin-bottom: var(--space-8);
+  }
+  @media (min-width: 768px) {
+    .top {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .brand-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: flex-start;
+  }
+  .brand {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-lg);
+    color: var(--color-wine);
+    margin: 0;
+  }
+  .note {
+    margin: 0;
+    color: var(--text-muted);
+    max-width: 32ch;
+  }
+  .nav__heading {
+    margin: 0 0 var(--space-3);
+    font-weight: 600;
+    color: var(--text-body);
+  }
+  .nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    /* Мультиколонка → ссылки читаются СВЕРХУ ВНИЗ по колонке в порядке
+       ALL_SECTION_KEYS (логические соседи рядом), а не разбросаны по строкам. */
+    columns: 2;
+    column-gap: var(--space-4);
+  }
+  .nav li {
+    break-inside: avoid;
+    margin-bottom: var(--space-2);
+  }
+  .nav a {
+    color: var(--link);
+    text-decoration: none;
+    transition: color var(--dur-fast) var(--ease-standard);
+  }
+  .nav a:hover,
+  .nav a:focus-visible {
+    color: var(--link-hover);
+  }
+  .disclaimer {
+    margin: 0 0 var(--space-2);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--border-hairline);
+    color: var(--text-muted);
+  }
+  .copy {
+    margin: 0;
+    color: var(--text-muted);
+  }
+  .creator {
+    margin: var(--space-2) 0 0;
+    color: var(--text-muted);
+  }
+</style>

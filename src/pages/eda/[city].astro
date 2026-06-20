@@ -1,0 +1,16 @@
+---
+import { EDA_CITY_PAGES } from '../../i18n';
+import CityFoodPage from '../../layouts/CityFoodPage.astro';
+
+/** Per-city страницы «Где поесть» (§8.6, en — корень): /eda/gde-poest-{город}/. */
+export function getStaticPaths() {
+  return EDA_CITY_PAGES.map((c) => ({
+    params: { city: c.slug },
+    props: { cityKey: c.key },
+  }));
+}
+
+const { cityKey } = Astro.props;
+---
+
+<CityFoodPage lang="en" cityKey={cityKey} />

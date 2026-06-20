@@ -1,0 +1,238 @@
+---
+/**
+ * RatesBar (§8.4, Фаза 6) — тонкая utility-полоса в самом верху шапки:
+ * курс лари (USD/EUR/RUB/UAH) + погода (Тбилиси/Кутаиси/Батуми/море) — ОБА
+ * закреплены инлайн единым стилем (решение владельца 2026-06-16: погоду из
+ * выпадашки в закреплённый вид, по аналогии с курсом). Полезно на любой
+ * странице → в глобальный хедер, компактно и без CLS.
+ *
+ * Гибрид: значения зашиваются снапшотом на сборке (getLiveSnapshot, мемо — 1
+ * запрос на билд даже при рендере на всех страницах), клиент (/js/live-data.js)
+ * дотягивает свежие по тем же data-live ключам. Источник недоступен → снапшот,
+ * нет и его → «—». Курс по конвенции НБ Грузии: USD/EUR за 1, RUB за 100, UAH за 10.
+ */
+import { t, type Lang } from '../i18n';
+import { getLiveSnapshot } from '../lib/liveSnapshot';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const dict = t(lang);
+const ld = dict.liveData;
+
+const snap = await getLiveSnapshot();
+
+const fmtT = (n: number | null): string => (typeof n === 'number' ? `${Math.round(n)}°` : '—');
+const fmtFx = (n: number | null): string => (typeof n === 'number' ? `${n.toFixed(2)} ₾` : '—');
+
+const locale = lang === 'uk' ? 'uk-UA' : lang === 'en' ? 'en-US' : 'ru-RU';
+let buildTime = '';
+try {
+  buildTime = new Intl.DateTimeFormat(locale, {
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Asia/Tbilisi',
+  }).format(new Date());
+} catch {
+  buildTime = '';
+}
+---
+
+<div class="ratesbar" data-live>
+  <div class="ratesbar__inner">
+    <ul class="rates" aria-label={ld.fx}>
+      <li class="rates__item">
+        <span class="rates__cur">1&nbsp;$</span>
+        <b data-live="fx-usd">{fmtFx(snap.fx.usd)}</b>
+      </li>
+      <li class="rates__item">
+        <span class="rates__cur">1&nbsp;€</span>
+        <b data-live="fx-eur">{fmtFx(snap.fx.eur)}</b>
+      </li>
+      <li class="rates__item">
+        <span class="rates__cur">10&nbsp;₴</span>
+        <b data-live="fx-uah">{fmtFx(snap.fx.uah)}</b>
+      </li>
+      <li class="rates__item">
+        <span class="rates__cur">100&nbsp;₽</span>
+        <b data-live="fx-rub">{fmtFx(snap.fx.rub)}</b>
+      </li>
+    </ul>
+
+    <div class="wx">
+      <ul class="rates rates--wx" aria-label={ld.weather}>
+        <li class="rates__item">
+          <span class="rates__cur">{ld.cities.tbilisi}</span>
+          <b data-live="air-tbilisi">{fmtT(snap.air.tbilisi)}</b>
+        </li>
+        <li class="rates__item">
+          <span class="rates__cur">{ld.cities.kutaisi}</span>
+          <b data-live="air-kutaisi">{fmtT(snap.air.kutaisi)}</b>
+        </li>
+        <li class="rates__item">
+          <span class="rates__cur">{ld.cities.batumi}</span>
+          <b data-live="air-batumi">{fmtT(snap.air.batumi)}</b>
+        </li>
+        <li class="rates__item">
+          <span class="rates__cur">{ld.sea}</span>
+          <b data-live="sea-batumi">{fmtT(snap.sea)}</b>
+        </li>
+      </ul>
+      <details class="wx__info">
+        <summary class="wx__info-q" aria-label={ld.source}>?</summary>
+        <p class="wx__info-panel">
+          {ld.updated} <time data-live="updated">{buildTime}</time> · {ld.source}
+        </p>
+      </details>
+    </div>
+  </div>
+
+  <script is:inline src="/js/live-data.js" defer></script>
+</div>
+
+<style>
+  /* Тонкая полоса поверх основной строки шапки: стоун-фон отделяет её от
+     белой шапки ниже; вино — только на значениях (акцент, §10). */
+  .ratesbar {
+    background: var(--color-wine);
+    border-bottom: 1px solid color-mix(in srgb, black 20%, var(--color-wine));
+    font-size: var(--text-sm);
+  }
+  .ratesbar__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-1) var(--space-4);
+    max-width: var(--container-wide);
+    margin: 0 auto;
+    padding: var(--space-1) var(--space-4);
+  }
+
+  /* Курс — инлайн. */
+  .rates {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1) var(--space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    /* min-width:0 — чтобы вложенный flex мог сжаться и ПЕРЕНОСИТЬ строки на
+       узких экранах, а не вылезать за край (иначе «Море, Батуми 24°» обрезалось). */
+    min-width: 0;
+  }
+  .rates__item {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35em;
+    white-space: nowrap;
+  }
+  .rates__cur {
+    color: color-mix(in srgb, var(--color-white) 78%, var(--color-wine));
+  }
+  .rates__item b {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-white);
+  }
+
+  /* Погода — закреплена инлайн (как курс валют): города + море единым стилем. */
+  .wx {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-1) var(--space-4);
+    min-width: 0;
+  }
+  /* Источник + время обновления — по клику на «?» (нативный popover, без своего JS). */
+  .wx__info {
+    position: relative;
+    display: inline-flex;
+  }
+  .wx__info-q {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    color: color-mix(in srgb, var(--color-white) 78%, var(--color-wine));
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+  /* Расширяем тап-зону «?» (видимый кружок маленький, §6/§15) без налезания на шапку. */
+  .wx__info-q::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 30px;
+    transform: translate(-50%, -50%);
+  }
+  .wx__info-q::-webkit-details-marker {
+    display: none;
+  }
+  .wx__info-q:hover,
+  .wx__info-q:focus-visible {
+    color: var(--color-white);
+  }
+  .wx__info-q:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 2px;
+  }
+  /* Закрытый попап не должен влиять на ширину страницы: у details:not([open])
+     absolute-контент в части браузеров остаётся в layout и даёт горизонтальный
+     перелив на узких экранах — прячем его явно. */
+  .wx__info:not([open]) .wx__info-panel {
+    display: none;
+  }
+  .wx__info-panel {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 6px);
+    z-index: 60;
+    margin: 0;
+    width: 14rem;
+    max-width: calc(100vw - var(--space-6));
+    padding: var(--space-3) var(--space-4);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-widget);
+    box-shadow: var(--shadow-raised);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  /* Узкие экраны: компактнее и по центру — курс одной строкой, погода аккуратно
+     переносится при нехватке места (min-width:0 на .rates/.wx), без обрезки. */
+  @media (max-width: 600px) {
+    .ratesbar {
+      font-size: 0.8125rem;
+    }
+    .ratesbar__inner {
+      justify-content: center;
+      gap: var(--space-1) var(--space-3);
+      padding-inline: var(--space-3);
+    }
+    .rates,
+    .wx {
+      justify-content: center;
+      gap: var(--space-1) var(--space-3);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .wx__info-panel {
+      right: auto;
+      left: 0;
+    }
+  }
+</style>

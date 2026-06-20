@@ -1,0 +1,128 @@
+---
+/**
+ * SearchBox (§8.4) — поиск по контенту, фильтр НА КЛИЕНТЕ по уже загруженному
+ * JSON, без бэкенда. Нативный vanilla JS (§15), без зависимостей.
+ *
+ * Данные приходят пропсом `items` (на R2 коллекции пусты → []). Пустые
+ * состояния честные (CLAUDE правило 4): нет контента → «материалы скоро»;
+ * есть контент, но нет совпадений → «ничего не нашлось». Никаких фейк-результатов.
+ */
+import { t, type Lang } from '../i18n';
+import Icon from './Icon.astro';
+
+export interface SearchItem {
+  title: string;
+  url: string;
+  section: string;
+}
+
+interface Props {
+  lang: Lang;
+  items: SearchItem[];
+}
+
+const { lang, items } = Astro.props;
+const dict = t(lang);
+---
+
+<div class="search" data-search>
+  <label class="search__label sr-only" for="site-search">{dict.home.search.label}</label>
+  <div class="search__field">
+    <Icon name="search" size={20} class="search__icon" />
+    <input
+      id="site-search"
+      type="search"
+      class="search__input"
+      placeholder={dict.home.search.placeholder}
+      autocomplete="off"
+      enterkeyhint="search"
+      aria-describedby="search-hint"
+      data-search-input
+    />
+  </div>
+  <p id="search-hint" class="search__hint">{dict.home.search.hint}</p>
+
+  <ul class="search__results" data-search-results hidden></ul>
+  <p
+    class="search__empty"
+    data-search-empty
+    data-empty-nocontent={dict.home.search.emptyNoContent}
+    data-empty-nomatch={dict.home.search.emptyNoMatch}
+    hidden
+  >
+  </p>
+
+  <script is:inline type="application/json" data-search-data set:html={JSON.stringify(items)} />
+</div>
+
+<!-- Внешний vanilla-модуль из public/js (script-src 'self', §18) — без инлайна. -->
+<script is:inline type="module" src="/js/search.js"></script>
+
+<style>
+  .search {
+    margin-top: var(--space-6);
+    max-width: 40rem;
+  }
+  .search__field {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-card);
+  }
+  .search__field:focus-within {
+    border-color: var(--color-wine);
+    /* Видимый фокус-ринг (WCAG 2.4.7): input внутри гасит свой outline, поэтому
+       ринг рисуем на всём поле при фокусе ввода (аудит 2026-06-17, a11y). */
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+  .search__icon {
+    color: var(--text-muted);
+    flex: none;
+  }
+  .search__input {
+    flex: 1 1 auto;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    color: var(--text-body);
+    min-width: 0;
+  }
+  .search__input::placeholder {
+    color: var(--text-muted);
+  }
+  .search__hint {
+    margin: var(--space-2) 0 0;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .search__results {
+    list-style: none;
+    margin: var(--space-3) 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .search__results a {
+    display: block;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-card);
+    text-decoration: none;
+    color: var(--link);
+  }
+  .search__results a:hover,
+  .search__results a:focus-visible {
+    background: var(--surface-hover);
+  }
+  .search__empty {
+    margin: var(--space-3) 0 0;
+    font-size: var(--text-base);
+    color: var(--text-muted);
+  }
+</style>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Georgia Guidebook — флаг Грузии">
+  <rect width="32" height="32" rx="6" fill="#ffffff"/>
+  <path d="M14 0h4v32h-4z M0 14h32v4H0z" fill="#ff0000"/>
+  <g fill="#ff0000">
+    <path d="M6 4h2v6H6z M4 6h6v2H4z"/>
+    <path d="M24 4h2v6h-2z M22 6h6v2h-6z"/>
+    <path d="M6 22h2v6H6z M4 24h6v2H4z"/>
+    <path d="M24 22h2v6h-2z M22 24h6v2h-6z"/>
+  </g>
+</svg>

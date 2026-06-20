@@ -1,0 +1,58 @@
+{
+  "name": "montenegro-guidebook",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Montenegro Guidebook — гид по Черногории (en/ru/uk), статика на Astro",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test:links": "node scripts/check-links.mjs",
+    "test:parity": "node scripts/check-parity.mjs",
+    "test:enums": "node scripts/check-enums.mjs",
+    "test:photos": "node scripts/check-photos.mjs",
+    "test:interlinks": "node scripts/check-interlinks.mjs",
+    "test": "node scripts/check-enums.mjs && node scripts/check-parity.mjs && node scripts/check-photos.mjs && node scripts/check-interlinks.mjs",
+    "new": "node scripts/new-content.mjs",
+    "build:covers": "node scripts/build-cover-variants.mjs",
+    "qa": "node scripts/qa.mjs",
+    "qa:responsive": "node scripts/qa-responsive.mjs",
+    "qa:browser": "node scripts/qa-lighthouse.mjs && node scripts/qa-responsive.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "3.7.3",
+    "astro": "6.4.6",
+    "leaflet": "1.9.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "@eslint/js": "^9.18.0",
+    "@tailwindcss/vite": "4.3.0",
+    "@types/leaflet": "1.9.21",
+    "chrome-launcher": "^1.2.1",
+    "eslint": "^9.18.0",
+    "eslint-plugin-astro": "^1.7.0",
+    "globals": "^15.14.0",
+    "lighthouse": "^13.4.0",
+    "playwright-core": "^1.61.0",
+    "prettier": "^3.8.4",
+    "prettier-plugin-astro": "^0.14.1",
+    "tailwindcss": "4.3.0",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.61.0",
+    "vite": "7.3.5"
+  },
+  "overrides": {
+    "@tailwindcss/vite": {
+      "vite": "$vite"
+    }
+  }
+}

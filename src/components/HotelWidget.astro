@@ -1,0 +1,145 @@
+---
+/**
+ * HotelWidget (§8.1, монетизация §16) — партнёрский виджет поиска отелей
+ * Trip.com (S17960742, 320×320). Click-to-load по образцу GoogleMap (§8.1).
+ *
+ * Приватность и перф (§15, §18): в статике рендерится ТОЛЬКО заглушка-кнопка —
+ * ничего от Trip.com не грузится до клика (ни iframe, ни cookie, ни скрипты),
+ * нулевой удар по LCP. По клику внешний vanilla-модуль /js/hotel-widget.js
+ * (script-src 'self', §18 — без inline) подставляет iframe виджета.
+ * frame-src www.trip.com разрешён в _headers (§18).
+ *
+ * Ноль CLS (§15): зарезервированный квадрат 320×320 — заглушка и будущий iframe
+ * занимают одну высоту. Виджет — дополнение к текстовым боксам «Жильё» (/go/),
+ * а не их замена.
+ *
+ * Доступность (§15): нативная <button> (фокус с клавиатуры, видимый focus-ring);
+ * контраст из токенов (без хардкода hex). Атрибуция партнёра — подпись снизу.
+ */
+import { t, type Lang } from '../i18n';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Lang;
+  /** slug текущей статьи → trip_sub1={slug} (SubID для атрибуции, §16). */
+  subid: string;
+}
+
+const { lang, subid } = Astro.props;
+const hw = t(lang).hotelWidget;
+
+/**
+ * URL виджета Trip.com (S17960742) централизован здесь — как embed-URL в
+ * GoogleMap; в контент (.md) не выносится. {subid} статьи идёт в trip_sub1 для
+ * атрибуции (тот же приём, что и в /go/, §16).
+ */
+const WIDGET_BASE = 'https://www.trip.com/partners/ad/S17960742';
+const widgetSrc = `${WIDGET_BASE}?Allianceid=8701645&SID=319548076&trip_sub1=${encodeURIComponent(subid)}`;
+---
+
+<aside class="hw" aria-label={hw.heading}>
+  <p class="hw__heading">{hw.heading}</p>
+  <div class="hw__frame" data-hw data-src={widgetSrc} data-title={hw.frameTitle}>
+    {/* Заглушка-кнопка: пока её не нажали, Trip.com не подгружается (приватность). */}
+    <button type="button" class="hw__stub" data-hw-show>
+      <span class="hw__stub-icon">
+        <Icon name="building" size={32} />
+      </span>
+      <span class="hw__stub-text">{hw.cta}</span>
+    </button>
+  </div>
+  <p class="hw__note">{hw.note}</p>
+</aside>
+
+{/* Внешний vanilla-модуль (self, без inline §18). No-op без [data-hw]. */}
+<script is:inline type="module" src="/js/hotel-widget.js"></script>
+
+<style>
+  .hw {
+    margin: var(--space-8) 0 var(--space-12);
+    max-width: var(--container-prose);
+  }
+  .hw__heading {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-lg);
+    color: var(--text-heading);
+    margin: 0 0 var(--space-3);
+  }
+  /*
+   * Зарезервированный квадрат 320×320 — заглушка и будущий iframe занимают одну
+   * высоту → ноль CLS (§15). На узких экранах сжимается по ширине, оставаясь
+   * квадратом (aspect-ratio); фиксированный iframe Trip.com центрируется и
+   * обрезается рамкой (overflow:hidden) — без горизонтального скролла страницы.
+   */
+  .hw__frame {
+    position: relative;
+    width: 320px;
+    max-width: 100%;
+    aspect-ratio: 1 / 1;
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-widget);
+    overflow: hidden;
+    background: var(--surface-page);
+  }
+  .hw__stub {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    width: 100%;
+    height: 100%;
+    padding: var(--space-6);
+    font: inherit;
+    color: var(--text-body);
+    background: var(--surface-page);
+    border: none;
+    cursor: pointer;
+    transition: background-color var(--dur) var(--ease-standard);
+  }
+  .hw__stub:hover,
+  .hw__stub:focus-visible {
+    background: var(--surface-hover);
+  }
+  .hw__stub-icon {
+    display: inline-flex;
+    color: var(--color-wine);
+  }
+  .hw__stub-text {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-2) var(--space-6);
+    font-weight: 600;
+    color: var(--text-on-cta);
+    background: var(--cta-bg);
+    border-radius: var(--radius-pill);
+  }
+
+  /*
+   * Когда hotel-widget.js вставил iframe, он ставит на .hw__frame класс
+   * is-loaded → прячем заглушку. iframe Trip.com фиксирован 320×320, центрируем.
+   */
+  .hw__frame.is-loaded .hw__stub {
+    display: none;
+  }
+  .hw__frame :global(iframe) {
+    display: block;
+    margin: 0 auto;
+    border: 0;
+  }
+
+  .hw__note {
+    margin: var(--space-2) 0 0;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hw__stub {
+      transition: none;
+    }
+  }
+</style>

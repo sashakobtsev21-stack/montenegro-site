@@ -1,0 +1,120 @@
+---
+/**
+ * Breadcrumbs (§9, §14) — крошки + JSON-LD BreadcrumbList.
+ * Используется на всех страницах, кроме главной. Первый элемент — «Главная»
+ * (из i18n), последний — текущая страница (без ссылки, aria-current="page").
+ *
+ * JSON-LD строится из тех же items с абсолютными URL (из Astro.site), чтобы
+ * разметка проходила Rich Results Test (§14). Все подписи — из словаря/данных,
+ * хардкода нет (§12).
+ */
+import { t, DEFAULT_LANG, type Lang } from '../i18n';
+
+export interface Crumb {
+  label: string;
+  /** Относительный путь (с завершающим слэшем). У текущей страницы — нет. */
+  href?: string;
+}
+
+interface Props {
+  lang: Lang;
+  /** Промежуточные крошки между «Главная» и текущей (в порядке вложенности). */
+  items: Crumb[];
+}
+
+const { lang, items } = Astro.props;
+const dict = t(lang);
+
+const homeHref = lang === DEFAULT_LANG ? '/' : `/${lang}/`;
+
+/** Полный список крошек: Главная → переданные items. */
+const crumbs: Crumb[] = [{ label: dict.breadcrumbs.home, href: homeHref }, ...items];
+
+const SITE = Astro.site ?? new URL('https://georgiaguidebook.com');
+const abs = (href?: string): string | undefined => (href ? new URL(href, SITE).href : undefined);
+/** URL текущей страницы — item для последней крошки (Rich Results: у всех ListItem есть item). */
+const currentHref = new URL(Astro.url.pathname, SITE).href;
+
+/** BreadcrumbList (§14): крошка с href → её URL; текущая (последняя) → canonical. */
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: crumbs.map((c, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: c.label,
+    item: abs(c.href) ?? currentHref,
+  })),
+};
+---
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
+
+<nav class="crumbs" aria-label={dict.breadcrumbs.aria}>
+  <ol class="crumbs__list">
+    {
+      crumbs.map((c, i) => (
+        <li class="crumbs__item">
+          {c.href ? (
+            <a class="crumbs__link" href={c.href}>
+              {c.label}
+            </a>
+          ) : (
+            <span aria-current="page">{c.label}</span>
+          )}
+          {i < crumbs.length - 1 && (
+            <span class="crumbs__sep" aria-hidden="true">
+              /
+            </span>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<style>
+  .crumbs {
+    margin-bottom: var(--space-6);
+  }
+  .crumbs__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .crumbs__item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .crumbs__link {
+    color: var(--link);
+    text-decoration: none;
+    transition: color var(--dur) var(--ease-standard);
+  }
+  .crumbs__link:hover,
+  .crumbs__link:focus-visible {
+    color: var(--link-hover);
+  }
+  .crumbs__sep {
+    color: var(--text-muted);
+  }
+  /* На мобайле длинная последняя крошка (= H1) не должна занимать 2 строки и
+     дублировать заголовок — обрезаем многоточием (аудит MOB-6). */
+  @media (max-width: 600px) {
+    .crumbs__item:last-child [aria-current] {
+      display: inline-block;
+      max-width: 62vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: bottom;
+    }
+  }
+</style>

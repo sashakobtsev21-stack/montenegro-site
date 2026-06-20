@@ -1,0 +1,208 @@
+---
+/**
+ * CatalogMap (§9) — мастер-карта раздела «Что посмотреть»: ВСЕ метки
+ * достопримечательностей справочника (articles, category=dostoprimechatelnosti,
+ * с geo, нужного языка, не draft). Каждая метка → переход на страницу места:
+ * popup со ссылкой (фокусируемой, доступной) + клик по метке как быстрый
+ * переход — оба варианта решает /js/map-init.js (режим 'catalog').
+ *
+ * Lazy строго как у MapEmbed (§8.2/§15): ни Leaflet-JS, ни его CSS НЕ в
+ * начальном бандле — этот компонент рендерит лёгкий плейсхолдер с
+ * зарезервированной высотой (0 CLS) и JSON-остров с метками. Подгрузку Leaflet
+ * делает map-init.js по IntersectionObserver/клику (script-src 'self', §18).
+ *
+ * Деградация: 0 меток — компонент не рендерится; 1 метка — map-init делает
+ * setView (без fitBounds). Без JS — остаётся плейсхолдер.
+ *
+ * Доступность (§15): role="region" + aria-label, фокусируемая кнопка показа,
+ * reduced-motion (карта без анимаций — решает map-init.js). Токены, без хардкода.
+ */
+import { t, type Lang } from '../i18n';
+import Icon from './Icon.astro';
+
+export interface CatalogMarker {
+  name: string;
+  coord: [number, number];
+  /** Относительный URL страницы места (с завершающим слэшем, §7). */
+  url: string;
+}
+
+interface Props {
+  lang: Lang;
+  markers: CatalogMarker[];
+  id?: string;
+}
+
+const { lang, markers, id = 'catalog-map' } = Astro.props;
+const dict = t(lang);
+const c = dict.catalog;
+const m = dict.map;
+
+/** Данные JSON-острова: режим каталога + метки (имя/координата/url). */
+const mapData = {
+  mode: 'catalog' as const,
+  attribution: m.attribution,
+  markers: markers.map((mk) => ({ name: mk.name, coord: mk.coord, url: mk.url })),
+};
+const jsonId = `${id}-data`;
+const headingId = `${id}-heading`;
+---
+
+{
+  markers.length > 0 && (
+    <section class="cmap" aria-labelledby={headingId}>
+      <h2 id={headingId} class="cmap__heading">
+        {c.mapHeading}
+      </h2>
+
+      {/* JSON-остров со всеми метками — читает /js/map-init.js при подгрузке. */}
+      <script is:inline id={jsonId} type="application/json" set:html={JSON.stringify(mapData)} />
+
+      <div
+        class="cmap__frame"
+        id={id}
+        data-map
+        data-map-data={jsonId}
+        role="region"
+        aria-label={c.mapAria}
+      >
+        {/* Плейсхолдер до загрузки Leaflet: высота зарезервирована → 0 CLS. */}
+        <div class="cmap__placeholder" data-map-placeholder>
+          <span class="cmap__placeholder-icon">
+            <Icon name="map-pin" size={32} />
+          </span>
+          <button type="button" class="cmap__btn" data-map-show>
+            {m.show}
+          </button>
+          <p class="cmap__hint">{c.mapHint}</p>
+          <p class="cmap__error" data-map-error hidden>
+            {m.error}
+          </p>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+{
+  /* Инициализатор карты — внешний vanilla-модуль (self, без inline §18). Один
+   модуль обслуживает и MapEmbed, и CatalogMap; Leaflet тянет только по
+   IntersectionObserver/клику (§8.2). */
+}
+<script is:inline type="module" src="/js/map-init.js"></script>
+
+<style>
+  .cmap {
+    margin-block: var(--space-8) var(--space-12);
+  }
+  .cmap__heading {
+    font-size: var(--text-2xl);
+    margin: 0 0 var(--space-6);
+  }
+  /*
+   * Зарезервированная высота — приём против CLS (§15): плейсхолдер и будущая
+   * карта занимают одну высоту, ничего не «прыгает» при загрузке. Каталог
+   * крупнее карты места — больше меток.
+   */
+  .cmap__frame {
+    position: relative;
+    /* Свой stacking-контекст (z-index:0) запирает внутренние z-index Leaflet
+       (до ~1000) внутри рамки → карта не наезжает на sticky-шапку (z-50). */
+    z-index: 0;
+    width: 100%;
+    height: 420px;
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-widget);
+    overflow: hidden;
+    background: var(--surface-card);
+  }
+  @media (min-width: 768px) {
+    .cmap__frame {
+      height: 520px;
+    }
+  }
+
+  .cmap__placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    text-align: center;
+    background: var(--surface-page);
+  }
+  .cmap__placeholder-icon {
+    display: inline-flex;
+    color: var(--color-wine);
+  }
+  .cmap__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-6);
+    font: inherit;
+    font-weight: 600;
+    color: var(--text-on-cta);
+    background: var(--cta-bg);
+    border: none;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition:
+      background-color var(--dur) var(--ease-standard),
+      transform var(--dur-fast) var(--ease-standard);
+  }
+  .cmap__btn:hover {
+    background: var(--cta-bg-hover);
+  }
+  .cmap__btn:active {
+    transform: scale(var(--press-scale));
+  }
+  .cmap__hint {
+    margin: 0;
+    max-width: 46ch;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .cmap__error {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-wine);
+    font-weight: 500;
+  }
+
+  /* После инициализации map-init.js ставит is-loaded → прячем плейсхолдер. */
+  .cmap__frame.is-loaded .cmap__placeholder {
+    display: none;
+  }
+
+  .cmap__frame :global(.leaflet-container) {
+    width: 100%;
+    height: 100%;
+    background: var(--surface-card);
+    font: inherit;
+  }
+  .cmap__frame :global(.leaflet-control-attribution) {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  /* Ссылка-метка в popup — вином, как остальные ссылки сайта. */
+  .cmap__frame :global(.catalog-pin-link) {
+    color: var(--link);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .cmap__frame :global(.catalog-pin-link:hover),
+  .cmap__frame :global(.catalog-pin-link:focus-visible) {
+    color: var(--link-hover);
+    text-decoration: underline;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cmap__btn {
+      transition: none;
+    }
+  }
+</style>

@@ -1,0 +1,282 @@
+---
+/**
+ * HubPage (§8.3) — хаб контентного раздела.
+ * Один компонент для ru и uk (язык пропсом, текст из словарей §12). Разделы:
+ * dostoprimechatelnosti, goroda, marshruty, arenda-avto, strahovka, novosti.
+ * /eda/ сюда НЕ относится — у неё свой шаблон-директория (EdaDirectory, §8.6).
+ *
+ * Состав (§8.3): Breadcrumbs → H1 → вводный текст (i18n) → [гл. AffiliateBox
+ * раздела — добавляется в R4, когда зарегистрированы партнёрки и partners.json
+ * непустой] → автосетка ArticleCard из коллекции `articles` (фильтр
+ * category+lang, не draft, детерминированный порядок).
+ * Пустое состояние, когда статей нет (как на главной, CLAUDE правило 4).
+ *
+ * Schema.org (§14): BreadcrumbList (через Breadcrumbs). Ручных списков статей
+ * нет — всё из коллекции.
+ */
+import { getCollectionSafe } from '../loaders/getCollectionSafe';
+import { clampDesc } from '../lib/text';
+import {
+  t,
+  format,
+  formatDate,
+  articleHref,
+  HUB_AFFILIATE_PARTNER,
+  type Lang,
+  type HubSectionKey,
+} from '../i18n';
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ArticleCard, { type CardMeta } from '../components/ArticleCard.astro';
+import AffiliateBox from '../components/AffiliateBox.astro';
+import EmptyHint from '../components/EmptyHint.astro';
+
+interface Props {
+  lang: Lang;
+  section: HubSectionKey;
+}
+const { lang, section } = Astro.props;
+const dict = t(lang);
+
+const heading = dict.nav[section];
+const sectionContent = dict.hub.sections[section];
+
+const pageTitle = `${heading} — ${dict.siteName}`;
+const description = clampDesc(sectionContent.intro[0]);
+
+/**
+ * Карточка сетки хаба (унифицированный вид для статей и маршрутов).
+ * `meta` — мета-чипы (дни/км маршрута, §8.3); у статей пусто.
+ */
+interface HubCard {
+  key: string;
+  href: string;
+  title: string;
+  cardDescription: string;
+  /** Обложка опциональна (§11): cover в базе статьи теперь опц. — карточка без фото. */
+  cover?: { src: string; alt: string };
+  date: string;
+  verified: 'verified' | 'updated';
+  verifiedPhoto?: { src: string; alt?: string };
+  meta: CardMeta[];
+  gallery?: { src: string; alt: string; credit?: string }[];
+}
+
+/**
+ * Хаб маршрутов листает коллекцию `routes`, а не `articles` (§8.2/§8.3):
+ * статей категории marshruty нет, материалы маршрутов живут в `routes`.
+ * Остальные хабы — статьи своей категории. Порядок детерминированный (§21):
+ * новее → старее (publishedAt desc), при равенстве — по slug.
+ */
+let cards: HubCard[];
+
+if (section === 'marshruty') {
+  const routes = await getCollectionSafe(
+    'routes',
+    (entry) => entry.data.lang === lang && entry.data.draft !== true,
+  );
+  routes.sort((a, b) => {
+    const diff = b.data.publishedAt.getTime() - a.data.publishedAt.getTime();
+    return diff !== 0 ? diff : a.data.slug.localeCompare(b.data.slug);
+  });
+  cards = routes.map((entry) => ({
+    key: entry.id,
+    href: articleHref(lang, 'marshruty', entry.data.slug),
+    title: entry.data.title,
+    cardDescription: entry.data.description,
+    cover: entry.data.cover,
+    date: formatDate(entry.data.verifiedAt ?? entry.data.updatedAt, lang),
+    verified: entry.data.verifiedAt ? 'verified' : 'updated',
+    verifiedPhoto: entry.data.verifiedPhoto,
+    meta: [
+      {
+        icon: 'calendar',
+        text: format(dict.route.summary.daysValue, { count: String(entry.data.days) }),
+      },
+      {
+        icon: 'milestone',
+        text: format(dict.route.summary.distanceValue, { km: String(entry.data.distanceKm) }),
+      },
+    ],
+    gallery: entry.data.gallery,
+  }));
+} else {
+  const articles = await getCollectionSafe(
+    'articles',
+    (entry) =>
+      entry.data.lang === lang && entry.data.category === section && entry.data.draft !== true,
+  );
+  articles.sort((a, b) => {
+    // Ручной приоритет (featuredOrder) — выше всего; затем publishedAt desc, slug.
+    const fa = a.data.featuredOrder;
+    const fb = b.data.featuredOrder;
+    if (fa != null || fb != null) {
+      if (fa == null) return 1;
+      if (fb == null) return -1;
+      if (fa !== fb) return fa - fb;
+    }
+    const diff = b.data.publishedAt.getTime() - a.data.publishedAt.getTime();
+    return diff !== 0 ? diff : a.data.slug.localeCompare(b.data.slug);
+  });
+  cards = articles.map((entry) => ({
+    key: entry.id,
+    href: articleHref(lang, entry.data.category, entry.data.slug),
+    title: entry.data.title,
+    cardDescription: entry.data.description,
+    cover: entry.data.cover,
+    date: formatDate(entry.data.verifiedAt ?? entry.data.updatedAt, lang),
+    verified: entry.data.verifiedAt ? 'verified' : 'updated',
+    verifiedPhoto: entry.data.verifiedPhoto,
+    meta: [],
+    gallery: entry.data.gallery,
+  }));
+}
+
+const hasArticles = cards.length > 0;
+
+/** OG-картинка хаба (§14): обложка первой карточки раздела — репрезентативное фото. */
+const ogImage = cards.find((c) => c.cover)?.cover?.src;
+
+/** ItemList (§14): список материалов раздела — rich-результаты. */
+const SITE = Astro.site ?? new URL('https://georgiaguidebook.com');
+const itemListLd = hasArticles
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: heading,
+      itemListElement: cards.map((card, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: card.title,
+        url: new URL(card.href, SITE).href,
+      })),
+    }
+  : null;
+---
+
+<BaseLayout title={pageTitle} description={description} lang={lang} image={ogImage}>
+  {itemListLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(itemListLd)} />}
+  <div class="hub">
+    <div class="container">
+      <Breadcrumbs lang={lang} items={[{ label: heading }]} />
+
+      <header class="head" data-reveal>
+        <h1 class="head__title">{heading}</h1>
+        <div class="head__intro">
+          {sectionContent.intro.map((p: string) => <p>{p}</p>)}
+        </div>
+      </header>
+
+      <section class="list" aria-labelledby="hub-list-heading">
+        <h2 id="hub-list-heading" class="list__heading">{dict.hub.listHeading}</h2>
+        {
+          hasArticles ? (
+            <div class="grid">
+              {cards.map((card) => (
+                <ArticleCard
+                  lang={lang}
+                  href={card.href}
+                  title={card.title}
+                  description={card.cardDescription}
+                  cover={card.cover}
+                  date={card.date}
+                  verified={card.verified}
+                  verifiedPhoto={card.verifiedPhoto}
+                  meta={card.meta}
+                  gallery={card.gallery}
+                />
+              ))}
+            </div>
+          ) : (
+            <EmptyHint text={dict.hub.empty} />
+          )
+        }
+      </section>
+
+      {
+        /* AffiliateBox раздела (§8.3, §16) — ПОД списком: контент-первый порядок
+           (аудит 2026-06-20). Один виджет на страницу (правило 2). slug=section. */
+        (() => {
+          const partner = HUB_AFFILIATE_PARTNER[section];
+          const affiliateCopy = dict.hubAffiliate[section];
+          if (!partner || !affiliateCopy) return null;
+          return (
+            <div class="hub__affiliate">
+              <AffiliateBox
+                lang={lang}
+                partner={partner}
+                slug={section}
+                title={affiliateCopy.title}
+                label={dict.actions.more}
+                note={affiliateCopy.note}
+              />
+            </div>
+          );
+        })()
+      }
+    </div>
+  </div>
+  {/* Карусель фото в карточках-миниатюрах (статьи/маршруты с галереей). */}
+  <script is:inline type="module" src="/js/rcard-gallery.js"></script>
+</BaseLayout>
+
+<style>
+  .container {
+    max-width: var(--container-content);
+    margin: 0 auto;
+    padding-inline: var(--space-4);
+  }
+  .hub {
+    padding-block: var(--space-8) var(--space-12);
+  }
+
+  .head {
+    margin-bottom: var(--space-12);
+  }
+  .head__title {
+    font-size: var(--text-3xl);
+    margin: 0 0 var(--space-6);
+  }
+  @media (min-width: 768px) {
+    .head__title {
+      font-size: var(--text-4xl);
+    }
+  }
+  .head__intro {
+    display: grid;
+    gap: var(--space-4);
+    max-width: 68ch;
+  }
+  .head__intro :global(p) {
+    margin: 0;
+    font-size: var(--text-lg);
+    color: var(--text-body);
+  }
+
+  /* AffiliateBox раздела — теперь ПОД списком (контент-первый): отступ сверху
+     отделяет его от карточек, снизу до футера хватает его margin-top (§8.3). */
+  .hub__affiliate {
+    margin-top: var(--space-12);
+  }
+
+  .list__heading {
+    font-size: var(--text-2xl);
+    margin: 0 0 var(--space-6);
+  }
+  .grid {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 640px) {
+    .grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 1024px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+</style>

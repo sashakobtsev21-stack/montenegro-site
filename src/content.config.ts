@@ -3,7 +3,7 @@ import { z } from 'astro/zod';
 import { contentGlob } from './loaders/contentGlob';
 
 /**
- * Контент-модель Georgia Guidebook (SPEC §11, v3.1).
+ * Контент-модель Montenegro Guidebook (SPEC §11; форк движка Georgia Guidebook).
  *
  * ВАЖНО: эти схемы — будущий API мобильного приложения (§23) и источник
  * автоматических schema.org. Менять только осознанно, со сверкой со SPEC §11.
@@ -30,22 +30,23 @@ const CATEGORIES = [
   'planirovanie',
 ] as const;
 
-/** Уровни цен для директории «Где поесть» (§8.6, §11). */
-const PRICE_LEVELS = ['₾', '₾₾', '₾₾₾'] as const;
+/** Уровни цен для директории «Где поесть» (§8.6, §11). Валюта Черногории — евро (€). */
+const PRICE_LEVELS = ['€', '€€', '€€€'] as const;
 
 /**
  * Язык-нейтральные ключи кухни для фильтра /eda/ (аудит 2026-06-20). Чип
  * локализуется (i18n eda.cuisineKeys ↔ CUISINE_KEY_SLUGS, см. check-enums);
- * карточка по-прежнему показывает полную строку `cuisine`.
+ * карточка по-прежнему показывает полную строку `cuisine`. Под Черногорию:
+ * черногорская/балканская кухня + морепродукты Адриатики + гриль (роштиль/чевапи).
  */
 const CUISINE_KEYS = [
-  'georgian',
+  'montenegrin',
   'seafood',
+  'grill',
   'wine',
   'cafe',
   'bakery',
   'vegetarian',
-  'asian',
   'street',
   'bar',
 ] as const;
@@ -67,23 +68,12 @@ const ATTRACTION_TYPES = [
 ] as const;
 
 /**
- * Регион (мхаре) Грузии (§7) — для фильтра каталога достопримечательностей.
- * Опционально (используют только достопримечательности). Слаги ↔ ru/uk лейблы
- * в i18n (`regions`). 11 мхаре + столица Тбилиси.
+ * Регион Черногории (§7) — для фильтра каталога достопримечательностей.
+ * Опционально (используют только достопримечательности). Слаги ↔ ru/uk/en лейблы
+ * в i18n (`regions`). 3 статистических макрорегиона (MONSTAT, решение владельца
+ * 2026-06): Приморье / Центральный / Северный.
  */
-const REGIONS = [
-  'tbilisi',
-  'adjara',
-  'guria',
-  'imereti',
-  'kakheti',
-  'kvemo-kartli',
-  'mtskheta-mtianeti',
-  'racha-lechkhumi',
-  'samegrelo-zemo-svaneti',
-  'samtskhe-javakheti',
-  'shida-kartli',
-] as const;
+const REGIONS = ['coastal', 'central', 'northern'] as const;
 
 /**
  * Подкатегория раздела «Развлечения» (§7, решение владельца 2026-06-16).
@@ -232,27 +222,28 @@ const articleBase = z.object({
     .optional(),
   /**
    * «Как доехать» из крупных точек въезда (§8.1). Опционально: статьи о
-   * местах получают блок AccessFrom с расстоянием/временем из Тбилиси,
-   * Кутаиси и Батуми. Все поля внутри опциональны — указываем только то,
-   * что известно (CLAUDE правило 4). На контракт API (§23) не влияет.
+   * местах получают блок AccessFrom с расстоянием/временем из Подгорицы
+   * (аэропорт TGD), Тивата (аэропорт TIV) и Будвы (главный курорт). Все поля
+   * внутри опциональны — указываем только то, что известно (CLAUDE правило 4).
+   * На контракт API (§23) не влияет.
    */
   accessFrom: z
     .object({
-      tbilisi: z
+      podgorica: z
         .object({
           km: z.number().optional(),
           duration: z.string().optional(),
           note: z.string().optional(),
         })
         .optional(),
-      kutaisi: z
+      tivat: z
         .object({
           km: z.number().optional(),
           duration: z.string().optional(),
           note: z.string().optional(),
         })
         .optional(),
-      batumi: z
+      budva: z
         .object({
           km: z.number().optional(),
           duration: z.string().optional(),

@@ -63,7 +63,7 @@ const dict = t(lang);
  */
 const navLangs: Lang[] = utility ? [lang] : availableLangs;
 
-const SITE = Astro.site ?? new URL('https://georgiaguidebook.com');
+const SITE = Astro.site ?? new URL('https://montenegroguidebook.com');
 const canonical = new URL(Astro.url.pathname, SITE).href;
 
 /**
@@ -132,16 +132,11 @@ const siteLd = {
       />
     )}
 
-    <!-- Google tag (gtag.js) — GA4. Внешний loader + инлайн-инициализация. Под строгим
-         CSP (§18, без 'unsafe-inline') инлайн-скрипт разрешён по sha256-хешу в
-         public/_headers → script-src. Меняешь содержимое инлайна/ID — пересчитай хеш. -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PV88LQSD3W"></script>
-    <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-PV88LQSD3W');
-    </script>
+    <!-- Аналитика (GA4) подключается на деплое (R5), когда заведено свойство под
+         домен Черногории. До этого тег НЕ ставим — чтобы не слать данные в чужое
+         (грузинское) свойство. При добавлении: внешний loader gtag.js + инлайн-
+         инициализация по sha256-хешу в public/_headers → script-src (§18). -->
+
 
     <!--
       Гейт движения (ui-ux-pro-max §7): СИНХРОННЫЙ внешний модуль со 'self'

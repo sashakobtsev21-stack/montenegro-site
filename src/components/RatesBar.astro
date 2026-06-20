@@ -1,15 +1,14 @@
 ---
 /**
  * RatesBar (§8.4, Фаза 6) — тонкая utility-полоса в самом верху шапки:
- * курс лари (USD/EUR/RUB/UAH) + погода (Тбилиси/Кутаиси/Батуми/море) — ОБА
- * закреплены инлайн единым стилем (решение владельца 2026-06-16: погоду из
- * выпадашки в закреплённый вид, по аналогии с курсом). Полезно на любой
- * странице → в глобальный хедер, компактно и без CLS.
+ * курс евро (€ за 1 $ / 1 £ / 100 ₽ / 10 ₴) + погода (Подгорица/Будва/Котор/
+ * море) — ОБА закреплены инлайн единым стилем. Полезно на любой странице → в
+ * глобальный хедер, компактно и без CLS.
  *
  * Гибрид: значения зашиваются снапшотом на сборке (getLiveSnapshot, мемо — 1
  * запрос на билд даже при рендере на всех страницах), клиент (/js/live-data.js)
  * дотягивает свежие по тем же data-live ключам. Источник недоступен → снапшот,
- * нет и его → «—». Курс по конвенции НБ Грузии: USD/EUR за 1, RUB за 100, UAH за 10.
+ * нет и его → «—». Черногория — евро (€): показываем, сколько € за единицу валюты.
  */
 import { t, type Lang } from '../i18n';
 import { getLiveSnapshot } from '../lib/liveSnapshot';
@@ -24,7 +23,7 @@ const ld = dict.liveData;
 const snap = await getLiveSnapshot();
 
 const fmtT = (n: number | null): string => (typeof n === 'number' ? `${Math.round(n)}°` : '—');
-const fmtFx = (n: number | null): string => (typeof n === 'number' ? `${n.toFixed(2)} ₾` : '—');
+const fmtFx = (n: number | null): string => (typeof n === 'number' ? `${n.toFixed(2)} €` : '—');
 
 const locale = lang === 'uk' ? 'uk-UA' : lang === 'en' ? 'en-US' : 'ru-RU';
 let buildTime = '';
@@ -32,7 +31,7 @@ try {
   buildTime = new Intl.DateTimeFormat(locale, {
     hour: '2-digit',
     minute: '2-digit',
-    timeZone: 'Asia/Tbilisi',
+    timeZone: 'Europe/Podgorica',
   }).format(new Date());
 } catch {
   buildTime = '';
@@ -47,8 +46,8 @@ try {
         <b data-live="fx-usd">{fmtFx(snap.fx.usd)}</b>
       </li>
       <li class="rates__item">
-        <span class="rates__cur">1&nbsp;€</span>
-        <b data-live="fx-eur">{fmtFx(snap.fx.eur)}</b>
+        <span class="rates__cur">1&nbsp;£</span>
+        <b data-live="fx-gbp">{fmtFx(snap.fx.gbp)}</b>
       </li>
       <li class="rates__item">
         <span class="rates__cur">10&nbsp;₴</span>
@@ -63,20 +62,20 @@ try {
     <div class="wx">
       <ul class="rates rates--wx" aria-label={ld.weather}>
         <li class="rates__item">
-          <span class="rates__cur">{ld.cities.tbilisi}</span>
-          <b data-live="air-tbilisi">{fmtT(snap.air.tbilisi)}</b>
+          <span class="rates__cur">{ld.cities.podgorica}</span>
+          <b data-live="air-podgorica">{fmtT(snap.air.podgorica)}</b>
         </li>
         <li class="rates__item">
-          <span class="rates__cur">{ld.cities.kutaisi}</span>
-          <b data-live="air-kutaisi">{fmtT(snap.air.kutaisi)}</b>
+          <span class="rates__cur">{ld.cities.budva}</span>
+          <b data-live="air-budva">{fmtT(snap.air.budva)}</b>
         </li>
         <li class="rates__item">
-          <span class="rates__cur">{ld.cities.batumi}</span>
-          <b data-live="air-batumi">{fmtT(snap.air.batumi)}</b>
+          <span class="rates__cur">{ld.cities.kotor}</span>
+          <b data-live="air-kotor">{fmtT(snap.air.kotor)}</b>
         </li>
         <li class="rates__item">
           <span class="rates__cur">{ld.sea}</span>
-          <b data-live="sea-batumi">{fmtT(snap.sea)}</b>
+          <b data-live="sea-budva">{fmtT(snap.sea)}</b>
         </li>
       </ul>
       <details class="wx__info">

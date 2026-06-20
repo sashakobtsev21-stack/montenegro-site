@@ -55,9 +55,9 @@ export {
  * на хабе /eda/ и в getStaticPaths шаблона CityFoodPage.
  */
 export const EDA_CITY_PAGES = [
-  { key: 'tbilisi', slug: 'gde-poest-tbilisi', citySlug: 'tbilisi' },
-  { key: 'batumi', slug: 'gde-poest-batumi', citySlug: 'batumi' },
-  { key: 'kutaisi', slug: 'gde-poest-kutaisi', citySlug: 'kutaisi' },
+  { key: 'budva', slug: 'gde-poest-budva', citySlug: 'budva' },
+  { key: 'kotor', slug: 'gde-poest-kotor', citySlug: 'kotor' },
+  { key: 'podgorica', slug: 'gde-poest-podgorica', citySlug: 'podgorica' },
 ] as const satisfies ReadonlyArray<{ key: EdaCityKey; slug: string; citySlug: string }>;
 
 const dictionaries: Record<Lang, UIDictionary> = { ru, uk, en };

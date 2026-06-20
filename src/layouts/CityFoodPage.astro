@@ -44,7 +44,7 @@ const cfg = EDA_CITY_PAGES.find((p) => p.key === cityKey)!;
 const pageTitle = `${city.heading} — ${dict.siteName}`;
 const description = clampDesc(city.lead);
 
-const SITE = Astro.site ?? new URL('https://georgiaguidebook.com');
+const SITE = Astro.site ?? new URL('https://montenegroguidebook.com');
 const pageUrl = new URL(Astro.url.pathname, SITE).href;
 const homeUrl = new URL(sectionHref(lang, 'home'), SITE).href;
 const edaUrl = new URL(sectionHref(lang, 'eda'), SITE).href;
@@ -57,6 +57,11 @@ const hasArticle = (category: string, slug: string): boolean =>
   articlesAll.some(
     (e) => e.data.lang === lang && e.data.category === category && e.data.slug === slug,
   );
+/** Существует ли материал хоть на одном языке — чтобы не рисовать битую ссылку до наполнения (§12). */
+const hasArticleAnyLang = (category: string, slug: string): boolean =>
+  articlesAll.some((e) => e.data.category === category && e.data.slug === slug);
+const hasCuisineGuide = hasArticleAnyLang('eda', 'chto-poprobovat');
+const hasCityGuide = hasArticleAnyLang('goroda', cfg.citySlug);
 const cuisineHref = articleHref(
   hasArticle('eda', 'chto-poprobovat') ? lang : DEFAULT_LANG,
   'eda',
@@ -91,7 +96,7 @@ places.sort((a, b) => {
 const hasPlaces = places.length > 0;
 
 const priceRangeFor = (lvl: string): string =>
-  lvl === '₾' ? 'inexpensive' : lvl === '₾₾' ? 'moderate' : 'expensive';
+  lvl === '€' ? 'inexpensive' : lvl === '€€' ? 'moderate' : 'expensive';
 
 /** JSON-LD (§14): ItemList(Restaurant) этого города. Чужие рейтинги НЕ кладём (§15). */
 const itemListLd = {
@@ -109,7 +114,7 @@ const itemListLd = {
       address: {
         '@type': 'PostalAddress',
         addressLocality: p.data.city,
-        addressCountry: 'GE',
+        addressCountry: 'ME',
         ...(p.data.geo.address ? { streetAddress: p.data.geo.address } : {}),
       },
       geo: {
@@ -157,11 +162,15 @@ const breadcrumbLd = {
         <div class="head__intro">
           {city.intro.map((p: string) => <p>{p}</p>)}
         </div>
-        <a class="head__guide" href={cuisineHref}>
-          <Icon name="utensils" size={18} class="head__guide-icon" />
-          <span>{dict.eda.cuisineGuide}</span>
-          <Icon name="arrow-right" size={16} />
-        </a>
+        {
+          hasCuisineGuide && (
+            <a class="head__guide" href={cuisineHref}>
+              <Icon name="utensils" size={18} class="head__guide-icon" />
+              <span>{dict.eda.cuisineGuide}</span>
+              <Icon name="arrow-right" size={16} />
+            </a>
+          )
+        }
       </header>
 
       {
@@ -221,11 +230,17 @@ const breadcrumbLd = {
           <span class="u-underline">{cp.backToAll}</span>
           <Icon name="arrow-right" size={16} />
         </a>
-        <a class="more__link" href={cityGuideHref}>
-          <Icon name="building" size={18} />
-          <span class="u-underline">{cp.cityGuideLink}: {city.cityName}</span>
-          <Icon name="arrow-right" size={16} />
-        </a>
+        {
+          hasCityGuide && (
+            <a class="more__link" href={cityGuideHref}>
+              <Icon name="building" size={18} />
+              <span class="u-underline">
+                {cp.cityGuideLink}: {city.cityName}
+              </span>
+              <Icon name="arrow-right" size={16} />
+            </a>
+          )
+        }
       </nav>
     </div>
   </div>

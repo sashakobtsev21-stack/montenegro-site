@@ -67,26 +67,15 @@ export type AttractionTypeSlug = (typeof ATTRACTION_TYPE_SLUGS)[number];
  * городов (/goroda/) задаются в EDA_CITY_PAGES (i18n/index.ts); локализованные
  * названия и тексты — в словарях (`eda.cityPages.items`).
  */
-export const EDA_CITY_KEYS = ['tbilisi', 'batumi', 'kutaisi'] as const;
+export const EDA_CITY_KEYS = ['budva', 'kotor', 'podgorica'] as const;
 export type EdaCityKey = (typeof EDA_CITY_KEYS)[number];
 
 /**
- * Слаги регионов (мхаре) Грузии (§7) — совпадают с enum REGIONS в
+ * Слаги регионов Черногории (§7) — совпадают с enum REGIONS в
  * content.config.ts (поле `region`). Лейблы — в словарях (`regions`).
+ * 3 статистических макрорегиона (MONSTAT): Приморье / Центральный / Северный.
  */
-export const REGION_SLUGS = [
-  'tbilisi',
-  'adjara',
-  'guria',
-  'imereti',
-  'kakheti',
-  'kvemo-kartli',
-  'mtskheta-mtianeti',
-  'racha-lechkhumi',
-  'samegrelo-zemo-svaneti',
-  'samtskhe-javakheti',
-  'shida-kartli',
-] as const;
+export const REGION_SLUGS = ['coastal', 'central', 'northern'] as const;
 export type RegionSlug = (typeof REGION_SLUGS)[number];
 
 /**
@@ -113,13 +102,13 @@ export type ServiceRubricSlug = (typeof SERVICE_RUBRIC_SLUGS)[number];
 
 /** Язык-нейтральные ключи кухни /eda/ ↔ enum CUISINE_KEYS в content.config (check-enums). */
 export const CUISINE_KEY_SLUGS = [
-  'georgian',
+  'montenegrin',
   'seafood',
+  'grill',
   'wine',
   'cafe',
   'bakery',
   'vegetarian',
-  'asian',
   'street',
   'bar',
 ] as const;
@@ -134,7 +123,7 @@ export interface UIDictionary {
   backToTop: string;
   /** Страница 404 (не найдена) — единая на сайт, рендерится на языке по умолчанию. */
   notFound: { heading: string; text: string; home: string };
-  /** Блок «Сейчас в Грузии» на главной (§8.4): погода + курс лари. */
+  /** Блок «Сейчас в Черногории» на главной (§8.4): погода + курс евро. */
   liveData: {
     heading: string;
     /** Короткое описание слева от панели (вёрстка «сбоку»). */
@@ -142,7 +131,7 @@ export interface UIDictionary {
     weather: string;
     sea: string;
     fx: string;
-    cities: { tbilisi: string; kutaisi: string; batumi: string };
+    cities: { podgorica: string; budva: string; kotor: string };
     updated: string;
     source: string;
   };
@@ -316,7 +305,7 @@ export interface UIDictionary {
   };
   /**
    * Блок «Как доехать» (AccessFrom §8.1) — расстояние/время из крупных
-   * точек въезда. Лейблы городов-истоков по слугам tbilisi/kutaisi/batumi.
+   * точек въезда. Лейблы городов-истоков по слугам podgorica/tivat/budva.
    */
   access: {
     /** Заголовок <summary> блока. */
@@ -325,9 +314,9 @@ export interface UIDictionary {
     km: string;
     /** Локализованные названия городов-истоков. */
     origins: {
-      tbilisi: string;
-      kutaisi: string;
-      batumi: string;
+      podgorica: string;
+      tivat: string;
+      budva: string;
     };
   };
   /** Блок «Вход и часы работы» места (VisitInfo §8.1). */

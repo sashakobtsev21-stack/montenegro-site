@@ -18,8 +18,8 @@ import { execSync } from 'node:child_process';
 import { readFileSync, statSync, readdirSync, existsSync, rmSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
-const ORIGIN = 'https://georgiaguidebook.com';
-const TITLE_SUFFIX = ' — Georgia Guidebook';
+const ORIGIN = 'https://montenegroguidebook.com';
+const TITLE_SUFFIX = ' — Montenegro Guidebook';
 const DIST = 'dist';
 
 const findings = []; // {sev:'critical'|'medium'|'minor', area, where, msg}

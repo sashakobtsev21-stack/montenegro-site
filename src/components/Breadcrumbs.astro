@@ -30,7 +30,7 @@ const homeHref = lang === DEFAULT_LANG ? '/' : `/${lang}/`;
 /** Полный список крошек: Главная → переданные items. */
 const crumbs: Crumb[] = [{ label: dict.breadcrumbs.home, href: homeHref }, ...items];
 
-const SITE = Astro.site ?? new URL('https://georgiaguidebook.com');
+const SITE = Astro.site ?? new URL('https://montenegroguidebook.com');
 const abs = (href?: string): string | undefined => (href ? new URL(href, SITE).href : undefined);
 /** URL текущей страницы — item для последней крошки (Rich Results: у всех ListItem есть item). */
 const currentHref = new URL(Astro.url.pathname, SITE).href;

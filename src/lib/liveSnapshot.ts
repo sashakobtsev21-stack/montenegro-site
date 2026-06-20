@@ -1,29 +1,34 @@
 /**
- * Снапшот «живых» данных для главной (§8.4, Фаза 6): погода (Тбилиси/Кутаиси/
- * Батуми), температура моря в Батуми и курсы лари (USD/EUR/RUB/UAH).
+ * Снапшот «живых» данных для шапки (§8.4, Фаза 6): погода (Подгорица/Будва/
+ * Котор), температура моря у Будвы и курс евро к доллару/фунту/рублю/гривне.
  *
  * Это BUILD-TIME слой гибрида: при сборке тянем данные и зашиваем в HTML
  * (мгновенно видно, 0 CLS, работает без JS). Клиент потом обновляет свежими
  * значениями (/js/live-data.js). Любой сбой источника → null → в UI «—», сборка
  * не падает (try/catch + таймаут). Кэш на уровне модуля: один fetch на сборку,
- * даже если компонент рендерится на нескольких страницах (ru/uk).
+ * даже если компонент рендерится на нескольких страницах (en/ru/uk).
  *
- * Источники (без ключей, CORS ok): open-meteo (погода/море), nbg.gov.ge (курс).
+ * Источники (без ключей, CORS ok): open-meteo (погода/море), open.er-api.com
+ * (курс евро, ECB-данные). Черногория использует евро (€), поэтому показываем
+ * сколько евро стоит 1 $ / 1 £ / 100 ₽ / 10 ₴ — ориентир для приезжающих.
  * Цифры не выдумываем (CLAUDE правило 4): нет данных — поле пустое.
  */
 
 export interface LiveSnapshot {
-  air: { tbilisi: number | null; kutaisi: number | null; batumi: number | null };
+  air: { podgorica: number | null; budva: number | null; kotor: number | null };
   sea: number | null;
-  /** Курс: лари за `quantity` единиц валюты (USD/EUR — за 1, RUB — за 100, UAH — за 10). */
-  fx: { usd: number | null; eur: number | null; rub: number | null; uah: number | null };
+  /** Курс: сколько ЕВРО за единицу валюты (USD/GBP — за 1, RUB — за 100, UAH — за 10). */
+  fx: { usd: number | null; gbp: number | null; rub: number | null; uah: number | null };
 }
 
+// Погода: Подгорица (42.4304,19.2594), Будва (42.2911,18.8401), Котор (42.4247,18.7712).
 const AIR_URL =
-  'https://api.open-meteo.com/v1/forecast?latitude=41.6938,42.2679,41.6168&longitude=44.8015,42.6946,41.6367&current=temperature_2m';
+  'https://api.open-meteo.com/v1/forecast?latitude=42.4304,42.2911,42.4247&longitude=19.2594,18.8401,18.7712&current=temperature_2m';
+// Море: Адриатика у Будвы.
 const SEA_URL =
-  'https://marine-api.open-meteo.com/v1/marine?latitude=41.645&longitude=41.63&current=sea_surface_temperature';
-const FX_URL = 'https://nbg.gov.ge/gw/api/ct/monetarypolicy/currencies/en/json/';
+  'https://marine-api.open-meteo.com/v1/marine?latitude=42.28&longitude=18.83&current=sea_surface_temperature';
+// Курс: евро-база (ECB-данные), без ключа.
+const FX_URL = 'https://open.er-api.com/v6/latest/EUR';
 
 async function jget(url: string, ms = 6000): Promise<unknown> {
   try {
@@ -57,18 +62,21 @@ async function build(): Promise<LiveSnapshot> {
   const seaVal = (sea as { current?: { sea_surface_temperature?: unknown } } | null)?.current
     ?.sea_surface_temperature;
 
-  const fxArr =
-    Array.isArray(fx) && (fx[0] as { currencies?: unknown[] })?.currencies
-      ? ((fx[0] as { currencies: { code: string; rate: number }[] }).currencies ?? [])
-      : [];
-  const per = (code: string): number | null => {
-    const c = fxArr.find((x) => x.code === code);
-    return c && typeof c.rate === 'number' ? c.rate : null;
+  // open.er-api.com: { rates: { USD, GBP, RUB, UAH, ... } } — единиц валюты за 1 €.
+  // Нам нужно обратное: сколько € за единицу валюты (за 100 ₽ / 10 ₴ — кратно).
+  const rates =
+    (fx as { rates?: Record<string, number> } | null)?.rates &&
+    typeof (fx as { rates?: Record<string, number> }).rates === 'object'
+      ? (fx as { rates: Record<string, number> }).rates
+      : {};
+  const eurPer = (code: string, qty = 1): number | null => {
+    const r = rates[code];
+    return typeof r === 'number' && r > 0 ? qty / r : null;
   };
 
   return {
-    air: { tbilisi: temp(airArr[0]), kutaisi: temp(airArr[1]), batumi: temp(airArr[2]) },
+    air: { podgorica: temp(airArr[0]), budva: temp(airArr[1]), kotor: temp(airArr[2]) },
     sea: typeof seaVal === 'number' ? seaVal : null,
-    fx: { usd: per('USD'), eur: per('EUR'), rub: per('RUB'), uah: per('UAH') },
+    fx: { usd: eurPer('USD'), gbp: eurPer('GBP'), rub: eurPer('RUB', 100), uah: eurPer('UAH', 10) },
   };
 }

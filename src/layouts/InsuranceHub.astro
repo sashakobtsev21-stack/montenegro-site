@@ -20,6 +20,7 @@
  */
 import { t, sectionHref, formatDate, type Lang } from '../i18n';
 import { clampDesc } from '../lib/text';
+import { getCollectionSafe } from '../loaders/getCollectionSafe';
 import BaseLayout from './BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import VerifiedBadge from '../components/VerifiedBadge.astro';
@@ -47,6 +48,14 @@ const updatedDate = formatDate(new Date(`${ins.updatedIso}T00:00:00Z`), lang);
 const rentalHref = sectionHref(lang, 'arenda-avto');
 /** Мост хаб→подробный гайд-статья (перелинковка §14, аудит 2026-06-17 P0-3). */
 const guideHref = `${sectionHref(lang, 'strahovka')}kak-vybrat-strahovku/`;
+/** Рисуем мост только когда гайд-статья реально существует (до наполнения — нет битой ссылки, §12). */
+const hasGuide =
+  (
+    await getCollectionSafe(
+      'articles',
+      (e) => e.data.category === 'strahovka' && e.data.slug === 'kak-vybrat-strahovku',
+    )
+  ).length > 0;
 ---
 
 <BaseLayout title={pageTitle} description={description} lang={lang}>
@@ -150,12 +159,16 @@ const guideHref = `${sectionHref(lang, 'strahovka')}kak-vybrat-strahovku/`;
       </section>
 
       {/* Мост на подробный гайд-статью (перелинковка хаб→статья §14). */}
-      <p class="guide-link" data-reveal>
-        <a class="rental-link" href={guideHref}>
-          <Icon name="arrow-right" size={18} />
-          <span class="u-underline">{ins.guideLink}</span>
-        </a>
-      </p>
+      {
+        hasGuide && (
+          <p class="guide-link" data-reveal>
+            <a class="rental-link" href={guideHref}>
+              <Icon name="arrow-right" size={18} />
+              <span class="u-underline">{ins.guideLink}</span>
+            </a>
+          </p>
+        )
+      }
 
       {/* Партнёрский бокс: SafetyWing (туристическая медстраховка) через /go/ (§16). */}
       <div class="affiliate-slot" data-reveal>

@@ -5,8 +5,8 @@
 import type { UIDictionary } from './types';
 
 export const en: UIDictionary = {
-  siteName: 'Georgia Guidebook',
-  tagline: 'Georgia travel guide: vetted places',
+  siteName: 'Montenegro Guidebook',
+  tagline: 'Montenegro travel guide: vetted places',
   langName: 'English',
   skipToContent: 'Skip to content',
   backToTop: 'Back to top',
@@ -16,14 +16,14 @@ export const en: UIDictionary = {
     home: 'Go to homepage',
   },
   liveData: {
-    heading: 'Right now in Georgia',
-    desc: 'Weather in the main cities and the lari exchange rate — check before you travel.',
+    heading: 'Right now in Montenegro',
+    desc: 'Weather in the main cities and the euro exchange rate — check before you travel.',
     weather: 'Weather',
-    sea: 'Sea, Batumi',
-    fx: 'Lari rate',
-    cities: { tbilisi: 'Tbilisi', kutaisi: 'Kutaisi', batumi: 'Batumi' },
+    sea: 'Sea, Budva',
+    fx: 'Euro rate',
+    cities: { podgorica: 'Podgorica', budva: 'Budva', kotor: 'Kotor' },
     updated: 'updated',
-    source: 'weather: open-meteo · rate: National Bank of Georgia',
+    source: 'weather: open-meteo · rate: open.er-api.com',
   },
   nav: {
     home: 'Home',
@@ -68,21 +68,21 @@ export const en: UIDictionary = {
     samplePlaceholder: 'date verified',
   },
   home: {
-    heroTitle: 'Georgia travel guide: vetted places',
+    heroTitle: 'Montenegro travel guide: vetted places',
     heroSubtitle:
-      'Plan your Georgia trip without the tourist traps: we pick places by rating and cross-check them with guides and locals. Updated regularly.',
+      'Plan your Montenegro trip without the tourist traps: we pick places by rating and cross-check them with guides and locals. Updated regularly.',
     heroCredit: 'Photo: Braveheart / Wikimedia Commons · CC BY-SA 4.0',
     photoPrefix: 'Photo',
     search: {
       label: 'Search the site',
-      placeholder: 'Where are you headed? Kazbegi, Tbilisi, car rental…',
+      placeholder: 'Where are you headed? Kotor, Budva, car rental…',
       emptyNoContent: 'Nothing found yet. Try another word — search runs over the articles already published.',
       emptyNoMatch: 'Nothing found. Try a different query.',
       hint: 'Search runs over already published articles, right in your browser.',
     },
     entriesHeading: 'Where to start',
     tiles: {
-      dostoprimechatelnosti: 'Nature, churches, fortresses, waterfalls, and canyons of Georgia',
+      dostoprimechatelnosti: 'Nature, monasteries, fortresses, canyons, and the Bay of Kotor',
       goroda: 'City guides: what to see, where to eat, how to get around',
       eda: 'What to try and where to eat honestly — without tourist markups',
       razvlecheniya: 'Where to go out: clubs and bars, quizzes, beaches, casinos, and parks',
@@ -215,9 +215,9 @@ export const en: UIDictionary = {
     heading: 'Distance',
     km: 'km',
     origins: {
-      tbilisi: 'Tbilisi',
-      kutaisi: 'Kutaisi',
-      batumi: 'Batumi',
+      podgorica: 'Podgorica',
+      tivat: 'Tivat',
+      budva: 'Budva',
     },
   },
   visit: {
@@ -424,22 +424,7 @@ export const en: UIDictionary = {
         'Georgia’s single emergency number is 112 (ambulance, police, rescue). In a serious situation, call for help first and sort things out with the insurer afterwards.',
       ],
     },
-    photos: [
-      {
-        src: '/images/strahovka/g1.webp',
-        alt: 'A mountain pass and green valley in the mountains of Svaneti',
-        caption:
-          'For active travel in remote mountains it’s well worth getting insurance with the right coverage: help can be a long way off here.',
-        credit: 'Photo: Andrew Dubok / Wikimedia Commons, CC BY-SA 3.0',
-      },
-      {
-        src: '/images/strahovka/g2.webp',
-        alt: 'A forest trail towards Mount Ushba in Svaneti',
-        caption:
-          'A basic policy may not cover trekking, skiing or rafting — for active travel you need a separate option.',
-        credit: 'Photo: FingerWiki / Wikimedia Commons, CC BY-SA 4.0',
-      },
-    ],
+    photos: [],
     sources: {
       heading: 'Sources',
       items: [
@@ -468,8 +453,8 @@ export const en: UIDictionary = {
     channels: {
       heading: 'How to get in touch',
       emailLabel: 'Write to us by email:',
-      email: 'info@georgiaguidebook.com',
-      emailUrl: 'mailto:info@georgiaguidebook.com',
+      email: 'info@montenegroguidebook.com',
+      emailUrl: 'mailto:info@montenegroguidebook.com',
     },
   },
   relocation: {
@@ -616,24 +601,24 @@ export const en: UIDictionary = {
       reset: 'Reset filters',
     },
     cuisineKeys: {
-      georgian: 'Georgian',
+      montenegrin: 'Montenegrin',
       seafood: 'Seafood',
+      grill: 'Grill (roštilj)',
       wine: 'Wine bar',
       cafe: 'Café',
       bakery: 'Bakery',
       vegetarian: 'Vegetarian',
-      asian: 'Asian',
       street: 'Street food',
       bar: 'Bar',
     },
-    priceHint: 'Price level: ₾ — cheap, ₾₾ — mid-range, ₾₾₾ — above average.',
+    priceHint: 'Price level: € — cheap, €€ — mid-range, €€€ — above average.',
     sponsoredBadge: 'Partner',
     illustrativeBadge: 'Illustration',
     dishesLabel: 'Prices for main dishes',
     dishesHint: 'a guideline, check on site',
     hoursLabel: 'Opening hours',
-    cuisineGuide: 'What to try in Georgia: a guide to the cuisine',
-    lodgingHeading: 'Where to stay in Georgia',
+    cuisineGuide: 'What to try in Montenegro: a guide to the cuisine',
+    lodgingHeading: 'Where to stay in Montenegro',
     lodgingInCity: 'Where to stay in {city}',
     lodgingNote: 'Hotels and apartments near the best places — compare on Trip.com.',
     onMap: 'On the map',
@@ -651,31 +636,31 @@ export const en: UIDictionary = {
       backToAll: 'The whole “Where to eat” directory',
       cityGuideLink: 'City guide',
       items: {
-        tbilisi: {
-          cityName: 'Tbilisi',
-          heading: 'Tbilisi restaurants & cafes',
-          lead: 'Tbilisi is Georgia’s culinary capital: from old khinkali houses and family marani to signature restaurants and wine bars. We’ve gathered vetted places by district and occasion.',
+        budva: {
+          cityName: 'Budva',
+          heading: 'Budva restaurants & cafes',
+          lead: 'Budva is the heart of the Montenegrin riviera: fresh Adriatic seafood, konobas in the walled old town, and lively terraces along the promenade. Vetted places by the beach and inside Stari Grad.',
           intro: [
-            'In Tbilisi people eat everywhere and in all sorts of ways. In the Old Town and Sololaki — atmospheric Georgian restaurants and wine bars; in Vera and on Rustaveli — coffee shops and breakfasts; at the Dezerter Bazaar — grocery color and street food. Prices rise toward the center and the tourist streets, and they’re noticeably cheaper in simple canteens.',
-            'Below are our vetted places: Georgian classics, signature cuisine, wine, vegan, and coffee. What exactly to order — khinkali, khachapuri, mtsvadi, qvevri wine — is in the guide to the cuisine. We verify each venue and note the check date.',
+            'Budva’s dining splits between the medieval old town (Stari Grad), the Slovenska Plaža promenade and the marina. Expect grilled fish and seafood, Balkan grill (ćevapi, pljeskavica), and Adriatic-Italian pizza and pasta, with busy summer terraces. Prices climb in the old town and along the beachfront and ease off a few streets inland.',
+            'Below are our vetted places in Budva — seafood, konoba classics, wine and cafes. What to order across Montenegrin cuisine — fresh fish, njeguški pršut, grilled meats, local wine — is in the guide to the cuisine. We verify each venue and note the check date.',
           ],
         },
-        batumi: {
-          cityName: 'Batumi',
-          heading: 'Batumi restaurants & cafes',
-          lead: 'Batumi is the sea and Adjarian cuisine: the famous boat-shaped khachapuri, fresh fish, and seaside terraces. Vetted places by the boulevard and in the old town.',
+        kotor: {
+          cityName: 'Kotor',
+          heading: 'Kotor restaurants & cafes',
+          lead: 'Kotor is a UNESCO old town wrapped in the bay: Mediterranean and Adriatic cooking, seafood and Boka specialties in stone-walled konobas. Vetted places inside the walls and around the waterfront.',
           intro: [
-            'In Batumi the gastronomy revolves around the sea and Adjara: fish restaurants, Adjarian khachapuri with egg and butter, seaside verandas. In the old town and by the boulevard there are more tourist spots and nightlife; a little off to the side it’s calmer and cheaper.',
-            'Below are our vetted places in Batumi. For the basic dishes of Georgian cuisine and what the region is famous for, take a look at the guide to the cuisine; each venue shows the check date.',
+            'Inside Kotor’s walls the squares are lined with restaurants and wine bars; along the Bay of Kotor (Boka) you’ll find seafood konobas, mussels and fresh fish from the bay. The old town is more touristy and pricier; Dobrota and Muo just outside are calmer and often better value.',
+            'Below are our vetted places in Kotor. For the basics of Montenegrin and Boka cuisine — buzara mussels, black risotto, fresh fish, local wine — see the guide to the cuisine; each venue shows the check date.',
           ],
         },
-        kutaisi: {
-          cityName: 'Kutaisi',
-          heading: 'Kutaisi restaurants & cafes',
-          lead: 'Kutaisi is the gateway to Imereti with its greenery, spices, and cheese. Simple, vivid local cuisine and vetted places not far from the center.',
+        podgorica: {
+          cityName: 'Podgorica',
+          heading: 'Podgorica restaurants & cafes',
+          lead: 'Podgorica is the year-round capital: Balkan grill, riverside cafes and a local food scene beyond the coast. Vetted places across the centre and along the Morača.',
           intro: [
-            'Imeretian cuisine is one of the most expressive in Georgia: Imeretian khachapuri, pkhali, spicy sauces, and cheese. Kutaisi has many family-run places with home-style serving, and at the central market — cheese, spices, and churchkhela.',
-            'Below are our vetted places in Kutaisi. What to try first is in the guide to the cuisine; each venue lists the check date.',
+            'As the capital, Podgorica eats all year round, not just in summer. The scene runs from Balkan grill houses (roštilj, ćevapi) and traditional konobas to modern cafes and international spots around the city centre and the Morača river. Prices are generally lower and more local than on the coast.',
+            'Below are our vetted places in Podgorica. What to try across Montenegrin cuisine is in the guide to the cuisine; each venue lists the check date.',
           ],
         },
       },
@@ -691,17 +676,9 @@ export const en: UIDictionary = {
     'muzei-gorodskoe': 'Museums and city sights',
   },
   regions: {
-    tbilisi: 'Tbilisi',
-    adjara: 'Adjara',
-    guria: 'Guria',
-    imereti: 'Imereti',
-    kakheti: 'Kakheti',
-    'kvemo-kartli': 'Kvemo Kartli',
-    'mtskheta-mtianeti': 'Mtskheta-Mtianeti',
-    'racha-lechkhumi': 'Racha-Lechkhumi',
-    'samegrelo-zemo-svaneti': 'Samegrelo — Zemo Svaneti',
-    'samtskhe-javakheti': 'Samtskhe-Javakheti',
-    'shida-kartli': 'Shida Kartli',
+    coastal: 'Adriatic coast',
+    central: 'Central',
+    northern: 'North',
   },
   razvlTypes: {
     'nochnaya-zhizn': 'Nightlife',

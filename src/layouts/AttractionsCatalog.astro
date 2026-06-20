@@ -145,7 +145,7 @@ const hasFilters = filterDefs.length > 0;
 const ogImage = cards.find((c) => c.cover)?.cover?.src;
 
 /** ItemList (§14): структурированный список достопримечательностей — rich-результаты. */
-const SITE = Astro.site ?? new URL('https://georgiaguidebook.com');
+const SITE = Astro.site ?? new URL('https://montenegroguidebook.com');
 const itemListLd = hasPlaces
   ? {
       '@context': 'https://schema.org',

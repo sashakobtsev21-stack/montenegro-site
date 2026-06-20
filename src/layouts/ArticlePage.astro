@@ -105,7 +105,7 @@ const related: RelatedItem[] = relatedPool.map((s) => ({
   verifiedPhoto: s.data.verifiedPhoto,
 }));
 
-const SITE = Astro.site ?? new URL('https://georgiaguidebook.com');
+const SITE = Astro.site ?? new URL('https://montenegroguidebook.com');
 const pageUrl = new URL(Astro.url.pathname, SITE).href;
 /** Абсолютный URL обложки — только если cover задан (cover опционален, §11). */
 const coverUrl = data.cover ? new URL(data.cover.src, SITE).href : undefined;
@@ -158,7 +158,7 @@ const attractionLd = data.geo
             address: {
               '@type': 'PostalAddress',
               streetAddress: data.geo.address,
-              addressCountry: 'GE',
+              addressCountry: 'ME',
             },
           }
         : {}),

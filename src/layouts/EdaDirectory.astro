@@ -49,7 +49,7 @@ const dict = t(lang);
 const pageTitle = `${dict.eda.heading} — ${dict.siteName}`;
 const description = clampDesc(dict.eda.lead);
 
-const SITE = Astro.site ?? new URL('https://georgiaguidebook.com');
+const SITE = Astro.site ?? new URL('https://montenegroguidebook.com');
 const pageUrl = new URL(Astro.url.pathname, SITE).href;
 const homeUrl = new URL(sectionHref(lang, 'home'), SITE).href;
 
@@ -69,6 +69,10 @@ const cuisineHref = articleHref(
     : DEFAULT_LANG,
   'eda',
   'chto-poprobovat',
+);
+/** Рисуем ссылку на гид по кухне только когда статья реально есть (до наполнения — без битой ссылки, §12). */
+const hasCuisineGuide = articlesAll.some(
+  (e) => e.data.category === 'eda' && e.data.slug === 'chto-poprobovat',
 );
 
 /**
@@ -136,7 +140,7 @@ const cuisineKeys: CuisineKeySlug[] = CUISINE_KEY_SLUGS.filter((k) =>
   places.some((p) => p.data.cuisineKey === k),
 );
 /** Ценники — в фиксированном порядке возрастания, только реально встречающиеся. */
-const PRICE_ORDER = ['₾', '₾₾', '₾₾₾'];
+const PRICE_ORDER = ['€', '€€', '€€€'];
 const prices = PRICE_ORDER.filter((lvl) => places.some((p) => p.data.priceLevel === lvl));
 
 /** Опция фасета: value — для data-атрибута и матчинга, label — видимый текст. */
@@ -174,7 +178,7 @@ const hasFilters = filterDefs.length > 0;
 
 /** Маппинг ценника в schema.org priceRange (§14). */
 const priceRangeFor = (lvl: string): string =>
-  lvl === '₾' ? 'inexpensive' : lvl === '₾₾' ? 'moderate' : 'expensive';
+  lvl === '€' ? 'inexpensive' : lvl === '€€' ? 'moderate' : 'expensive';
 
 /**
  * JSON-LD (§14): ItemList с Restaurant-элементами + BreadcrumbList.
@@ -195,7 +199,7 @@ const itemListLd = {
       address: {
         '@type': 'PostalAddress',
         addressLocality: p.data.city,
-        addressCountry: 'GE',
+        addressCountry: 'ME',
         ...(p.data.geo.address ? { streetAddress: p.data.geo.address } : {}),
       },
       geo: {
@@ -249,11 +253,15 @@ const breadcrumbLd = {
       <header class="head" data-reveal>
         <h1 class="head__title">{dict.eda.heading}</h1>
         <p class="head__lead">{dict.eda.lead}</p>
-        <a class="head__guide" href={cuisineHref}>
-          <Icon name="utensils" size={18} class="head__guide-icon" />
-          <span>{dict.eda.cuisineGuide}</span>
-          <Icon name="arrow-right" size={16} />
-        </a>
+        {
+          hasCuisineGuide && (
+            <a class="head__guide" href={cuisineHref}>
+              <Icon name="utensils" size={18} class="head__guide-icon" />
+              <span>{dict.eda.cuisineGuide}</span>
+              <Icon name="arrow-right" size={16} />
+            </a>
+          )
+        }
       </header>
 
       {/* По городам — ссылки на per-city страницы (§8.6, воронка + перелинковка). */}

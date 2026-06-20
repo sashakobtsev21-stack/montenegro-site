@@ -51,7 +51,7 @@ const badgeDate = formatDate(data.verifiedAt ?? data.updatedAt, lang);
 const categoryHeading = dict.nav['marshruty'];
 const categoryHref = sectionHref(lang, 'marshruty' as SectionKey);
 
-const SITE = Astro.site ?? new URL('https://georgiaguidebook.com');
+const SITE = Astro.site ?? new URL('https://montenegroguidebook.com');
 const pageUrl = new URL(Astro.url.pathname, SITE).href;
 const coverUrl = new URL(data.cover.src, SITE).href;
 

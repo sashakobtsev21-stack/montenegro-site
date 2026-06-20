@@ -41,7 +41,7 @@ interface Props {
 const { lang } = Astro.props;
 const dict = t(lang);
 
-const pageTitle = `${dict.siteName} — ${dict.tagline}`;
+const pageTitle = `${dict.tagline} — ${dict.siteName}`;
 const description = dict.home.heroSubtitle;
 
 /**

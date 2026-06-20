@@ -1,7 +1,7 @@
 ---
 /**
- * AccessFrom (§8.1) — «Как доехать» из крупных точек въезда (Тбилиси, Кутаиси,
- * Батуми). Нативный <details>/<summary>: НОЛЬ JS, доступно с клавиатуры из
+ * AccessFrom (§8.1) — «Как доехать» из крупных точек въезда (Подгорица, Тиват,
+ * Будва). Нативный <details>/<summary>: НОЛЬ JS, доступно с клавиатуры из
  * коробки (нативный аккордеон §9), видимый focus задаёт global.css.
  *
  * Данные — из frontmatter `accessFrom` (§11). Рисуем строку только для тех
@@ -20,9 +20,9 @@ export interface AccessOrigin {
 }
 
 export interface AccessFromData {
-  tbilisi?: AccessOrigin;
-  kutaisi?: AccessOrigin;
-  batumi?: AccessOrigin;
+  podgorica?: AccessOrigin;
+  tivat?: AccessOrigin;
+  budva?: AccessOrigin;
 }
 
 interface Props {
@@ -34,8 +34,8 @@ const { lang, accessFrom } = Astro.props;
 const dict = t(lang);
 const a = dict.access;
 
-/** Порядок истоков фиксирован (§8.1): Тбилиси → Кутаиси → Батуми. */
-const ORDER = ['tbilisi', 'kutaisi', 'batumi'] as const;
+/** Порядок истоков фиксирован (§8.1): Подгорица → Тиват → Будва. */
+const ORDER = ['podgorica', 'tivat', 'budva'] as const;
 type OriginKey = (typeof ORDER)[number];
 
 /** Только заданные истоки, в нужном порядке. */

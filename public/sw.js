@@ -5,10 +5,10 @@
  *  - /_astro/ и /fonts/ (хешированные, иммутабельные): cache-first;
  *  - прочее same-origin GET (картинки и т.п.): network-first с кэш-фолбэком офлайн.
  * CSP (§18): SW и manifest отдаются со 'self' (default-src 'self'). Кэш версионируется
- * (CACHE = gg-vN): при активации новой версии старые кэши удаляются.
+ * (CACHE = mg-vN): при активации новой версии старые кэши удаляются.
  */
-const VERSION = 'v1';
-const CACHE = 'gg-' + VERSION;
+const VERSION = 'v2';
+const CACHE = 'mg-' + VERSION;
 const OFFLINE_URL = '/offline.html';
 
 self.addEventListener('install', (event) => {

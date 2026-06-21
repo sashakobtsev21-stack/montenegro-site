@@ -5,7 +5,7 @@
 
 - **Статусы:** ✅ готово (опубликовано, гейты зелёные) · 🟡 в работе · ⬜ план (ещё нет).
 - **Языки (EN-first):** каждая тема = **en (ведущий)** + ru + uk, одинаковый slug. URL: en на корне `/<category>/<slug>/`, ru → `/ru/…`, uk → `/uk/…`. EN пишется первым и задаёт целевой запрос.
-- **На старте корпус ПУСТОЙ** (движок перемоделирован, контента Черногории ещё нет). Всё ниже — ⬜.
+- **Опубликован первый кластер (5 статей, 2026-06-21):** `montenegro-travel-guide`, `best-time-to-visit-montenegro`, `renting-a-car-in-montenegro`, `cost-of-living-in-montenegro`, `durmitor-national-park` — все en/ru/uk, обложка+3 figure, кластер-перелинковка, гейты зелёные (`qa` = GO). Остальное ниже — ⬜.
 
 ---
 
@@ -29,8 +29,8 @@
 
 | Тема | Целевой EN-запрос | Тип | Ссылается вниз на | Статус |
 |---|---|---|---|---|
-| Pillar: гид по Черногории | montenegro travel guide / is montenegro worth visiting | TRAFFIC | всё MONEY-ядро | ⬜ |
-| Когда ехать (сезоны) | best time to visit montenegro | TRAFFIC | города, развлечения (пляжи/горы), маршруты | ⬜ |
+| Pillar: гид по Черногории | montenegro travel guide / is montenegro worth visiting | TRAFFIC | всё MONEY-ядро | ✅ `montenegro-travel-guide` |
+| Когда ехать (сезоны) | best time to visit montenegro | TRAFFIC | города, развлечения (пляжи/горы), маршруты | ✅ `best-time-to-visit-montenegro` |
 | Как добраться / аэропорты | how to get to montenegro / dubrovnik to montenegro | TRAFFIC | трансфер, транспорт, аренда | ⬜ |
 | Передвижение по стране | getting around montenegro | TRAFFIC→MONEY | аренда авто, маршруты | ⬜ |
 | Бюджет поездки | montenegro trip cost / budget | TRAFFIC | аренда, страховка, eSIM, еда | ⬜ |
@@ -41,7 +41,7 @@
 
 | Тема | Целевой EN-запрос | Slug (`/car-rental/…`) | Статус |
 |---|---|---|---|
-| Pillar: аренда авто | car rental in montenegro / renting a car montenegro | `car-rental-montenegro` *(предв.)* | ⬜ |
+| Pillar: аренда авто | car rental in montenegro / renting a car montenegro | `renting-a-car-in-montenegro` | ✅ |
 | Аэропорт Тиват | tivat airport car rental | `tivat-airport` *(предв.)* | ⬜ |
 | Аэропорт Подгорица | podgorica airport car rental | `podgorica-airport` *(предв.)* | ⬜ |
 | Вождение в Черногории | driving in montenegro / serpentine roads | `driving-in-montenegro` *(предв.)* | ⬜ |
@@ -71,7 +71,7 @@
 | Тема | Целевой EN-запрос | Тип | Денежная связка | Статус |
 |---|---|---|---|---|
 | Pillar: переезд | moving to montenegro / living in montenegro | MONEY | Wise + хаб | ⬜ |
-| Стоимость жизни | cost of living in montenegro | MONEY | Wise, eSIM, страховка | ⬜ |
+| Стоимость жизни | cost of living in montenegro | MONEY | Wise, eSIM, страховка | ✅ `cost-of-living-in-montenegro` |
 | Номад-виза | montenegro digital nomad visa | MONEY (YMYL) | SafetyWing рекуррент, лид-ген | ⬜ |
 | Регистрация компании | register company in montenegro / open d.o.o. | MONEY (YMYL) | лид-ген, Wise бизнес | ⬜ |
 | Налоги для иностранцев | montenegro taxes for foreigners | MONEY (YMYL) | лид-ген, Wise | ⬜ |
@@ -88,7 +88,7 @@
 |---|---|---|---|
 | Pillar: что посмотреть | things to do in montenegro | — | ⬜ |
 | Залив/Старый город Котор | kotor old town / bay of kotor | coastal | ⬜ |
-| Дурмитор + Тара | durmitor national park / tara canyon | northern | ⬜ |
+| Дурмитор + Тара | durmitor national park / tara canyon | northern | ✅ `durmitor-national-park` |
 | Свети-Стефан | sveti stefan | coastal | ⬜ |
 | Скадарское озеро | lake skadar | central | ⬜ |
 | Монастырь Острог | ostrog monastery | central | ⬜ |
@@ -146,14 +146,18 @@
 
 Порядок исполнения (certainty-first, по приоритету кластеров + AIO-стойкости):
 
-1. **Pillar «montenegro travel guide»** (Планирование) — ведёт вниз на всё ядро.
-2. **«best time to visit montenegro»** (Планирование) — высокий спрос, ведёт на сезонные разделы.
-3. **«car rental in montenegro»** (MONEY, аренда) — ключевой денежный, авто-страна.
-4. **«montenegro road trip itinerary»** (Маршруты) — AIO-стойкий коммерческий EN-вход.
-5. **«cost of living in montenegro»** (Релокация) — дорогой EN-интент, круглогодичный.
-6. **«kotor travel guide»** + **«budva guide»** (Города) — топ-направления, отели/туры.
-7. **«montenegro travel insurance»** (MONEY, страховка) — рекуррент.
-8. **«things to do in montenegro» / «bay of kotor»** (Достопримечательности) — туры.
+1. ✅ **Pillar «montenegro travel guide»** (Планирование) — ведёт вниз на всё ядро.
+2. ✅ **«best time to visit montenegro»** (Планирование) — высокий спрос, ведёт на сезонные разделы.
+3. ✅ **«renting a car in montenegro»** (MONEY, аренда) — ключевой денежный, авто-страна.
+4. ✅ **«durmitor national park»** (Достопримечательности) — кластер-партнёр гида/сезона/аренды; туры (взят вместо road-trip как опорная точка перелинковки; road-trip — следующим).
+5. ✅ **«cost of living in montenegro»** (Релокация) — дорогой EN-интент, круглогодичный.
+
+> **Готово 2026-06-21:** пункты 1–5 (первый кластер, 15 файлов en/ru/uk, `qa` = GO). Дальше:
+
+6. ⬜ **«montenegro road trip itinerary»** (Маршруты) — AIO-стойкий коммерческий EN-вход.
+7. ⬜ **«kotor travel guide»** + **«budva guide»** (Города) — топ-направления, отели/туры.
+8. ⬜ **«montenegro travel insurance»** (MONEY, страховка) — рекуррент.
+9. ⬜ **«things to do in montenegro» / «bay of kotor»** (Достопримечательности) — туры.
 
 После 8–10 материалов и покупки домена — подключить GSC, снять baseline, пересортировать очередь по реальному спросу.
 

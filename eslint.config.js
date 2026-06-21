@@ -6,7 +6,16 @@ import astro from 'eslint-plugin-astro';
 import globals from 'globals';
 
 export default defineConfig([
-  globalIgnores(['dist/', '.astro/', 'node_modules/', 'public/', '_scratch/', '.tmp-*', '**/*.d.ts']),
+  globalIgnores([
+    'dist/',
+    '.astro/',
+    'node_modules/',
+    'public/',
+    '_scratch/',
+    '.tmp-*',
+    '**/*.d.ts',
+    'scripts/_*.mjs', // scratch-скрипты (gitignored): разовые загрузчики фото и т.п.
+  ]),
   js.configs.recommended,
   tseslint.configs.recommended,
   astro.configs.recommended,

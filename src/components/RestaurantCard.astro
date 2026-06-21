@@ -5,7 +5,7 @@
  * hover-подъём на transform/opacity (ноль CLS, как у ArticleCard/SectionTile).
  *
  * Состав (§8.6): название (Unbounded) → строка-мета (район · кухня · ценник
- * ₾/₾₾/₾₾₾) → 1–2 строки нашего описания (summary) → строка-ориентир рейтинга
+ * €/€€/€€€) → 1–2 строки нашего описания (summary) → строка-ориентир рейтинга
  * (ratingNote, текстом) → VerifiedBadge «Проверено · {дата}» → ссылка «На карте».
  *
  * ВАЖНО (ToS, §15): чужие рейтинги и число отзывов дословно НЕ публикуем —
@@ -27,7 +27,7 @@ import coverVariants from '../data/cover-variants.json';
 interface Props {
   lang: Lang;
   name: string;
-  /** Ценник-ориентир: ₾ / ₾₾ / ₾₾₾ (§11). */
+  /** Ценник-ориентир: € / €€ / €€€ (§11). */
   priceLevel: string;
   district?: string;
   cuisine?: string;

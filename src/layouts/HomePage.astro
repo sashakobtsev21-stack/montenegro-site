@@ -10,7 +10,7 @@
  * персональной личности автора.
  *
  * Состав: hero+поиск → витрина (золотая лента) + строка доверия → бэнд
- * «Услуги для жизни в Грузии» (CTA) → свежие материалы → о проекте → footer (в Base).
+ * «Услуги для жизни в Черногории» (CTA) → свежие материалы → о проекте → footer (в Base).
  */
 import { getCollectionSafe } from '../loaders/getCollectionSafe';
 import BaseLayout from './BaseLayout.astro';
@@ -191,28 +191,30 @@ const showcaseRestaurants = await getCollectionSafe(
   'restaurants',
   (entry) => entry.data.lang === lang && entry.data.draft !== true,
 );
-// Заведения перемешаны со статьями/маршрутами (не подряд) — решение владельца.
+// Витрина: подборка избранного (заведения перемешаны со статьями/маршрутами).
+// Слаги — ЗАГОТОВКИ под будущий контент Черногории: пока материала нет, карточки
+// фильтруются (рендерятся только при наличии материала с обложкой). Заменить на
+// реальные места/маршруты при наполнении (решение владельца). Структуру pick-ов
+// (article/route/restaurant/place-карточка) сохраняем — менять только слаги/курацию.
 const showcasePicks = [
-  { kind: 'article', category: 'goroda', slug: 'tbilisi', kicker: 'city' },
-  { kind: 'restaurant', slug: 'guinness-by-sinori', edaSlug: 'gde-poest-batumi', kicker: 'food' },
-  { kind: 'route', slug: 'tbilisi-kazbegi-2-dnya', kicker: 'route' },
-  // Teatro — статья «Развлечения» как place-карточка (поповер: адрес/часы/карта/сайт)
-  // со знаком качества; всё по запросу владельца.
+  { kind: 'article', category: 'goroda', slug: 'kotor', kicker: 'city' },
+  { kind: 'restaurant', slug: 'placeholder-budva', edaSlug: 'gde-poest-budva', kicker: 'food' },
+  { kind: 'route', slug: 'montenegro-road-trip', kicker: 'route' },
+  // Место «Развлечения» как place-карточка (поповер: адрес/часы/карта/сайт) со
+  // знаком качества — заготовка; реальное заведение + mapUrl добавит владелец.
   {
     kind: 'article',
     category: 'razvlecheniya',
-    slug: 'teatro-batumi',
+    slug: 'placeholder-nightlife',
     kicker: 'nightlife',
     quality: true,
     place: true,
-    cardTitle: 'Teatro',
-    mapUrl: 'https://maps.app.goo.gl/qMh9Kj2rMURoVfLy5',
   },
-  { kind: 'article', category: 'dostoprimechatelnosti', slug: 'vardzia', kicker: 'sight' },
-  { kind: 'restaurant', slug: 'sushiman-batumi', edaSlug: 'gde-poest-batumi', kicker: 'food' },
+  { kind: 'article', category: 'dostoprimechatelnosti', slug: 'durmitor', kicker: 'sight' },
+  { kind: 'restaurant', slug: 'placeholder-kotor', edaSlug: 'gde-poest-kotor', kicker: 'food' },
   { kind: 'article', category: 'eda', slug: 'chto-poprobovat', kicker: 'food' },
-  { kind: 'route', slug: 'gomismta-iz-batumi', kicker: 'route' },
-  { kind: 'article', category: 'goroda', slug: 'batumi', kicker: 'city' },
+  { kind: 'route', slug: 'boka-kotorska-day-trip', kicker: 'route' },
+  { kind: 'article', category: 'goroda', slug: 'budva', kicker: 'city' },
 ] as const;
 const showcaseItems: ShowcaseItem[] = [];
 for (const pick of showcasePicks) {
@@ -257,13 +259,13 @@ for (const pick of showcasePicks) {
   if (p.place) {
     // Статья-место (Teatro): рендерим как place-карточку витрины с поповером
     // (адрес/часы/карта/сайт) и каруселью фото — как у заведений.
-    const batumiCity = lang === 'uk' ? 'Батумі' : lang === 'en' ? 'Batumi' : 'Батуми';
+    const defaultCity = lang === 'uk' ? 'Будва' : lang === 'en' ? 'Budva' : 'Будва';
     showcaseItems.push({
       href: articleHref(lang, category, entry.data.slug),
       title: p.cardTitle ?? entry.data.title,
       cover: entry.data.cover,
       kicker: dict.home.showcase.kickers[pick.kicker],
-      city: p.city ?? batumiCity,
+      city: p.city ?? defaultCity,
       place: true,
       quality: p.quality === true,
       hours: entry.data.visit?.hours,
@@ -291,7 +293,7 @@ for (const pick of showcasePicks) {
     // Знак качества на карточке-статье — только по запросу владельца (Teatro).
     quality: p.quality === true,
     // Опознавательный пин-чип города (для заведений). Задаётся явно у pick:
-    // напр. { kind:'article', category:'eda', slug:'…', kicker:'food', city:'Тбилиси' }.
+    // напр. { kind:'article', category:'eda', slug:'…', kicker:'food', city:'Будва' }.
     // У текущих контентных карточек (города/маршруты) не задан → чип не рисуется.
     city: p.city,
   });
@@ -415,7 +417,7 @@ for (const pick of showcasePicks) {
     </div>
   </section>
 
-  {/* 3. Услуги для жизни в Грузии — заметный CTA-бэнд (продаваемый инвентарь, §16). */}
+  {/* 3. Услуги для жизни в Черногории — заметный CTA-бэнд (продаваемый инвентарь, §16). */}
   <section class="services-band">
     <div class="container services-band__inner" data-reveal>
       <div class="services-band__text">
@@ -477,7 +479,7 @@ for (const pick of showcasePicks) {
     padding-inline: var(--space-4);
   }
 
-  /* Hero — фотофон Грузии (Гергети+Казбек) + тёмный скрим, светлый текст.
+  /* Hero — фотофон (пока грузинские заглушки src/assets/hero — заменить на кадры Черногории) + тёмный скрим, светлый текст.
      Картинка — LCP-элемент: astro:assets даёт адаптивные avif/webp, грузим
      eager+high. Скрим обеспечивает контраст ≥4.5 (§6). Параллакса нет → §15. */
   .hero {

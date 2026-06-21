@@ -89,8 +89,8 @@ export const en: UIDictionary = {
       marshruty: 'Ready-made road trips: a day-by-day plan, budget, and map',
     },
     showcase: {
-      heading: 'Georgia showcase',
-      lead: 'The best places, routes and vetted venues — Georgia at a glance.',
+      heading: 'Montenegro showcase',
+      lead: 'The best places, routes and vetted venues — Montenegro at a glance.',
       partnerNote: 'Includes partner placements.',
       aria: 'Showcase: featured places, routes and venues',
       adKicker: 'Advertising',
@@ -122,7 +122,7 @@ export const en: UIDictionary = {
     freshEmpty: 'Nothing to show here right now — please check back soon. We keep adding vetted, up-to-date guides.',
     about: {
       heading: 'About the project',
-      text: 'Georgia Guidebook is a travel guide to Georgia: attractions, cities, food, routes, and car rental. We pick places by rating, cross-check the facts, and date-stamp every article — here’s how we work.',
+      text: 'Montenegro Guidebook is a travel guide to Montenegro: attractions, cities, food, routes, and car rental. We pick places by rating, cross-check the facts, and date-stamp every article — here’s how we work.',
       link: 'More about the project',
     },
   },
@@ -146,56 +146,56 @@ export const en: UIDictionary = {
     sections: {
       dostoprimechatelnosti: {
         intro: [
-          'What to see in Georgia — from the snowy peaks of Kazbegi and the cave towns of Vardzia and Uplistsikhe to waterfalls, canyons, and ancient churches. In this section we gather the places worth traveling for: nature, fortresses, monasteries, and viewpoints across the country — from Kakheti in the east to Svaneti in the west.',
-          'For each attraction we try to honestly answer the main questions: what exactly to see, how to get there, how much time to set aside, and when to go so you’re not disappointed. Where it makes sense, the end of the article has tips on car rental and tours, because the most convenient way to reach many places in Georgia is by car.',
+          'What to see in Montenegro — from the Bay of Kotor and the Durmitor peaks above the Tara Canyon to Lake Skadar, clifftop monasteries, and ancient fortress towns. In this section we gather the places worth traveling for: nature, fortresses, monasteries, and viewpoints across the country — from the Adriatic coast to the northern mountains.',
+          'For each attraction we try to honestly answer the main questions: what exactly to see, how to get there, how much time to set aside, and when to go so you’re not disappointed. Where it makes sense, the end of the article has tips on car rental and tours, because the most convenient way to reach many places in Montenegro is by car.',
         ],
       },
       goroda: {
         intro: [
-          'Georgia’s cities are like different countries in miniature: multilayered Tbilisi, seaside Batumi, calm Kutaisi, the resort of Borjomi, mountainous Mestia, and wine-country Sighnaghi. This section has city guides: what to see, where to eat honestly, how to get there, and where to stay.',
+          'Montenegro’s cities are like different countries in miniature: the UNESCO bay town of Kotor, lively seaside Budva, yacht-marina Tivat, the year-round capital Podgorica, the old royal capital Cetinje, and mountain-gateway Žabljak. This section has city guides: what to see, where to eat honestly, how to get there, and where to stay.',
           'Cities are a handy starting point for planning: routes branch out from them, attractions are nearby, and this is where you book accommodation, pick up a car, and sort out connectivity. That’s why in the city guides we link to related sections — food, routes, and rental — to put your whole trip in one place.',
         ],
       },
       razvlecheniya: {
         intro: [
-          'Entertainment in Georgia — where to go for experiences beyond ancient churches and mountains: Black Sea beaches, cable cars and parks, botanical gardens, museums, and casinos. In this section we gather places to relax and have fun across the country’s cities — with a focus on what matters in practice: where it is, how much admission costs, and when it’s open.',
+          'Entertainment in Montenegro — where to go for experiences beyond old towns and mountains: Adriatic beaches, the Kotor cable car and national parks, museums, and casinos. In this section we gather places to relax and have fun across the country’s cities — with a focus on what matters in practice: where it is, how much admission costs, and when it’s open.',
           'We keep building the section out, city by city. Prices and opening hours are listed per place, so a night out or a day trip is easy to plan ahead.',
         ],
       },
       marshruty: {
         intro: [
-          'Ready-made road trips around Georgia: a day-by-day plan, a budget guideline, key stops, and a map. The country is compact but mountainous — a car opens up what’s hard to reach by public transport: passes, the wine villages of Kakheti, the canyons of Imereti, and the road to Svaneti.',
-          'How to choose a direction. East — wine-country Kakheti with the Alazani Valley and monasteries; north — the Georgian Military Road to Kazbegi and the Gergeti church; south — mineral-water Borjomi and the cave town of Vardzia; west — Imereti with its emerald canyons and caves; to the sea — the Tbilisi → Batumi corridor. And to see it all in one trip, there’s the “Grand Tour of Georgia,” roughly two weeks long.',
-          'Season and preparation. The best time for most routes is from late spring to autumn. In winter the mountain sections (the Georgian Military Road, the pass to Vardzia, the road to Svaneti) are harder, and passes are sometimes closed because of snow — check road conditions before setting off. For the high mountains and dirt roads, take an SUV. The mileage, days, and budget in the cards are guidelines, not exact measurements: it all depends on the number of stops, the season, and accommodation.',
+          'Ready-made road trips around Montenegro: a day-by-day plan, a budget guideline, key stops, and a map. The country is compact but mountainous — a car opens up what’s hard to reach by public transport: the Kotor serpentine, the lakeside villages of Skadar, the Durmitor ring, and the canyon roads of the north.',
+          'How to choose a direction. The coast — the Bay of Kotor with Perast and Kotor, Budva and Sveti Stefan down to Ulcinj; the centre — Cetinje and the Lovćen mausoleum, Ostrog monastery, Lake Skadar; the north — Durmitor and the Tara Canyon around Žabljak, and the forests of Biogradska Gora near Kolašin; to the mountains — the climb from the bay over Lovćen. And to see it all in one trip, there’s a grand tour of Montenegro, roughly two weeks long.',
+          'Season and preparation. The best time for most routes is from late spring to autumn. In winter the mountain sections (the high passes to Durmitor, the Lovćen and Njegoš roads, the northern canyons) are harder, and passes are sometimes closed because of snow — check road conditions before setting off. For the high mountains and narrow serpentines, take a smaller, manoeuvrable car or an SUV. The mileage, days, and budget in the cards are guidelines, not exact measurements: it all depends on the number of stops, the season, and accommodation.',
         ],
       },
       transport: {
         intro: [
-          'Transport in Georgia — how to get around the country: airports, trains, marshrutkas, intercity buses, and transfers. This section has practical guides: how to get from point to point, roughly how long the trip takes, and what options there are.',
-          'Here you’ll find the country’s airports (Tbilisi, Kutaisi, Batumi), city transport, and popular routes like Tbilisi → Batumi (train, bus, car) — and we keep adding directions and modes of transport. It’s handy to plan transport together with the “Car rental” and “Routes” sections.',
+          'Transport in Montenegro — how to get around the country: airports, the coastal railway, intercity buses, transfers, and ferries across the Bay of Kotor. This section has practical guides: how to get from point to point, roughly how long the trip takes, and what options there are.',
+          'Here you’ll find the country’s airports (Podgorica, Tivat, and nearby Dubrovnik in Croatia), city transport, and popular routes like Podgorica → Budva or Kotor → Budva (bus, car) — and we keep adding directions and modes of transport. It’s handy to plan transport together with the “Car rental” and “Routes” sections.',
         ],
       },
       'arenda-avto': {
         intro: [
-          'Car rental in Georgia is one of the most common questions before a trip: where to get a car, how much it costs, whether you need a deposit, and what catches there are in the contracts. In this section we break down rental by city and airport and compare the options — from international aggregators to local rental companies.',
+          'Car rental in Montenegro is one of the most common questions before a trip: where to get a car, how much it costs, whether you need a deposit, and what catches there are in the contracts. In this section we break down rental by city and airport and compare the options — from international aggregators to local rental companies.',
           'We write about rental from the perspective of a traveler who has personally dealt with deposits, surcharges, and “insurance on site.” Specific prices and terms are something that goes out of date fast, so we mark the date they’re current and don’t pass off old figures as fresh.',
         ],
       },
       strahovka: {
         intro: [
-          'Insurance for a trip to Georgia and for living in the country is a topic that’s easy to put off and that people regret at the worst possible moment. In this section we break down which insurance policies actually work for travelers and relocators, how they differ, and what to look for when choosing.',
-          'Different readers need different solutions: a tourist staying a week needs one kind of insurance, someone living in Georgia for months needs another, with regular renewal. For Ukrainian travelers we call out options that still work, such as EKTA, since some of the standard policies are off-limits to them.',
+          'Insurance for a trip to Montenegro and for living in the country is a topic that’s easy to put off and that people regret at the worst possible moment. In this section we break down which insurance policies actually work for travelers and relocators, how they differ, and what to look for when choosing.',
+          'Different readers need different solutions: a tourist staying a week needs one kind of insurance, someone living in Montenegro for months needs another, with regular renewal. For Ukrainian travelers we call out options that still work, such as EKTA, since some of the standard policies are off-limits to them.',
         ],
       },
       planirovanie: {
         intro: [
-          'Planning a trip to Georgia is what people look up before booking: do you need a visa, when to go, how much money to bring, and what about insurance and safety. This section gives short, practical answers with links to the sections that cover each topic in depth.',
-          'We keep only what actually affects your prep here: visa and entry rules, seasons and weather, money and budget, the mandatory insurance. Regulatory things (visas, insurance) change fast — we mark the date and link the official source rather than passing off old facts as current.',
+          'Planning a trip to Montenegro is what people look up before booking: do you need a visa, when to go, how much money to bring, and what about insurance and safety. This section gives short, practical answers with links to the sections that cover each topic in depth.',
+          'We keep only what actually affects your prep here: visa and entry rules, seasons and weather, money and budget, and travel insurance. Regulatory things (visas, entry) change fast — we mark the date and link the official source (gov.me) rather than passing off old facts as current.',
         ],
       },
       novosti: {
         intro: [
-          'News and updates to the guide: new vetted places, seasonal tips, and changes worth knowing before a trip. Georgia changes — venues open and close, prices and rental terms shift, new routes appear — and this section keeps the guide up to date.',
+          'News and updates to the guide: new vetted places, seasonal tips, and changes worth knowing before a trip. Montenegro changes — venues open and close, prices and rental terms shift, new routes appear — and this section keeps the guide up to date.',
           'We don’t chase “hot” news for the sake of traffic. What lands here is what actually affects trip planning: what we’ve re-checked, what we’ve updated by season, and which places we’ve added after cross-checking with locals and guides. The entries show a date — so you always know how current the information is.',
         ],
       },
@@ -236,7 +236,7 @@ export const en: UIDictionary = {
     heading: 'Search and book hotels',
     cta: 'Show hotel search',
     note: 'Trip.com partner widget. Loads on click. Prices and availability are on the service’s side.',
-    frameTitle: 'Hotel search in Georgia — Trip.com',
+    frameTitle: 'Hotel search in Montenegro — Trip.com',
   },
   article: {
     tocHeading: 'Contents',
@@ -295,7 +295,7 @@ export const en: UIDictionary = {
     heading: 'About the project',
     breadcrumb: 'About',
     intro: [
-      'Georgia Guidebook is a guide to all of Georgia, available in English, Russian and Ukrainian. We bring together in one place everything you need for a trip: attractions, cities, food, ready-made routes, car rental, insurance, and news. The goal is simple — to help you plan a trip without outdated advice and tourist traps.',
+      'Montenegro Guidebook is a guide to all of Montenegro, available in English, Russian and Ukrainian. We bring together in one place everything you need for a trip: attractions, cities, food, ready-made routes, car rental, insurance, and news. The goal is simple — to help you plan a trip without outdated advice and tourist traps.',
       'We don’t write “from memory” and we don’t retell other people’s articles. The guide has a clear principle: how we select places, how we verify facts, and why each article shows the date it was checked. More on that below.',
     ],
     sections: [
@@ -317,7 +317,7 @@ export const en: UIDictionary = {
         heading: 'Honest about figures and prices',
         paragraphs: [
           'We don’t reprint others’ ratings and review counts verbatim — that’s platform data, and their rules forbid such copying. For us a rating is a selection criterion, not content: to see the current rating and reviews, follow the link to the source or the map.',
-          'Prices, opening hours, and terms in our articles are guidelines as of the check date, not a guarantee. Georgia changes fast, so always verify the details that matter for your trip (the rental price, the deposit, the admission cost) on the other side before you pay.',
+          'Prices, opening hours, and terms in our articles are guidelines as of the check date, not a guarantee. Montenegro changes fast, so always verify the details that matter for your trip (the rental price, the deposit, the admission cost) on the other side before you pay.',
         ],
       },
       {
@@ -335,55 +335,55 @@ export const en: UIDictionary = {
     },
   },
   insurance: {
-    heading: 'Insurance for a trip to Georgia: rules and where to get it',
+    heading: 'Insurance for a trip to Montenegro: what you need and where to get it',
     breadcrumb: 'Insurance',
     intro: [
-      'As of 2026, medical insurance has become mandatory for all foreign tourists entering Georgia. It used to be optional — now without a policy you may be refused entry at the border. Below are the current rules, the minimum requirements for a policy, and the services through which you can get one.',
-      'The topic is regulatory: the wording of the law and the border-check procedures may be refined. So we’ve gathered the key requirements into one block and advise verifying them against official sources before your trip — links to the primary sources are at the bottom of the page.',
+      'Travel medical insurance isn’t something Montenegro forces on tourists at the border, but going without it is a gamble you don’t want to take: a policy covers treatment, an accident, or evacuation if something goes wrong far from home. Below are the things worth checking in a policy and the services through which travelers usually buy one.',
+      'Entry and insurance rules can change, so we don’t present any figure as a fixed legal requirement. We’ve gathered practical guidance into one block and advise verifying the current entry conditions against official sources before your trip — links are at the bottom of the page.',
     ],
     updatedIso: '2026-06-14',
     callout: {
-      heading: 'Current rules (from January 1, 2026)',
+      heading: 'Before you travel: check the current entry rules',
       disclaimer:
-        'As of January 1, 2026, medical insurance is mandatory for all foreign tourists entering Georgia. This is a regulatory requirement, and the details (wording, amounts, check procedures) may change — be sure to verify they’re current before your trip.',
+        'Montenegro does not currently require tourists to hold travel insurance to enter, but we still recommend a policy for any trip. Entry conditions can change, so don’t treat this page as a legal source — verify the current requirements before your trip.',
       sourceNote:
-        'The primary source is official resources: embassies, the Ministry of Foreign Affairs, and the Government of Georgia (Resolution No. 602 of 26.12.2025). Links to the sources are at the bottom of the page.',
+        'For the official entry rules check government resources: the Government of Montenegro (gov.me), the Ministry of Foreign Affairs, and your nearest Montenegrin embassy or consulate. Links to the sources are at the bottom of the page.',
     },
     guideLink: 'In depth: how to choose and buy a policy',
     requirements: {
-      heading: 'What you need to know',
+      heading: 'What to look for in a policy',
       items: [
-        'Insurance is mandatory for all foreign tourists — citizens of Russia, Ukraine, Kazakhstan, Belarus, and other countries. A policy is needed for children too.',
-        'The minimum coverage is 30,000 GEL.',
-        'The policy must cover the entire trip: from the entry date to the exit date.',
-        'The issuer can be either a Georgian or a foreign insurance company.',
-        'Coverage must include both medical expenses and accident insurance — by requirement it’s a “health and accident” policy. Medical evacuation and repatriation are additionally mentioned.',
-        'The policy language is English or Georgian. A policy only in Russian or Ukrainian without a translation may not be accepted at the border.',
-        'The policy is checked on entry: at airports — systematically, at land border crossings — selectively. Without it, entry may be refused. Airlines may check for a policy as early as check-in.',
-        'The legal basis is the Law of Georgia “On Tourism” (Art. 12) and Government of Georgia Resolution No. 602 of 26.12.2025.',
+        'Get a policy for everyone travelling, including children — medical care abroad is expensive and a single incident can cost far more than the premium.',
+        'Pick a sensible coverage limit. There’s no fixed legal minimum for Montenegro, but for Europe a limit around €30,000–50,000 is a common, comfortable benchmark.',
+        'The policy should cover the entire trip: from the entry date to the exit date.',
+        'The issuer can be a Montenegrin or a foreign insurance company — what matters is that the coverage is valid in Montenegro/Europe.',
+        'Coverage should include both medical expenses and accidents — ideally a “health and accident” policy. Check that medical evacuation and repatriation are included.',
+        'Keep the policy in English where possible: it’s the easiest language to present at a clinic or to an assistance service. A version in your own language alongside is fine.',
+        'Carry the policy details with you (on your phone is enough): the certificate, the coverage limit, and the 24/7 assistance number.',
+        'Montenegro uses the euro (€), so quote and compare coverage limits in euros to avoid confusion at a clinic or with the insurer.',
       ],
     },
     penalty: {
-      heading: 'Fine for not having a policy',
+      heading: 'What it costs to skip insurance',
       paragraphs: [
-        'The base fine for not having mandatory insurance is 300 GEL. Besides the fine, entry may be refused, so it’s better to get a policy in advance rather than counting on “paying extra on site.”',
-        'For active travel — trekking, skiing, rafting, and other extreme activities — you need a separate coverage option: a basic tourist policy may not cover such cases. Verify the exact fine amounts and coverage terms for extreme activities with the insurer and in official sources before your trip.',
+        'There’s no border fine for travelling without insurance, but the real cost is medical: without a policy you pay clinics and any evacuation out of pocket, and in a serious case that can run into thousands of euros. It’s far cheaper to buy a policy in advance than to count on “sorting it out on site.”',
+        'For active travel — hiking in Durmitor, rafting the Tara, skiing, diving, or other adventure activities — you usually need a separate coverage option: a basic tourist policy may not cover such cases. Verify the exact coverage terms for adventure activities with the insurer before your trip.',
       ],
     },
     services: {
       heading: 'Where to get a policy',
-      lead: 'Below are the services through which travelers most often get insurance for Georgia. Whichever option you choose, check that the policy meets the requirement: coverage of at least 30,000 GEL for the entire trip, the language is English or Georgian, and accident insurance is included (basic plans often don’t have it — it’s added as a separate option). Prices depend on age, duration, and the coverage set, so we give only guidelines, without exact amounts.',
+      lead: 'Below are the services through which travelers most often get insurance for Montenegro. Whichever option you choose, check the essentials: a sensible coverage limit for the whole trip (around €30,000–50,000 is a comfortable benchmark for Europe), a policy you can present in English, and accident cover included (basic plans often don’t have it — it’s added as a separate option). Prices depend on age, duration, and the coverage set, so we give only guidelines, without exact amounts.',
       ctaPlaceholder: 'Sign up on the service’s website. Before buying, verify the current terms and rate.',
       items: [
         {
           name: 'EKTA',
           note: 'a working option for everyone, including citizens of Ukraine',
-          text: 'Online insurance paid by card from anywhere in the world; the policy arrives by email. Coverage is easy to adjust, and the limit can be raised to 30,000 USD — well above the 30,000 GEL requirement. The service’s legal entity is registered in an offshore jurisdiction — this doesn’t affect how the policy works, but keep it in mind.',
+          text: 'Online insurance paid by card from anywhere in the world; the policy arrives by email. Coverage is easy to adjust, and the limit can be raised well above a comfortable European benchmark of €30,000–50,000. The service’s legal entity is registered in an offshore jurisdiction — this doesn’t affect how the policy works, but keep it in mind.',
         },
         {
           name: 'SafetyWing (Nomad Insurance)',
           note: 'for digital nomads and long trips',
-          text: 'Subscription insurance billed monthly — convenient for those who live in Georgia or travel for a long time and don’t want to buy a policy for a fixed period. Suits a relocation and wintering scenario. The service has changed its terms and rates — verify the current ones before buying.',
+          text: 'Subscription insurance billed monthly — convenient for those who live in Montenegro or travel for a long time and don’t want to buy a policy for a fixed period. Suits a relocation and wintering scenario. The service has changed its terms and rates — verify the current ones before buying.',
         },
         {
           name: 'Cherehapa, Polis812',
@@ -391,24 +391,24 @@ export const en: UIDictionary = {
           text: 'Comparison services: they show offers from several insurers at once and help you pick a policy for the limit and duration you need. Handy when you want to compare terms in one place; the set of insurers and the service’s availability change over time — go by the current list on the service itself.',
         },
         {
-          name: 'TBC Insurance, Aldagi, GPI',
-          note: 'local Georgian insurers',
-          text: 'Georgian companies: the policy is issued from the start in English or Georgian and for the local 30,000 GEL limit. This is the most “risk-free” option for meeting the requirement — the policy is guaranteed to fit the local rules and the language of the check.',
+          name: 'Lovćen Osiguranje, Sava Montenegro, Generali',
+          note: 'local Montenegrin insurers',
+          text: 'Montenegrin companies: handy if you’re already in the country or want a locally issued policy in euros. Branches are easy to reach in the bigger towns; check that the plan covers medical treatment and an accident, and ask for an English-language certificate so it’s simple to use at a clinic.',
         },
       ],
     },
     affiliate: {
       title: 'Get SafetyWing insurance',
-      note: 'Nomad Insurance billed monthly — convenient for long trips and living in Georgia. Before buying, verify the current terms and that they meet the entry requirements.',
+      note: 'Nomad Insurance billed monthly — convenient for long trips and living in Montenegro. Before buying, verify the current terms and that they meet the entry requirements.',
       label: 'Sign up online',
     },
     notes: {
       heading: 'What’s important to keep in mind',
       items: [
-        'Check that the policy includes accident insurance. Georgia’s requirement is a “health and accident” policy, and in basic medical plans an accident often comes as a separate option: medical coverage alone may not be enough.',
+        'Check that the policy includes accident cover. The best policies are “health and accident,” and in basic medical plans an accident often comes as a separate option: medical coverage alone may not be enough.',
         'Citizens of Ukraine find it more convenient to get a policy through EKTA or Ukrainian services (for example, Green Travel, Finance.ua). This is a practical recommendation based on service availability, not a ban: “Russian insurance is banned for Ukrainians” is an unconfirmed claim, and we don’t present it as a rule.',
-        'Buy the policy before entering Georgia: some services have a 5–7 day “waiting period” — the insurance doesn’t take effect immediately after payment.',
-        'Visa-free entry (for many countries — up to 1 year) does not cancel the insurance requirement: these are different things.',
+        'Buy the policy before you travel: some services have a 5–7 day “waiting period” — the insurance doesn’t take effect immediately after payment.',
+        'Visa-free entry (for many countries — up to 90 days) is not the same as insurance: it doesn’t cover your medical costs, so a policy is still worth having.',
         'Car rental insurance is a separate matter. A medical policy doesn’t cover damage to the car: for the rental you need your own insurance (CDW / collision), which is arranged together with the rental.',
       ],
       rentalLink: 'More about car rental and its insurance',
@@ -421,17 +421,17 @@ export const en: UIDictionary = {
         'Keep all documents: bills and payment receipts, discharge notes, diagnoses, referrals and prescriptions. Without supporting documents, reimbursement is difficult.',
         'Check how your policy works: the insurer either pays the clinic directly (direct billing) or you pay yourself and are reimbursed later against your receipts.',
         'Respect the deadline for filing a claim — it’s stated in your policy terms. Don’t delay: late claims are often rejected.',
-        'Georgia’s single emergency number is 112 (ambulance, police, rescue). In a serious situation, call for help first and sort things out with the insurer afterwards.',
+        'Montenegro’s single emergency number is 112 (ambulance, police, rescue). In a serious situation, call for help first and sort things out with the insurer afterwards.',
       ],
     },
     photos: [],
     sources: {
       heading: 'Sources',
       items: [
-        'U.S. Embassy in Georgia — the requirement for mandatory medical insurance for entry.',
-        'Government of Georgia Resolution No. 602 of 26.12.2025 and the Law “On Tourism” (Art. 12) — text at matsne.gov.ge/ka/document/view/6728816.',
-        'Ministry of Foreign Affairs of Georgia, Consular Service (entry rules) — geoconsul.gov.ge.',
-        'Georgian insurance companies (TBC Insurance, Aldagi, GPI) — coverage limit and policy language.',
+        'Government of Montenegro (gov.me) — official entry and stay conditions.',
+        'Ministry of Foreign Affairs of Montenegro (mfa.gov.me) — visa and entry rules for foreign nationals.',
+        'Your nearest Montenegrin embassy or consulate — current entry requirements for your citizenship.',
+        'Montenegrin insurance companies (Lovćen Osiguranje, Sava Montenegro, Generali) — coverage terms and limits in euros.',
       ],
     },
   },
@@ -458,22 +458,22 @@ export const en: UIDictionary = {
     },
   },
   relocation: {
-    heading: 'Relocating to Georgia: how to settle in',
+    heading: 'Relocating to Montenegro: how to settle in',
     breadcrumb: 'Relocation',
     uslugi: {
-      heading: 'Services for living in Georgia',
+      heading: 'Services for living in Montenegro',
       text: 'Real estate agents, cleaning, moving, repairs, documents, translators — a directory of vetted services so you don’t have to dig through chats.',
       cta: 'Open services',
     },
     intro: [
-      'Georgia is one of the easiest destinations for a long winter stay and relocation: visa-free entry for citizens of many countries for a long period, inexpensive living, fast internet, and large Russian- and Ukrainian-speaking communities. This section is a practical guide to settling in on the ground.',
-      'We start with the non-regulatory things everyone needs: housing, connectivity, banking, transport, insurance. Documents, visas, and taxes are regulated by the state, and they change periodically — for those we give direct links to official sources and are preparing separate breakdowns.',
+      'Montenegro is an increasingly popular base for a long stay and relocation: visa-free entry for citizens of many countries (typically 90 days in 180), the euro, inexpensive Adriatic living, fast internet, and growing Russian- and Ukrainian-speaking communities on the coast. This section is a practical guide to settling in on the ground.',
+      'We start with the non-regulatory things everyone needs: housing, connectivity, banking, transport, insurance. Documents, residence permits, and taxes are regulated by the state, and they change periodically — for those we give direct links to official sources and are preparing separate breakdowns.',
     ],
     updatedIso: '2026-06-15',
     callout: {
       heading: 'Documents and taxes change — verify with the primary source',
       disclaimer:
-        'The rules for entry, residence permits, business registration, and taxes in Georgia are revised periodically. Don’t rely on retellings in chats and outdated articles — verify the terms as of the time of your move directly with the government bodies (links below).',
+        'The rules for entry, residence permits, business registration, and taxes in Montenegro are revised periodically (for example, the digital nomad permit and the new Company Law). Don’t rely on retellings in chats and outdated articles — verify the terms as of the time of your move directly with the government bodies (gov.me / MUP; links below).',
       sourceNote:
         'That’s why we don’t fix specific deadlines, amounts, and requirements here as unchanging, but point you to the official sites — they always have the current version.',
     },
@@ -486,23 +486,23 @@ export const en: UIDictionary = {
       items: [
         {
           title: 'Housing for your first weeks',
-          text: 'For the first weeks it’s convenient to stay in a hotel, guesthouse, or apart-hotel, and look for a long-term rental on the ground, having seen the neighborhood in person. The largest local listing boards are myhome.ge and ss.ge; there are also many options through local chats and agencies.',
+          text: 'For the first weeks it’s convenient to stay in a hotel, guesthouse, or apart-hotel, and look for a long-term rental on the ground, having seen the neighborhood in person. The largest local listing boards are nekretnine.me and 4zida.me; there are also many options through local Facebook groups, chats, and agencies.',
         },
         {
           title: 'SIM card and internet',
-          text: 'A local SIM is sold with a passport at the airport and at operators’ offices — the main ones are Magti and Silknet. Mobile internet is fast and inexpensive, Wi-Fi is everywhere in the cities; this is one of Georgia’s strengths for remote work.',
+          text: 'A local SIM is sold with a passport at operators’ offices and shops — the main ones are Crnogorski Telekom, m:tel, and Yettel. Mobile internet is fast and inexpensive, Wi-Fi is everywhere in the cities; this is one of Montenegro’s strengths for remote work.',
         },
         {
           title: 'Bank account',
-          text: 'An account and a card are opened for foreigners by the major banks — Bank of Georgia and TBC. Requirements and check times are periodically tightened, so verify the document set and terms at a branch in advance.',
+          text: 'An account and a card are opened for foreigners by the major banks — CKB, NLB, Hipotekarna, and Erste are among the larger ones. Requirements and check times are periodically tightened, so verify the document set and terms at a branch in advance.',
         },
         {
           title: 'Long-term rental',
-          text: 'The lease is usually for 6–12 months, with a deposit most often equal to one month. Prices depend on the city and season: in summer Batumi is more expensive, while in Tbilisi demand is steadier. Check the meters, the internet, and who pays for utilities.',
+          text: 'The lease is usually for 6–12 months, with a deposit most often equal to one month. Prices depend on the city and season: on the coast (Budva, Kotor, Tivat) summer rents spike, while in Podgorica demand is steadier year-round. Check the meters, the internet, and who pays for utilities.',
         },
         {
           title: 'Transport and getting around',
-          text: 'In the cities — cheap public transport (in Tbilisi, the metro and buses with a Metromoney card); between cities — trains, buses, and marshrutkas. For freedom of movement many rent a car — how that works is in our rental section.',
+          text: 'In the cities — cheap public buses (Podgorica has the densest network); between cities — frequent intercity buses and the coastal Bar–Podgorica railway. For freedom of movement many rent a car — how that works is in our rental section.',
         },
         {
           title: 'Health and insurance',
@@ -510,19 +510,19 @@ export const en: UIDictionary = {
         },
         {
           title: 'Daily life and community',
-          text: 'Lari (₾) — cash is needed in the regions, while in the cities cards are accepted almost everywhere. Tbilisi and Batumi have large Russian- and Ukrainian-speaking communities, and cafes and services often speak English — it’s easy to adapt even without Georgian.',
+          text: 'The euro (€) — cash is handy in smaller towns and at markets, while in the cities cards are accepted almost everywhere. The coast (Budva, Bar, Herceg Novi) and Podgorica have growing Russian- and Ukrainian-speaking communities, and cafes and services often speak English — it’s easy to adapt even without Montenegrin.',
         },
       ],
     },
     affiliate: {
       title: 'Where to stay the first weeks',
-      note: 'Hotels and apartments for your first weeks in Georgia — compare prices on Trip.com.',
+      note: 'Hotels and apartments for your first weeks in Montenegro — compare prices on Trip.com.',
       label: 'Find a place for your first weeks',
     },
     esim: {
       title: 'eSIM with internet for your first days',
       note: 'Mobile internet from arrival, until you get a local SIM — the eSIM activates online.',
-      label: 'Buy an eSIM for Georgia',
+      label: 'Buy an eSIM for Montenegro',
     },
     links: {
       heading: 'What’s already on the site',
@@ -531,7 +531,7 @@ export const en: UIDictionary = {
         { section: 'strahovka', text: 'medical insurance with coverage abroad' },
         { section: 'arenda-avto', text: 'car rental: how, where, and without overpaying' },
         { section: 'transport', text: 'how to get there and travel between cities' },
-        { section: 'goroda', text: 'Georgia’s cities — where to live and what’s nearby' },
+        { section: 'goroda', text: 'Montenegro’s cities — where to live and what’s nearby' },
         { section: 'eda', text: 'where to eat: vetted places by city' },
       ],
     },
@@ -541,28 +541,28 @@ export const en: UIDictionary = {
       items: [
         {
           topic: 'Visa, visa-free entry, and length of stay',
-          org: 'MFA of Georgia · Consular Service',
-          url: 'https://geoconsul.gov.ge/en',
+          org: 'Ministry of Foreign Affairs of Montenegro',
+          url: 'https://www.gov.me/en/mvp',
         },
         {
-          topic: 'Residence permit',
-          org: 'Public Service Development Agency',
-          url: 'https://sda.gov.ge/en/',
+          topic: 'Residence and work permit, digital nomad permit',
+          org: 'Ministry of Interior (MUP)',
+          url: 'https://www.gov.me/en/mup',
         },
         {
-          topic: 'Sole proprietor and the “small business” tax (1%)',
-          org: 'Revenue Service of Georgia',
-          url: 'https://rs.ge/',
+          topic: 'Taxes for individuals and companies',
+          org: 'Revenue and Customs Administration',
+          url: 'https://www.gov.me/en/uphi',
         },
         {
-          topic: 'Registering a company or sole proprietorship',
-          org: 'National Agency of Public Registry',
-          url: 'https://napr.gov.ge/en',
+          topic: 'Registering a company (d.o.o.)',
+          org: 'Central Registry of Business Entities (CRPS)',
+          url: 'https://www.gov.me/en/uphi',
         },
         {
           topic: 'Driver’s license and vehicle registration',
-          org: 'Service Agency of the Ministry of Internal Affairs',
-          url: 'https://sa.gov.ge/',
+          org: 'Ministry of Interior (MUP)',
+          url: 'https://www.gov.me/en/mup',
         },
       ],
       linkLabel: 'official site',
@@ -570,25 +570,25 @@ export const en: UIDictionary = {
     notes: {
       heading: 'Nuances people ask about',
       items: [
-        'The language is Georgian, but in the cities you can easily get by with English and Russian: signs and menus are often duplicated.',
-        'The money is the lari (₾). We show the current rate against the dollar, euro, ruble, and hryvnia on the home page in the “Right now in Georgia” block.',
-        'Internet and connectivity are cheap and fast, which is why remote workers love Georgia.',
-        'Housing in Batumi gets noticeably more expensive in the summer season — worth keeping in mind for a long-term rental.',
+        'The language is Montenegrin, but in the cities and on the coast you can easily get by with English and Russian: signs and menus are often duplicated.',
+        'The money is the euro (€) — Montenegro uses it unilaterally. We show the current euro rate on the home page in the “Right now in Montenegro” block.',
+        'Internet and connectivity are cheap and fast, which is why remote workers love Montenegro.',
+        'Housing on the coast (Budva, Kotor, Tivat) gets noticeably more expensive in the summer season — worth keeping in mind for a long-term rental.',
       ],
     },
     sources: {
       heading: 'Official sources',
       items: [
-        'MFA of Georgia, Consular Service (visa, entry) — geoconsul.gov.ge',
-        'Public Service Development Agency (residence permit, civil registry) — sda.gov.ge',
-        'Revenue Service of Georgia (taxes, small business status) — rs.ge',
-        'National Agency of Public Registry (business registration) — napr.gov.ge',
-        'Service Agency of the Ministry of Internal Affairs of Georgia (license, vehicle registration) — sa.gov.ge',
+        'Ministry of Foreign Affairs of Montenegro (visa, entry) — gov.me/en/mvp',
+        'Ministry of Interior, MUP (residence and work permit, digital nomad permit) — gov.me/en/mup',
+        'Revenue and Customs Administration (taxes for individuals and companies) — gov.me/en/uphi',
+        'Central Registry of Business Entities, CRPS (company registration) — gov.me',
+        'Government of Montenegro portal (official services and updates) — gov.me',
       ],
     },
   },
   eda: {
-    heading: 'Where to eat in Georgia',
+    heading: 'Where to eat in Montenegro',
     lead: 'Restaurants, cafes, wine bars, bakeries and markets — by city. Each place has its address, hours, our honest write-up and a link to the map.',
     breadcrumbHome: 'Home',
     filtersLegend: 'Place filters',
@@ -705,14 +705,14 @@ export const en: UIDictionary = {
     emptyFiltered: 'Nothing yet for the selected type. Reset the filter.',
   },
   catalog: {
-    heading: 'What to see in Georgia',
+    heading: 'What to see in Montenegro',
     intro: [
-      'A catalog of Georgia’s attractions: nature and mountains, waterfalls and canyons, cave towns, ancient churches and monasteries, fortresses, and thermal resorts. Filter them by type and region below and open a card with the details.',
+      'A catalog of Montenegro’s attractions: nature and mountains, canyons and lakes, fortress towns, ancient churches and monasteries, and the bays of the Adriatic coast. Filter them by type and region below and open a card with the details.',
       'Places make it into the catalog not “from an old blog from memory.” We select them by high ratings across several independent sources and check the details with experienced travelers, guides, and locals. Every article shows the date of its last check.',
     ],
     breadcrumbHome: 'Home',
     mapHeading: 'All places on the map',
-    mapAria: 'Interactive map of Georgia’s attractions',
+    mapAria: 'Interactive map of Montenegro’s attractions',
     mapHint: 'The map with all the markers loads on click — to keep the page lightweight.',
     filtersLegend: 'Attraction filters',
     typeLabel: 'Type',
@@ -725,10 +725,10 @@ export const en: UIDictionary = {
     emptyNoData: 'This section is being filled in: vetted places with honest descriptions and a check date will appear here soon.',
   },
   uslugi: {
-    heading: 'Services in Georgia: for living and relocating',
+    heading: 'Services in Montenegro: for living and relocating',
     breadcrumb: 'Services',
     intro: [
-      'Services that those living in Georgia and those relocating need: real estate agents and help with housing, cleaning, freight, repairs, paperwork, translators. Conveniently gathered in one place — by category and city.',
+      'Services that those living in Montenegro and those relocating need: real estate agents and help with housing, cleaning, freight, repairs, paperwork, translators. Conveniently gathered in one place — by category and city.',
       'We add to this section as requests come in. Paid placements are marked with a gold border; everything else we add once we’ve verified the service.',
     ],
     rubricLabel: 'Category',
@@ -741,9 +741,9 @@ export const en: UIDictionary = {
     siteLabel: 'Website',
     demoLabel: 'Sample',
     emptyFiltered: 'Nothing yet for the selected category. Reset the filter.',
-    emptyNoData: 'This section is being filled in: vetted services for living in Georgia will appear here soon.',
+    emptyNoData: 'This section is being filled in: vetted services for living in Montenegro will appear here soon.',
     ctaHeading: 'Is your service here?',
-    ctaText: 'Real estate agents, cleaning, tradespeople, and other services for those living in Georgia — write to us and we’ll tell you about placement.',
+    ctaText: 'Real estate agents, cleaning, tradespeople, and other services for those living in Montenegro — write to us and we’ll tell you about placement.',
     ctaLabel: 'Ask about placement',
   },
   coordCopy: {
@@ -754,20 +754,20 @@ export const en: UIDictionary = {
   },
   hubAffiliate: {
     'arenda-avto': {
-      title: 'Car rental in Georgia',
+      title: 'Car rental in Montenegro',
       note: 'Compare rental prices on Trip.com.',
     },
     transport: {
-      title: 'Flights to Georgia',
+      title: 'Flights to Montenegro',
       note: 'Search flights and fares on Trip.com.',
     },
     goroda: {
       title: 'Where to stay',
-      note: 'Hotels and apartments across Georgia on Trip.com.',
+      note: 'Hotels and apartments across Montenegro on Trip.com.',
     },
     razvlecheniya: {
       title: 'Tours & activities',
-      note: 'Find tours and activities across Georgia on Trip.com.',
+      note: 'Find tours and activities across Montenegro on Trip.com.',
     },
   },
 };

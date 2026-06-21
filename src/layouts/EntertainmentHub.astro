@@ -82,21 +82,21 @@ interface HubCard {
   gallery?: { src: string; alt: string; credit?: string }[];
 }
 
-/** Город места — по суффиксу slug (-tbilisi/-batumi/-kutaisi), иначе «другое». */
+/** Город места — по суффиксу slug (-budva/-kotor/-podgorica), иначе «другое». */
 const CITY_NAMES: Record<string, string> = {
-  tbilisi: lang === 'uk' ? 'Тбілісі' : lang === 'en' ? 'Tbilisi' : 'Тбилиси',
-  batumi: lang === 'uk' ? 'Батумі' : lang === 'en' ? 'Batumi' : 'Батуми',
-  kutaisi: lang === 'uk' ? 'Кутаїсі' : lang === 'en' ? 'Kutaisi' : 'Кутаиси',
+  budva: lang === 'uk' ? 'Будва' : lang === 'en' ? 'Budva' : 'Будва',
+  kotor: lang === 'uk' ? 'Котор' : lang === 'en' ? 'Kotor' : 'Котор',
+  podgorica: lang === 'uk' ? 'Подгориця' : lang === 'en' ? 'Podgorica' : 'Подгорица',
   other: lang === 'uk' ? 'Інше' : lang === 'en' ? 'Elsewhere' : 'Другое',
 };
-const CITY_ORDER = ['tbilisi', 'batumi', 'kutaisi', 'other'];
+const CITY_ORDER = ['budva', 'kotor', 'podgorica', 'other'];
 const cityKeyOf = (slug: string): string =>
-  slug.endsWith('-tbilisi')
-    ? 'tbilisi'
-    : slug.endsWith('-batumi')
-      ? 'batumi'
-      : slug.endsWith('-kutaisi')
-        ? 'kutaisi'
+  slug.endsWith('-budva')
+    ? 'budva'
+    : slug.endsWith('-kotor')
+      ? 'kotor'
+      : slug.endsWith('-podgorica')
+        ? 'podgorica'
         : 'other';
 
 const cards: HubCard[] = places.map((entry) => {

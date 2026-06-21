@@ -453,7 +453,7 @@ export interface UIDictionary {
   };
   /**
    * Главная страница раздела «Страховки» (§8.3 хаб с выделенным контентом,
-   * InsuranceHub). Регуляторная тема: действующие правила въезда в Грузию +
+   * InsuranceHub). Регуляторная тема: действующие правила въезда в Черногорию +
    * описание сервисов покупки. Бейдж «Обновлено · {date}» + оговорка про
    * актуальность. AffiliateBox нет (партнёров в partners.json нет — R4).
    * Спорные/неподтверждённые данные как факт НЕ публикуем (см. бриф п.4/п.6).
@@ -665,7 +665,7 @@ export interface UIDictionary {
    * Полная запись (Record) — расхождение слугов схемы и словаря ловит TypeScript.
    */
   attractionTypes: Record<AttractionTypeSlug, string>;
-  /** Лейблы регионов (мхаре) Грузии (§7) по слугам REGION_SLUGS. */
+  /** Лейблы регионов Черногории (§7) по слугам REGION_SLUGS. */
   regions: Record<RegionSlug, string>;
   /** Лейблы подкатегорий «Развлечений» (§7) по слугам RAZVL_TYPE_SLUGS. */
   razvlTypes: Record<RazvlTypeSlug, string>;
@@ -723,7 +723,7 @@ export interface UIDictionary {
   };
   /**
    * Директория «Услуги» (§7, /relokatsiya/uslugi/) — сервисы для живущих в
-   * Грузии. Шаблон-директория (ServicesDirectory) с фильтром по рубрике;
+   * Черногории. Шаблон-директория (ServicesDirectory) с фильтром по рубрике;
    * платное размещение — золотая рамка (решение владельца 2026-06-16).
    */
   uslugi: {

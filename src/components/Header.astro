@@ -2,9 +2,10 @@
 /**
  * Header (§9, §10) — направление «Полевой журнал».
  * Тонкая белая sticky-шапка: сверху utility-полоса с курсом/погодой (RatesBar),
- * ниже — бренд слева, ОСНОВНЫЕ разделы в строке (десктоп), переключатель языка
- * и кнопка-меню справа. Кнопка ☰ открывает компактный блок-выпадашку с
- * остальными разделами (а на мобайле — со всеми). Меню — нативный JS (минимум).
+ * ниже — бренд слева, ОСНОВНЫЕ разделы в строке (десктоп), кнопка-меню справа.
+ * Кнопка ☰ открывает компактный блок-выпадашку с остальными разделами (а на
+ * мобайле — со всеми) И переключателем языка внизу (решение владельца 2026-06-21:
+ * язык убран из основной строки, чтобы не загромождать шапку). Меню — нативный JS.
  *
  * Раскладка разделов (решение владельца): основные (PRIMARY_TILE_KEYS) вынесены
  * в строку на десктопе; вторичные — всегда в выпадашке. На мобайле строка
@@ -58,11 +59,7 @@ const secondaryKeys = SECTION_KEYS.filter((key) => !primarySet.includes(key));
       </ul>
     </nav>
 
-    <div class="bar__lang">
-      <LangSwitcher lang={lang} availableLangs={availableLangs} />
-    </div>
-
-    {/* Кнопка-меню + компактный блок-выпадашка с остальными разделами. */}
+    {/* Кнопка-меню + компактный блок-выпадашка с остальными разделами + языком. */}
     <div class="menu">
       <button
         type="button"
@@ -109,6 +106,12 @@ const secondaryKeys = SECTION_KEYS.filter((key) => !primarySet.includes(key));
             })
           }
         </ul>
+
+        {/* Переключатель языка — внизу выпадашки (вынесен из строки шапки). */}
+        <div class="nav__lang">
+          <span class="nav__lang-label">{dict.lang.label}</span>
+          <LangSwitcher lang={lang} availableLangs={availableLangs} />
+        </div>
       </nav>
     </div>
   </div>
@@ -218,14 +221,10 @@ const secondaryKeys = SECTION_KEYS.filter((key) => !primarySet.includes(key));
     font-weight: 600;
   }
 
-  /* Группа «язык» прижата вправо (бренд и основные разделы — слева). */
-  .bar__lang {
-    margin-left: auto;
-  }
-
-  /* Кнопка-меню + выпадашка. */
+  /* Кнопка-меню прижата вправо (бренд и основные разделы — слева). */
   .menu {
     position: relative;
+    margin-left: auto;
   }
   .menu-toggle {
     display: inline-flex;
@@ -348,6 +347,23 @@ const secondaryKeys = SECTION_KEYS.filter((key) => !primarySet.includes(key));
     }
   }
 
+  /* Блок выбора языка внизу выпадашки: отделён тонкой линией, с подписью-меткой. */
+  .nav__lang {
+    margin-top: var(--space-2);
+    padding: var(--space-2) var(--space-2) var(--space-1);
+    border-top: 1px solid var(--border-hairline);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .nav__lang-label {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
   /*
    * Компактная шапка на узких экранах (§15: 70%+ трафика — телефоны).
    * Бренд (широкий шрифт Unbounded) + 3-язычный переключатель + кнопка-меню
@@ -376,7 +392,6 @@ const secondaryKeys = SECTION_KEYS.filter((key) => !primarySet.includes(key));
       width: 32px;
       height: 21px;
     }
-    .bar__lang,
     .menu {
       flex: 0 0 auto;
     }

@@ -132,10 +132,13 @@ const siteLd = {
       />
     )}
 
-    <!-- Аналитика (GA4) подключается на деплое (R5), когда заведено свойство под
-         домен Черногории. До этого тег НЕ ставим — чтобы не слать данные в чужое
-         (грузинское) свойство. При добавлении: внешний loader gtag.js + инлайн-
-         инициализация по sha256-хешу в public/_headers → script-src (§18). -->
+    {/* Аналитика — GA4 (gtag.js, G-MMFK991W8V): единственная аналитика сайта
+        (правило 8, §17). Внешний self-скрипт (script-src 'self', §18) инициализирует
+        dataLayer и догружает gtag с www.googletagmanager.com (домен — в script-src).
+        Данные шлются ТОЛЬКО с прод-домена (guard по hostname в analytics.js); dev/
+        preview не засоряют статистику. Эндпоинты google-analytics.com — в CSP
+        connect-src/img-src (public/_headers). async — не блокирует рендер. */}
+    <script is:inline async src="/js/analytics.js"></script>
 
 
     <!--

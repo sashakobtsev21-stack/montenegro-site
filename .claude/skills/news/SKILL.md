@@ -34,12 +34,10 @@ description: Дайджест-агрегатор новостей Montenegro Gui
 бизнес-сводки без связи с туризмом, реклама, кликбейт, «топ-10»-листиклы, гороскопы.
 
 ## Источники (правит только владелец)
-Издания: **Vijesti (vijesti.me), CdM (cdm.me), RTCG (rtcg.me), Pobjeda (pobjeda.me)**;
-EN — **Total Montenegro News (total-montenegro-news.com)**.
+Издания (EN): **Total Montenegro News (total-montenegro-news.com), Vijesti (EN, vijesti.me), CdM / Cafe del Montenegro (EN, cdm.me), Balkan Insight (по Черногории, balkaninsight.com)**; локальные — RTCG (rtcg.me), Pobjeda (pobjeda.me).
 **Google News RSS** по запросам: `Montenegro travel`, `Tivat airport`, `Podgorica airport`,
 `Montenegro visa`, `Montenegro border`, `Montenegro tourism`.
-Официальные: **Montenegro Airports (montenegroairports.com — TGD Подгорица, TIV Тиват)**,
-**МВД (MUP — визы/въезд/регистрация)**, нацпарки (**nparkovi.me**). Валюта — евро.
+Официальные: **gov.me**, **МВД Черногории (MUP — визы/въезд/регистрация)**, **аэропорты Тиват (TIV) и Подгорица (TGD) — Airports of Montenegro (montenegroairports.com)**; релевантный хаб въезда — **Дубровник (DBV, Хорватия)**. Нацпарки — nparkovi.me. Валюта — **евро €** (у Черногории евро без своего ЦБ — «курс» отслеживать не нужно).
 _Инструменты сбора: `WebSearch` (с указанием свежести) + `WebFetch` (открыть материал и
 прочитать факты). Если источник недоступен — пропусти, не выдумывай._
 

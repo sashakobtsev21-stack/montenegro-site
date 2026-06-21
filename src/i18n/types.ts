@@ -64,7 +64,7 @@ export type AttractionTypeSlug = (typeof ATTRACTION_TYPE_SLUGS)[number];
 
 /**
  * Ключи per-city страниц «Где поесть в {городе}» (§8.6). Слаги URL и слаги
- * городов (/goroda/) задаются в EDA_CITY_PAGES (i18n/index.ts); локализованные
+ * городов (/cities/) задаются в EDA_CITY_PAGES (i18n/index.ts); локализованные
  * названия и тексты — в словарях (`eda.cityPages.items`).
  */
 export const EDA_CITY_KEYS = ['budva', 'kotor', 'podgorica'] as const;
@@ -651,7 +651,7 @@ export interface UIDictionary {
       picksHeading: string;
       /** Ссылка назад на всю директорию /eda/. */
       backToAll: string;
-      /** Подпись ссылки на путеводитель города /goroda/{slug}/. */
+      /** Подпись ссылки на путеводитель города /cities/{slug}/. */
       cityGuideLink: string;
       /** Контент по каждому городу (название города = поле `city` коллекции). */
       items: Record<

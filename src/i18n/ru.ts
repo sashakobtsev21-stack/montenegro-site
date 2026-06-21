@@ -71,7 +71,7 @@ export const ru: UIDictionary = {
     heroTitle: 'Справочник по Черногории: проверенные места',
     heroSubtitle:
       'Спланируйте поездку по Черногории без туристических ловушек: места отбираем по рейтингу и сверяем с гидами и местными. Обновляем регулярно.',
-    heroCredit: 'Фото: Braveheart / Wikimedia Commons · CC BY-SA 4.0',
+    heroCredit: 'Фото: Chensiyuan / Wikimedia Commons · CC BY-SA 4.0',
     photoPrefix: 'Фото',
     search: {
       label: 'Поиск по сайту',

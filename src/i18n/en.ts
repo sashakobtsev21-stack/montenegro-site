@@ -71,7 +71,7 @@ export const en: UIDictionary = {
     heroTitle: 'Montenegro travel guide: vetted places',
     heroSubtitle:
       'Plan your Montenegro trip without the tourist traps: we pick places by rating and cross-check them with guides and locals. Updated regularly.',
-    heroCredit: 'Photo: Braveheart / Wikimedia Commons · CC BY-SA 4.0',
+    heroCredit: 'Photo: Chensiyuan / Wikimedia Commons · CC BY-SA 4.0',
     photoPrefix: 'Photo',
     search: {
       label: 'Search the site',

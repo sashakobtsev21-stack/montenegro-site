@@ -29,11 +29,11 @@ import ArticleCard from '../components/ArticleCard.astro';
 import Icon from '../components/Icon.astro';
 import EmptyHint from '../components/EmptyHint.astro';
 import { getImage } from 'astro:assets';
-import heroGergeti from '../assets/hero/gergeti-kazbek-2.jpg';
-import heroUshguli from '../assets/hero/ushguli.jpg';
-import heroMestia from '../assets/hero/mestia-ushba.jpg';
-import heroTbilisi from '../assets/hero/tbilisi-colorful.jpg';
-import heroKakheti from '../assets/hero/kakheti-vineyards.jpg';
+import heroKotor from '../assets/hero/kotor-bay.jpg';
+import heroDurmitor from '../assets/hero/durmitor-crno-jezero.jpg';
+import heroSvetiStefan from '../assets/hero/sveti-stefan.jpg';
+import heroBudva from '../assets/hero/budva-old-town.jpg';
+import heroLovcen from '../assets/hero/lovcen-njegos.jpg';
 
 interface Props {
   lang: Lang;
@@ -47,7 +47,7 @@ const description = dict.home.heroSubtitle;
 /**
  * Hero-фон с ротацией: кадр меняется каждые 3 часа (по 3-часовому окну
  * времени, floor(now / 3ч) % N) — чистая статика, без бэкенда. Исходники —
- * Unsplash (бесплатная лицензия); атрибуция (автор · Unsplash) и ссылка на фото —
+ * Wikimedia Commons (CC BY-SA 4.0); атрибуция (автор · Commons · лицензия) и ссылка на фото —
  * в credit под кадром, меняются вместе с фото. astro:assets даёт адаптивный
  * webp (responsive widths). LCP (§15): <img> рендерится без src, инлайн-скрипт
  * сразу за ним ставит srcset выбранного кадра (без двойной загрузки),
@@ -59,45 +59,45 @@ const description = dict.home.heroSubtitle;
 // не даёт детальным кадрам влезть в 1600+ на webp. Поэтому AVIF (сжимает заметно
 // плотнее) до 1600px + webp-фолбэк до 1280px для ~5% браузеров без AVIF (<picture>).
 // `sizes="100vw"`: мобайл (70%+ трафика, §15) и Lighthouse-mobile берут 640/960/1280;
-// 1600 уезжает только на десктоп. quality AVIF — per-image (q): детальный снежный
-// Гергети жмём сильнее, мягкий градиент Кахетии — мягче; так каждый вариант ≤~175КБ.
+// 1600 уезжает только на десктоп. quality AVIF — per-image (q): детальные
+// Котор/Будва жмём сильнее, мягкое озеро Дурмитора/небо Ловчена — мягче; вариант ≤~175КБ.
 const AVIF_WIDTHS = [640, 960, 1280, 1600];
 const WEBP_WIDTHS = [640, 960, 1280];
 const heroSources = [
   {
-    img: heroGergeti,
-    q: 40,
-    credit: 'Deogyeon Hwang · Unsplash',
-    href: 'https://unsplash.com/photos/vep3LTkwuwo',
-    focus: '50% 50%',
-  },
-  {
-    img: heroUshguli,
-    q: 50,
-    credit: 'Patrick Schneider · Unsplash',
-    href: 'https://unsplash.com/photos/8bPJ0vagphw',
-    focus: '50% 55%',
-  },
-  {
-    img: heroMestia,
-    q: 48,
-    credit: 'Mike Swigunski · Unsplash',
-    href: 'https://unsplash.com/photos/oqWb_tOK7ns',
-    focus: '50% 50%',
-  },
-  {
-    img: heroTbilisi,
-    q: 52,
-    credit: 'Inna Nasonova · Unsplash',
-    href: 'https://unsplash.com/photos/VcbjEhgdR9A',
+    img: heroKotor,
+    q: 44,
+    credit: 'Chensiyuan · Wikimedia Commons · CC BY-SA 4.0',
+    href: 'https://commons.wikimedia.org/wiki/File:Kotor_Montenegro_panorama_2016.jpg',
     focus: '50% 45%',
   },
   {
-    img: heroKakheti,
-    q: 62,
-    credit: 'Giga Goriashvili · Unsplash',
-    href: 'https://unsplash.com/photos/Lf__9L2SHVQ',
-    focus: '50% 55%',
+    img: heroDurmitor,
+    q: 52,
+    credit: 'Ingo Mehling · Wikimedia Commons · CC BY-SA 4.0',
+    href: 'https://commons.wikimedia.org/wiki/File:Crno_jezero_-_1.jpg',
+    focus: '50% 50%',
+  },
+  {
+    img: heroSvetiStefan,
+    q: 48,
+    credit: 'Marcin Konsek · Wikimedia Commons · CC BY-SA 4.0',
+    href: 'https://commons.wikimedia.org/wiki/File:Sveti_Stefan_(06).jpg',
+    focus: '50% 50%',
+  },
+  {
+    img: heroBudva,
+    q: 44,
+    credit: 'Wistula · Wikimedia Commons · CC BY-SA 4.0',
+    href: 'https://commons.wikimedia.org/wiki/File:Budva_Altstadt.jpg',
+    focus: '50% 45%',
+  },
+  {
+    img: heroLovcen,
+    q: 54,
+    credit: 'Ingo Mehling · Wikimedia Commons · CC BY-SA 4.0',
+    href: 'https://commons.wikimedia.org/wiki/File:Jezerski_Vrh,_Njegos_mausoleum_-_1.jpg',
+    focus: '50% 50%',
   },
 ];
 const heroVariants = await Promise.all(

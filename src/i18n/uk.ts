@@ -71,7 +71,7 @@ export const uk: UIDictionary = {
     heroTitle: 'Довідник по Чорногорії: перевірені місця',
     heroSubtitle:
       'Сплануйте подорож Чорногорією без туристичних пасток: місця відбираємо за рейтингом і звіряємо з гідами та місцевими. Оновлюємо регулярно.',
-    heroCredit: 'Фото: Braveheart / Wikimedia Commons · CC BY-SA 4.0',
+    heroCredit: 'Фото: Chensiyuan / Wikimedia Commons · CC BY-SA 4.0',
     photoPrefix: 'Фото',
     search: {
       label: 'Пошук по сайту',

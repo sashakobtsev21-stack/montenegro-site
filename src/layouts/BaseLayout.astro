@@ -192,6 +192,8 @@ const siteLd = {
 
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {/* Растровый фолбэк favicon (Google-выдача и старые браузеры без SVG-иконок). */}
+    <link rel="icon" type="image/png" sizes="96x96" href="/icons/favicon-96.png" />
 
     {/* PWA: манифест + иконки + цвет темы. theme-color = --color-wine (meta требует литерал). */}
     <link rel="manifest" href="/manifest.webmanifest" />

@@ -25,7 +25,7 @@
 
 ## 1. ⭐ Планирование поездки — TRAFFIC (верх воронки, приоритет №1)
 
-Топ воронки: ищут ПЕРЕД поездкой; ведут трафик вниз (маршруты/города/аренда/страховка). Правило: **каждая статья ссылается вниз** — минимум на `/marshruty/`, `/goroda/`, `/arenda-avto/`, `/strahovka/` (где уместно). Категория `planirovanie`.
+Топ воронки: ищут ПЕРЕД поездкой; ведут трафик вниз (маршруты/города/аренда/страховка). Правило: **каждая статья ссылается вниз** — минимум на `/routes/`, `/cities/`, `/car-rental/`, `/insurance/` (где уместно). Категория `planning`.
 
 | Тема | Целевой EN-запрос | Тип | Ссылается вниз на | Статус |
 |---|---|---|---|---|
@@ -39,7 +39,7 @@
 
 Опорная + аэропорт-спицы + тематические. Монетизация: **DiscoverCars** (EN, 70%/365дн) + **Localrent** (СНГ) через `/go/`.
 
-| Тема | Целевой EN-запрос | Slug (`/arenda-avto/…`) | Статус |
+| Тема | Целевой EN-запрос | Slug (`/car-rental/…`) | Статус |
 |---|---|---|---|
 | Pillar: аренда авто | car rental in montenegro / renting a car montenegro | `car-rental-montenegro` *(предв.)* | ⬜ |
 | Аэропорт Тиват | tivat airport car rental | `tivat-airport` *(предв.)* | ⬜ |
@@ -50,7 +50,7 @@
 
 Монетизация: **SafetyWing** (EN, 10% рекуррентно) / **EKTA** (СНГ/UA, ~20%). YMYL — Черногория НЕ требует страховку для въезда (не выдумывать «обязательность»); рекомендательно + евро/Шенген + офиц. источник.
 
-| Тема | Целевой EN-запрос | Slug (`/strahovka/…`) | Статус |
+| Тема | Целевой EN-запрос | Slug (`/insurance/…`) | Статус |
 |---|---|---|---|
 | Pillar: travel-страховка | montenegro travel insurance | `montenegro-travel-insurance` *(предв.)* | ⬜ |
 | Страховка номада/долгого пребывания | digital nomad insurance montenegro | `nomad-insurance` *(предв.)* | ⬜ |
@@ -62,11 +62,11 @@
 
 | Тема | Целевой EN-запрос | Slug | Статус |
 |---|---|---|---|
-| Pillar: eSIM/SIM | best esim for montenegro / sim card montenegro | `esim-montenegro` *(предв., категория transport или planirovanie)* | ⬜ |
+| Pillar: eSIM/SIM | best esim for montenegro / sim card montenegro | `esim-montenegro` *(предв., категория transport или planning)* | ⬜ |
 
 ## 5. ⭐ Релокация / Номады — MONEY (EN-first, поднят в приоритет)
 
-Менее сезонно, дороже RPM, рекуррент. Категория `relokatsiya` (+ хаб RelocationHub). **YMYL:** только офиц. источники (gov.me/MUP/PwC) + дата + дисклеймер; порог дохода номад-визы — формулой («≈3× минзарплаты»), не фикс-числом; евро.
+Менее сезонно, дороже RPM, рекуррент. Категория `relocation` (+ хаб RelocationHub). **YMYL:** только офиц. источники (gov.me/MUP/PwC) + дата + дисклеймер; порог дохода номад-визы — формулой («≈3× минзарплаты»), не фикс-числом; евро.
 
 | Тема | Целевой EN-запрос | Тип | Денежная связка | Статус |
 |---|---|---|---|---|
@@ -80,7 +80,7 @@
 
 > Подкластер **«register company / taxes for foreigners»** — реалистичный EN-вход (анализ §4: там в основном юрфирмы, мало нейтрального контента).
 
-## 6. Достопримечательности — TRAFFIC (каталог, `dostoprimechatelnosti`)
+## 6. Достопримечательности — TRAFFIC (каталог, `attractions`)
 
 Монетизация: **GetYourGuide/Viator** (туры, 8%). Регион: `coastal`/`central`/`northern`.
 
@@ -94,7 +94,7 @@
 | Монастырь Острог | ostrog monastery | central | ⬜ |
 | Ловчен + мавзолей Негоша | lovcen / njegos mausoleum | central | ⬜ |
 
-## 7. Города — TRAFFIC (`goroda/`)
+## 7. Города — TRAFFIC (`cities/`)
 
 Монетизация: **Booking** (отели, ~4%), туры. Города директории еды — Budva/Kotor/Podgorica.
 
@@ -112,7 +112,7 @@
 
 Монетизация: **DiscoverCars** + отели. Коллекция `routes/`.
 
-| Тема | Целевой EN-запрос | Slug (`/marshruty/…`) | Статус |
+| Тема | Целевой EN-запрос | Slug (`/routes/…`) | Статус |
 |---|---|---|---|
 | Pillar: road trip | montenegro road trip itinerary | `montenegro-road-trip` | ⬜ |
 | 7 дней | montenegro 7 day itinerary | `montenegro-7-days` *(предв.)* | ⬜ |
@@ -125,11 +125,11 @@
 
 | Тема | Целевой EN-запрос | Где | Статус |
 |---|---|---|---|
-| Что попробовать (кухня) | montenegrin food / what to eat in montenegro | `eda/chto-poprobovat` | ⬜ |
-| Где поесть по городам | best restaurants in kotor / budva | гайды по городам (`gde-poest-budva`/`-kotor`/`-podgorica`) | ⬜ |
+| Что попробовать (кухня) | montenegrin food / what to eat in montenegro | `food/what-to-eat` | ⬜ |
+| Где поесть по городам | best restaurants in kotor / budva | гайды по городам (`where-to-eat-budva`/`-kotor`/`-podgorica`) | ⬜ |
 | Карточки заведений | — | `restaurants/` (метка «Проверено» обязательна, CONTENT_GUIDE §13) | ⬜ |
 
-## 10. Развлечения / события — TRAFFIC (`razvlecheniya/`)
+## 10. Развлечения / события — TRAFFIC (`entertainment/`)
 
 Афиша (Sea Dance/KotorArt) — **SEO-магнит** (тикетинг-партнёрок нет); монетизация жильём/авто/турами.
 

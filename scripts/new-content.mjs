@@ -1,9 +1,9 @@
-// Скаффолдер контента Georgia Guidebook (ROADMAP #20b).
+// Скаффолдер контента Montenegro Guidebook (ROADMAP #20b).
 // Генерирует ТРИ языковые версии (ru/uk/en) скелета с корректным по
 // content.config.ts frontmatter + папку фото public/images/<slug>/ + .gitkeep.
 //
 // Использование:
-//   node scripts/new-content.mjs <type> <slug> [--title "Заголовок"] [--city Тбилиси]
+//   node scripts/new-content.mjs <type> <slug> [--title "Заголовок"] [--city Подгорица]
 //   type: article | news | route | restaurant | service | city
 //
 // Что делает:
@@ -145,7 +145,7 @@ days: 1
 distanceKm: 1
 budgetFrom:
   amount: 0
-  currency: 'GEL'
+  currency: 'EUR'
 stops: [] # TODO: заполнить остановки (name/km/coord), затем build-route-geometry.mjs
 bestSeason: []
 gallery: []

@@ -3,7 +3,7 @@
 // Печатает реальные файлы категории с лицензией/автором/URL — БЕЗ галлюцинаций.
 // На сайт не попадает (только инструмент конвейера, см. PROGRESS §11).
 
-const UA = 'GeorgiaGuidebook/1.0 (sashakobtsev21@gmail.com)';
+const UA = 'MontenegroGuidebook/1.0 (sashakobtsev21@gmail.com)';
 const OK_LICENSES = [
   'cc0',
   'cc-by-1.0',

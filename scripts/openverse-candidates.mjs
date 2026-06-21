@@ -7,7 +7,7 @@
 // коммерческий (партнёрки), by-nc/nd нельзя. Атрибуция (автор+лицензия+источник)
 // ОБЯЗАТЕЛЬНА в coverCredit (§18). Печатает реальные результаты API — без галлюцинаций.
 
-const UA = 'GeorgiaGuidebook/1.0 (sashakobtsev21@gmail.com)';
+const UA = 'MontenegroGuidebook/1.0 (sashakobtsev21@gmail.com)';
 const [, , query, limitArg] = process.argv;
 if (!query) {
   console.error('Usage: node scripts/openverse-candidates.mjs "query" [limit]');

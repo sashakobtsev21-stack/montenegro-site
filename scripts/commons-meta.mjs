@@ -1,6 +1,6 @@
 // Dev-хелпер: по списку File:-заголовков печатает автора+лицензию для credit-строки.
 // Использование: node scripts/commons-meta.mjs "File:Ananuri Fortress 01.jpg" "File:..."
-const UA = 'GeorgiaGuidebook/1.0 (sashakobtsev21@gmail.com)';
+const UA = 'MontenegroGuidebook/1.0 (sashakobtsev21@gmail.com)';
 
 const stripHtml = (s = '') =>
   s

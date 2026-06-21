@@ -1,4 +1,4 @@
-// Браузерный слой QA Georgia Guidebook (ROADMAP #21, решение владельца D8).
+// Браузерный слой QA Montenegro Guidebook (ROADMAP #21, решение владельца D8).
 // Запуск: node scripts/qa-lighthouse.mjs   (или npm run qa:browser)
 //
 // Mobile-Lighthouse по ключевым страницам собранного сайта. Чтобы не зависеть от

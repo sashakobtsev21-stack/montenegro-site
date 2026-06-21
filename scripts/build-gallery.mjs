@@ -12,7 +12,7 @@ import { mkdir, writeFile, readFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
 import sharp from 'sharp';
 
-const UA = 'GeorgiaGuidebook/1.0 (sashakobtsev21@gmail.com)';
+const UA = 'MontenegroGuidebook/1.0 (sashakobtsev21@gmail.com)';
 const MAX_BYTES = 200 * 1024;
 const manifestPath = process.argv[2];
 if (!manifestPath) {

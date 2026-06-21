@@ -19,7 +19,7 @@ function accessKey() {
 }
 const KEY = accessKey();
 if (!KEY) { console.error('Нет UNSPLASH_ACCESS_KEY в .env'); process.exit(1); }
-const UA = 'GeorgiaGuidebook/1.0';
+const UA = 'MontenegroGuidebook/1.0';
 const MAX = 200 * 1024;
 const manifest = JSON.parse(await readFile(process.argv[2], 'utf8'));
 

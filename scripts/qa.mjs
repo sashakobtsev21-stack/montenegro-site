@@ -1,4 +1,4 @@
-// Финальный QA-оркестратор Georgia Guidebook (ROADMAP #21).
+// Финальный QA-оркестратор Montenegro Guidebook (ROADMAP #21).
 // Запуск: node scripts/qa.mjs   (или npm run qa)
 //
 // Делает два прохода и печатает отчёт GO/NO-GO с разбивкой

@@ -63,16 +63,16 @@ const places = await getCollectionSafe(
 const articlesAll = await getCollectionSafe('articles', (entry) => entry.data.draft !== true);
 const cuisineHref = articleHref(
   articlesAll.some(
-    (e) => e.data.lang === lang && e.data.category === 'eda' && e.data.slug === 'chto-poprobovat',
+    (e) => e.data.lang === lang && e.data.category === 'food' && e.data.slug === 'what-to-eat',
   )
     ? lang
     : DEFAULT_LANG,
-  'eda',
-  'chto-poprobovat',
+  'food',
+  'what-to-eat',
 );
 /** Рисуем ссылку на гид по кухне только когда статья реально есть (до наполнения — без битой ссылки, §12). */
 const hasCuisineGuide = articlesAll.some(
-  (e) => e.data.category === 'eda' && e.data.slug === 'chto-poprobovat',
+  (e) => e.data.category === 'food' && e.data.slug === 'what-to-eat',
 );
 
 /**
@@ -225,7 +225,7 @@ const breadcrumbLd = {
     {
       '@type': 'ListItem',
       position: 2,
-      name: dict.nav.eda,
+      name: dict.nav.food,
       item: pageUrl,
     },
   ],
@@ -247,7 +247,7 @@ const breadcrumbLd = {
       <nav class="crumbs" aria-label={dict.breadcrumbs.aria}>
         <a href={sectionHref(lang, 'home')}>{dict.eda.breadcrumbHome}</a>
         <span class="crumbs__sep" aria-hidden="true">/</span>
-        <span aria-current="page">{dict.nav.eda}</span>
+        <span aria-current="page">{dict.nav.food}</span>
       </nav>
 
       <header class="head" data-reveal>
@@ -271,7 +271,7 @@ const breadcrumbLd = {
           {
             EDA_CITY_PAGES.map((c) => (
               <li>
-                <a class="cities__link" href={articleHref(lang, 'eda', c.slug)}>
+                <a class="cities__link" href={articleHref(lang, 'food', c.slug)}>
                   {dict.eda.cityPages.items[c.key].cityName}
                   <Icon name="arrow-right" size={14} />
                 </a>
@@ -400,7 +400,7 @@ const breadcrumbLd = {
             <AffiliateBox
               lang={lang}
               partner="trip-hotels"
-              slug="eda"
+              slug="food"
               title={dict.eda.lodgingHeading}
               label={dict.actions.more}
               note={dict.eda.lodgingNote}

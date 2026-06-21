@@ -28,7 +28,7 @@ const about = dict.about;
 const pageTitle = `${about.heading} — ${dict.siteName}`;
 const description = clampDesc(about.intro[0]);
 
-const feedbackHref = sectionHref(lang, 'kontakty');
+const feedbackHref = sectionHref(lang, 'contact');
 
 const SITE = Astro.site ?? new URL('https://montenegroguidebook.com');
 const pageUrl = new URL(Astro.url.pathname, SITE).href;
@@ -94,16 +94,16 @@ const webPageLd = {
 
       {/* Выход из тупика (аудит 2026-06-20): дорожки в контент путеводителя. */}
       <nav class="about__explore" aria-label={dict.header.primaryNav} data-reveal>
-        <a class="about__explore-link" href={sectionHref(lang, 'dostoprimechatelnosti')}>
-          {dict.nav.dostoprimechatelnosti}
+        <a class="about__explore-link" href={sectionHref(lang, 'attractions')}>
+          {dict.nav.attractions}
           <Icon name="arrow-right" size={16} />
         </a>
-        <a class="about__explore-link" href={sectionHref(lang, 'goroda')}>
-          {dict.nav.goroda}
+        <a class="about__explore-link" href={sectionHref(lang, 'cities')}>
+          {dict.nav.cities}
           <Icon name="arrow-right" size={16} />
         </a>
-        <a class="about__explore-link" href={sectionHref(lang, 'marshruty')}>
-          {dict.nav.marshruty}
+        <a class="about__explore-link" href={sectionHref(lang, 'routes')}>
+          {dict.nav.routes}
           <Icon name="arrow-right" size={16} />
         </a>
       </nav>

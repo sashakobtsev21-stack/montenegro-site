@@ -95,12 +95,12 @@ export default defineConfig({
         locales: { en: 'en', ru: 'ru', uk: 'uk' },
       },
       // /go/ — Worker-роут (§16), в dist его нет; фильтр — защита на будущее.
-      // /relokatsiya/uslugi/ пока пуст (коллекция services пустая) → держим вне карты
+      // /relocation/services/ пока пуст (коллекция services пустая) → держим вне карты
       // и под noindex по ВСЕМ языкам. УБРАТЬ строку-regex ниже, когда появятся реальные услуги.
       filter: (page) => {
         const p = new URL(page).pathname;
         if (p.startsWith('/go/')) return false;
-        if (/^\/(ru\/|uk\/)?relokatsiya\/uslugi\/$/.test(p)) return false;
+        if (/^\/(ru\/|uk\/)?relocation\/services\/$/.test(p)) return false;
         // demo-материалы (demo:true) — noindex, держим вне карты (аудит 2026-06-17, P0).
         const lastSeg = p.replace(/\/$/, '').split('/').pop();
         if (lastSeg && DEMO_SLUGS.has(lastSeg)) return false;

@@ -27,19 +27,19 @@ export const en: UIDictionary = {
   },
   nav: {
     home: 'Home',
-    dostoprimechatelnosti: 'What to see',
-    goroda: 'Cities',
-    eda: 'Food',
-    razvlecheniya: 'Entertainment',
-    marshruty: 'Routes',
-    planirovanie: 'Before you go',
+    attractions: 'What to see',
+    cities: 'Cities',
+    food: 'Food',
+    entertainment: 'Entertainment',
+    routes: 'Routes',
+    planning: 'Before you go',
     transport: 'Transport',
-    'arenda-avto': 'Car rental',
-    strahovka: 'Insurance',
-    novosti: 'News',
-    relokatsiya: 'Relocation',
-    'o-sajte': 'About',
-    kontakty: 'Contact',
+    'car-rental': 'Car rental',
+    insurance: 'Insurance',
+    news: 'News',
+    relocation: 'Relocation',
+    about: 'About',
+    contact: 'Contact',
   },
   header: {
     openMenu: 'Open menu',
@@ -82,11 +82,11 @@ export const en: UIDictionary = {
     },
     entriesHeading: 'Where to start',
     tiles: {
-      dostoprimechatelnosti: 'Nature, monasteries, fortresses, canyons, and the Bay of Kotor',
-      goroda: 'City guides: what to see, where to eat, how to get around',
-      eda: 'What to try and where to eat honestly — without tourist markups',
-      razvlecheniya: 'Where to go out: clubs and bars, quizzes, beaches, casinos, and parks',
-      marshruty: 'Ready-made road trips: a day-by-day plan, budget, and map',
+      attractions: 'Nature, monasteries, fortresses, canyons, and the Bay of Kotor',
+      cities: 'City guides: what to see, where to eat, how to get around',
+      food: 'What to try and where to eat honestly — without tourist markups',
+      entertainment: 'Where to go out: clubs and bars, quizzes, beaches, casinos, and parks',
+      routes: 'Ready-made road trips: a day-by-day plan, budget, and map',
     },
     showcase: {
       heading: 'Montenegro showcase',
@@ -144,25 +144,25 @@ export const en: UIDictionary = {
     empty:
       'The first articles in this section are coming soon. We’re preparing vetted guides with up-to-date information.',
     sections: {
-      dostoprimechatelnosti: {
+      attractions: {
         intro: [
           'What to see in Montenegro — from the Bay of Kotor and the Durmitor peaks above the Tara Canyon to Lake Skadar, clifftop monasteries, and ancient fortress towns. In this section we gather the places worth traveling for: nature, fortresses, monasteries, and viewpoints across the country — from the Adriatic coast to the northern mountains.',
           'For each attraction we try to honestly answer the main questions: what exactly to see, how to get there, how much time to set aside, and when to go so you’re not disappointed. Where it makes sense, the end of the article has tips on car rental and tours, because the most convenient way to reach many places in Montenegro is by car.',
         ],
       },
-      goroda: {
+      cities: {
         intro: [
           'Montenegro’s cities are like different countries in miniature: the UNESCO bay town of Kotor, lively seaside Budva, yacht-marina Tivat, the year-round capital Podgorica, the old royal capital Cetinje, and mountain-gateway Žabljak. This section has city guides: what to see, where to eat honestly, how to get there, and where to stay.',
           'Cities are a handy starting point for planning: routes branch out from them, attractions are nearby, and this is where you book accommodation, pick up a car, and sort out connectivity. That’s why in the city guides we link to related sections — food, routes, and rental — to put your whole trip in one place.',
         ],
       },
-      razvlecheniya: {
+      entertainment: {
         intro: [
           'Entertainment in Montenegro — where to go for experiences beyond old towns and mountains: Adriatic beaches, the Kotor cable car and national parks, museums, and casinos. In this section we gather places to relax and have fun across the country’s cities — with a focus on what matters in practice: where it is, how much admission costs, and when it’s open.',
           'We keep building the section out, city by city. Prices and opening hours are listed per place, so a night out or a day trip is easy to plan ahead.',
         ],
       },
-      marshruty: {
+      routes: {
         intro: [
           'Ready-made road trips around Montenegro: a day-by-day plan, a budget guideline, key stops, and a map. The country is compact but mountainous — a car opens up what’s hard to reach by public transport: the Kotor serpentine, the lakeside villages of Skadar, the Durmitor ring, and the canyon roads of the north.',
           'How to choose a direction. The coast — the Bay of Kotor with Perast and Kotor, Budva and Sveti Stefan down to Ulcinj; the centre — Cetinje and the Lovćen mausoleum, Ostrog monastery, Lake Skadar; the north — Durmitor and the Tara Canyon around Žabljak, and the forests of Biogradska Gora near Kolašin; to the mountains — the climb from the bay over Lovćen. And to see it all in one trip, there’s a grand tour of Montenegro, roughly two weeks long.',
@@ -175,25 +175,25 @@ export const en: UIDictionary = {
           'Here you’ll find the country’s airports (Podgorica, Tivat, and nearby Dubrovnik in Croatia), city transport, and popular routes like Podgorica → Budva or Kotor → Budva (bus, car) — and we keep adding directions and modes of transport. It’s handy to plan transport together with the “Car rental” and “Routes” sections.',
         ],
       },
-      'arenda-avto': {
+      'car-rental': {
         intro: [
           'Car rental in Montenegro is one of the most common questions before a trip: where to get a car, how much it costs, whether you need a deposit, and what catches there are in the contracts. In this section we break down rental by city and airport and compare the options — from international aggregators to local rental companies.',
           'We write about rental from the perspective of a traveler who has personally dealt with deposits, surcharges, and “insurance on site.” Specific prices and terms are something that goes out of date fast, so we mark the date they’re current and don’t pass off old figures as fresh.',
         ],
       },
-      strahovka: {
+      insurance: {
         intro: [
           'Insurance for a trip to Montenegro and for living in the country is a topic that’s easy to put off and that people regret at the worst possible moment. In this section we break down which insurance policies actually work for travelers and relocators, how they differ, and what to look for when choosing.',
           'Different readers need different solutions: a tourist staying a week needs one kind of insurance, someone living in Montenegro for months needs another, with regular renewal. For Ukrainian travelers we call out options that still work, such as EKTA, since some of the standard policies are off-limits to them.',
         ],
       },
-      planirovanie: {
+      planning: {
         intro: [
           'Planning a trip to Montenegro is what people look up before booking: do you need a visa, when to go, how much money to bring, and what about insurance and safety. This section gives short, practical answers with links to the sections that cover each topic in depth.',
           'We keep only what actually affects your prep here: visa and entry rules, seasons and weather, money and budget, and travel insurance. Regulatory things (visas, entry) change fast — we mark the date and link the official source (gov.me) rather than passing off old facts as current.',
         ],
       },
-      novosti: {
+      news: {
         intro: [
           'News and updates to the guide: new vetted places, seasonal tips, and changes worth knowing before a trip. Montenegro changes — venues open and close, prices and rental terms shift, new routes appear — and this section keeps the guide up to date.',
           'We don’t chase “hot” news for the sake of traffic. What lands here is what actually affects trip planning: what we’ve re-checked, what we’ve updated by season, and which places we’ve added after cross-checking with locals and guides. The entries show a date — so you always know how current the information is.',
@@ -528,11 +528,11 @@ export const en: UIDictionary = {
       heading: 'What’s already on the site',
       lead: 'Practical sections that come in handy when relocating:',
       items: [
-        { section: 'strahovka', text: 'medical insurance with coverage abroad' },
-        { section: 'arenda-avto', text: 'car rental: how, where, and without overpaying' },
+        { section: 'insurance', text: 'medical insurance with coverage abroad' },
+        { section: 'car-rental', text: 'car rental: how, where, and without overpaying' },
         { section: 'transport', text: 'how to get there and travel between cities' },
-        { section: 'goroda', text: 'Montenegro’s cities — where to live and what’s nearby' },
-        { section: 'eda', text: 'where to eat: vetted places by city' },
+        { section: 'cities', text: 'Montenegro’s cities — where to live and what’s nearby' },
+        { section: 'food', text: 'where to eat: vetted places by city' },
       ],
     },
     regulatory: {
@@ -753,7 +753,7 @@ export const en: UIDictionary = {
     copyAria: 'Copy coordinates {coords}',
   },
   hubAffiliate: {
-    'arenda-avto': {
+    'car-rental': {
       title: 'Car rental in Montenegro',
       note: 'Compare rental prices on Trip.com.',
     },
@@ -761,11 +761,11 @@ export const en: UIDictionary = {
       title: 'Flights to Montenegro',
       note: 'Search flights and fares on Trip.com.',
     },
-    goroda: {
+    cities: {
       title: 'Where to stay',
       note: 'Hotels and apartments across Montenegro on Trip.com.',
     },
-    razvlecheniya: {
+    entertainment: {
       title: 'Tours & activities',
       note: 'Find tours and activities across Montenegro on Trip.com.',
     },

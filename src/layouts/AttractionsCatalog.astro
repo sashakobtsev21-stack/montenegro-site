@@ -50,7 +50,7 @@ const places = await getCollectionSafe(
   'articles',
   (entry) =>
     entry.data.lang === lang &&
-    entry.data.category === 'dostoprimechatelnosti' &&
+    entry.data.category === 'attractions' &&
     entry.data.draft !== true,
 );
 
@@ -92,7 +92,7 @@ const cards: CatalogCard[] = places.map((entry) => {
   }
   return {
     key: entry.id,
-    href: articleHref(lang, 'dostoprimechatelnosti', d.slug),
+    href: articleHref(lang, 'attractions', d.slug),
     title: d.title,
     cardDescription: d.description,
     cover: d.cover,
@@ -157,7 +157,7 @@ const itemListLd = hasPlaces
         item: {
           '@type': 'TouristAttraction',
           name: entry.data.title,
-          url: new URL(articleHref(lang, 'dostoprimechatelnosti', entry.data.slug), SITE).href,
+          url: new URL(articleHref(lang, 'attractions', entry.data.slug), SITE).href,
           ...(entry.data.geo
             ? {
                 geo: {
@@ -177,7 +177,7 @@ const itemListLd = hasPlaces
   {itemListLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(itemListLd)} />}
   <div class="catalog" data-catalog>
     <div class="container">
-      <Breadcrumbs lang={lang} items={[{ label: dict.nav.dostoprimechatelnosti }]} />
+      <Breadcrumbs lang={lang} items={[{ label: dict.nav.attractions }]} />
 
       <header class="head" data-reveal>
         <h1 class="head__title">{c.heading}</h1>

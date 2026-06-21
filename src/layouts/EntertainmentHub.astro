@@ -1,13 +1,13 @@
 ---
 /**
  * EntertainmentHub (§7, §8.3) — хаб «Развлечения» с фильтром по подкатегории.
- * Заменяет HubPage для /razvlecheniya/: каталог развлечений (ночная жизнь,
+ * Заменяет HubPage для /entertainment/: каталог развлечений (ночная жизнь,
  * афиша, активный отдых, места) с фильтром по `razvlType`. Механика фильтра —
  * переиспользуем catalog-filter.js (data-catalog*, ключ `razvl`), как в каталоге
  * достопримечательностей; без своего JS. Фильтр показывается только если
  * присутствует >1 подкатегории (иначе скрыт). Заголовок/интро — из nav +
- * hub.sections.razvlecheniya (§12). Данные — коллекция `articles`,
- * category=razvlecheniya, нужный язык, не draft (§11). Порядок: featuredOrder →
+ * hub.sections.entertainment (§12). Данные — коллекция `articles`,
+ * category=entertainment, нужный язык, не draft (§11). Порядок: featuredOrder →
  * publishedAt desc → slug (§21). Schema.org (§14): BreadcrumbList.
  */
 import { getCollectionSafe } from '../loaders/getCollectionSafe';
@@ -33,8 +33,8 @@ interface Props {
 const { lang } = Astro.props;
 const dict = t(lang);
 const e = dict.entertainment;
-const heading = dict.nav.razvlecheniya;
-const intro = dict.hub.sections.razvlecheniya.intro;
+const heading = dict.nav.entertainment;
+const intro = dict.hub.sections.entertainment.intro;
 
 const pageTitle = `${heading} — ${dict.siteName}`;
 // Обрезка по границе слова (≤155, без обрыва посередине) — SEO description (§14).
@@ -45,7 +45,7 @@ const places = await getCollectionSafe(
   'articles',
   (entry) =>
     entry.data.lang === lang &&
-    entry.data.category === 'razvlecheniya' &&
+    entry.data.category === 'entertainment' &&
     entry.data.draft !== true,
 );
 
@@ -108,7 +108,7 @@ const cards: HubCard[] = places.map((entry) => {
   const cityKey = cityKeyOf(d.slug);
   return {
     key: entry.id,
-    href: articleHref(lang, 'razvlecheniya', d.slug),
+    href: articleHref(lang, 'entertainment', d.slug),
     title: d.title,
     cardDescription: d.description,
     cover: d.cover,
@@ -263,18 +263,18 @@ const itemListLd = hasPlaces
 
       {
         /* AffiliateBox раздела (§8.3, §16) — экскурсии/активности (trip-tours);
-           один виджет на страницу (CLAUDE правило 2). slug=razvlecheniya → SubID. */
+           один виджет на страницу (CLAUDE правило 2). slug=entertainment → SubID. */
         hasPlaces &&
           (() => {
-            const partner = HUB_AFFILIATE_PARTNER.razvlecheniya;
-            const copy = dict.hubAffiliate.razvlecheniya;
+            const partner = HUB_AFFILIATE_PARTNER.entertainment;
+            const copy = dict.hubAffiliate.entertainment;
             if (!partner || !copy) return null;
             return (
               <div class="hub-affiliate">
                 <AffiliateBox
                   lang={lang}
                   partner={partner}
-                  slug="razvlecheniya"
+                  slug="entertainment"
                   title={copy.title}
                   label={dict.actions.more}
                   note={copy.note}

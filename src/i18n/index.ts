@@ -55,9 +55,9 @@ export {
  * на хабе /eda/ и в getStaticPaths шаблона CityFoodPage.
  */
 export const EDA_CITY_PAGES = [
-  { key: 'budva', slug: 'gde-poest-budva', citySlug: 'budva' },
-  { key: 'kotor', slug: 'gde-poest-kotor', citySlug: 'kotor' },
-  { key: 'podgorica', slug: 'gde-poest-podgorica', citySlug: 'podgorica' },
+  { key: 'budva', slug: 'where-to-eat-budva', citySlug: 'budva' },
+  { key: 'kotor', slug: 'where-to-eat-kotor', citySlug: 'kotor' },
+  { key: 'podgorica', slug: 'where-to-eat-podgorica', citySlug: 'podgorica' },
 ] as const satisfies ReadonlyArray<{ key: EdaCityKey; slug: string; citySlug: string }>;
 
 const dictionaries: Record<Lang, UIDictionary> = { ru, uk, en };
@@ -73,32 +73,32 @@ export function t(lang: Lang): UIDictionary {
  * Используется в HubPage для условного рендера AffiliateBox.
  */
 export const HUB_AFFILIATE_PARTNER: Partial<Record<HubSectionKey, string>> = {
-  'arenda-avto': 'trip-carhire',
+  'car-rental': 'trip-carhire',
   transport: 'aviasales',
-  goroda: 'trip-hotels',
-  razvlecheniya: 'trip-tours',
+  cities: 'trip-hotels',
+  entertainment: 'trip-tours',
 };
 
 /** Список разделов IA в порядке навигации (§7), кроме `home` и `o-sajte`. */
 export const SECTION_KEYS: SectionKey[] = [
-  'dostoprimechatelnosti',
-  'goroda',
-  'eda',
-  'razvlecheniya',
-  'marshruty',
-  'planirovanie',
+  'attractions',
+  'cities',
+  'food',
+  'entertainment',
+  'routes',
+  'planning',
   'transport',
-  'arenda-avto',
-  'strahovka',
-  'novosti',
-  'relokatsiya',
+  'car-rental',
+  'insurance',
+  'news',
+  'relocation',
 ];
 
 /** 5 главных плиток входа на главной (§8.4): + «Развлечения» (решение владельца 2026-06-16). */
-export const PRIMARY_TILE_KEYS = ['dostoprimechatelnosti', 'goroda', 'eda', 'razvlecheniya', 'marshruty'] as const;
+export const PRIMARY_TILE_KEYS = ['attractions', 'cities', 'food', 'entertainment', 'routes'] as const;
 
 /** Все разделы для футера и блока «Все разделы» на главной (§8.4): хабы + «О проекте» + «Обратная связь». */
-export const ALL_SECTION_KEYS: SectionKey[] = [...SECTION_KEYS, 'o-sajte', 'kontakty'];
+export const ALL_SECTION_KEYS: SectionKey[] = [...SECTION_KEYS, 'about', 'contact'];
 
 /**
  * Простая подстановка плейсхолдеров вида `{name}` в строку словаря.

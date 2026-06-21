@@ -44,7 +44,7 @@ const guides = (
     'articles',
     (e) =>
       e.data.lang === lang &&
-      e.data.category === 'relokatsiya' &&
+      e.data.category === 'relocation' &&
       e.data.draft !== true &&
       e.data.demo !== true,
   )
@@ -100,7 +100,7 @@ const guides = (
             <ul class="links">
               {guides.map((g) => (
                 <li>
-                  <a class="link" href={articleHref(lang, 'relokatsiya', g.data.slug)}>
+                  <a class="link" href={articleHref(lang, 'relocation', g.data.slug)}>
                     <span class="link__label">{g.data.title}</span>
                     <span class="link__text">{g.data.description}</span>
                     <Icon name="arrow-right" size={18} />
@@ -117,7 +117,7 @@ const guides = (
         <h2 id="rel-uslugi-heading" class="block__heading">{rl.uslugi.heading}</h2>
         <ul class="links">
           <li>
-            <a class="link" href={`${sectionHref(lang, 'relokatsiya')}uslugi/`}>
+            <a class="link" href={`${sectionHref(lang, 'relocation')}services/`}>
               <span class="link__label">{rl.uslugi.cta}</span>
               <span class="link__text">{rl.uslugi.text}</span>
               <Icon name="arrow-right" size={18} />
@@ -131,7 +131,7 @@ const guides = (
         <AffiliateBox
           lang={lang}
           partner="trip-hotels"
-          slug="relokatsiya"
+          slug="relocation"
           title={rl.affiliate.title}
           label={rl.affiliate.label}
           note={rl.affiliate.note}
@@ -139,7 +139,7 @@ const guides = (
         <AffiliateBox
           lang={lang}
           partner="airalo"
-          slug="relokatsiya"
+          slug="relocation"
           title={rl.esim.title}
           label={rl.esim.label}
           note={rl.esim.note}

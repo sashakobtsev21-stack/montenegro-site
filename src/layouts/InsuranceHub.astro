@@ -45,15 +45,15 @@ const description = clampDesc(ins.intro[0]);
  */
 const updatedDate = formatDate(new Date(`${ins.updatedIso}T00:00:00Z`), lang);
 
-const rentalHref = sectionHref(lang, 'arenda-avto');
+const rentalHref = sectionHref(lang, 'car-rental');
 /** Мост хаб→подробный гайд-статья (перелинковка §14, аудит 2026-06-17 P0-3). */
-const guideHref = `${sectionHref(lang, 'strahovka')}kak-vybrat-strahovku/`;
+const guideHref = `${sectionHref(lang, 'insurance')}kak-vybrat-strahovku/`;
 /** Рисуем мост только когда гайд-статья реально существует (до наполнения — нет битой ссылки, §12). */
 const hasGuide =
   (
     await getCollectionSafe(
       'articles',
-      (e) => e.data.category === 'strahovka' && e.data.slug === 'kak-vybrat-strahovku',
+      (e) => e.data.category === 'insurance' && e.data.slug === 'kak-vybrat-strahovku',
     )
   ).length > 0;
 ---
@@ -175,7 +175,7 @@ const hasGuide =
         <AffiliateBox
           lang={lang}
           partner="safetywing"
-          slug="strahovka"
+          slug="insurance"
           title={ins.affiliate.title}
           label={ins.affiliate.label}
           note={ins.affiliate.note}

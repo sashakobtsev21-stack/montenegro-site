@@ -23,16 +23,16 @@ interface Props {
 }
 const { lang } = Astro.props;
 const dict = t(lang);
-const intro = dict.hub.sections.novosti?.intro ?? [];
+const intro = dict.hub.sections.news?.intro ?? [];
 
-const pageTitle = `${dict.nav.novosti} — ${dict.siteName}`;
-const description = clampDesc((intro[0] ?? dict.nav.novosti));
+const pageTitle = `${dict.nav.news} — ${dict.siteName}`;
+const description = clampDesc((intro[0] ?? dict.nav.news));
 
 /** Новости этого языка, не черновики (§11); свежие сверху. */
 const items = await getCollectionSafe(
   'articles',
   (entry) =>
-    entry.data.lang === lang && entry.data.category === 'novosti' && entry.data.draft !== true,
+    entry.data.lang === lang && entry.data.category === 'news' && entry.data.draft !== true,
 );
 items.sort((a, b) => {
   const diff = b.data.publishedAt.getTime() - a.data.publishedAt.getTime();
@@ -82,10 +82,10 @@ for (const entry of visibleItems) {
 <BaseLayout title={pageTitle} description={description} lang={lang}>
   <div class="news">
     <div class="container">
-      <Breadcrumbs lang={lang} items={[{ label: dict.nav.novosti }]} />
+      <Breadcrumbs lang={lang} items={[{ label: dict.nav.news }]} />
 
       <header class="head" data-reveal>
-        <h1 class="head__title">{dict.nav.novosti}</h1>
+        <h1 class="head__title">{dict.nav.news}</h1>
         {
           intro.length > 0 && (
             <div class="head__intro">
@@ -106,7 +106,7 @@ for (const entry of visibleItems) {
                 <ol class="feed__list">
                   {group.items.map((entry) => {
                     const d = entry.data;
-                    const href = articleHref(lang, 'novosti', d.slug);
+                    const href = articleHref(lang, 'news', d.slug);
                     return (
                       <li
                         class:list={['news-item', { 'news-item--featured': entry === visibleItems[0] }]}

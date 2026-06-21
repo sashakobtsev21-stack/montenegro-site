@@ -22,13 +22,15 @@ import lighthouse from 'lighthouse';
 import * as chromeLauncher from 'chrome-launcher';
 
 const DIST = 'dist';
-// Репрезентативный срез шаблонов (не все 294 страницы — это долго):
+// Репрезентативный срез шаблонов (не все страницы — это долго). Пока контента
+// нет — хаб-страницы (английские слаги). Добавить статейные пути (напр.
+// /cities/kotor/, /car-rental/tivat-airport/) при наполнении — для фото-тяжёлых тестов.
 const PAGES = [
   ['/', 'главная (hero, витрина)'],
-  ['/goroda/tbilisi/', 'город (фото-тяжёлая статья)'],
-  ['/arenda-avto/kak-arendovat-avto/', 'статья (#16/#17, figure+карта)'],
-  ['/eda/', 'директория «Где поесть» (фильтры)'],
-  ['/marshruty/', 'хаб маршрутов'],
+  ['/cities/', 'хаб городов'],
+  ['/car-rental/', 'хаб аренды (MONEY)'],
+  ['/food/', 'директория «Где поесть» (фильтры)'],
+  ['/routes/', 'хаб маршрутов'],
 ];
 const HARD = ['accessibility', 'seo', 'best-practices'];
 const THRESHOLD = 90;

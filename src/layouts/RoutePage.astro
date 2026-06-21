@@ -48,8 +48,8 @@ const { Content } = await render(entry);
 const isVerified = Boolean(data.verifiedAt);
 const badgeDate = formatDate(data.verifiedAt ?? data.updatedAt, lang);
 
-const categoryHeading = dict.nav['marshruty'];
-const categoryHref = sectionHref(lang, 'marshruty' as SectionKey);
+const categoryHeading = dict.nav['routes'];
+const categoryHref = sectionHref(lang, 'routes' as SectionKey);
 
 const SITE = Astro.site ?? new URL('https://montenegroguidebook.com');
 const pageUrl = new URL(Astro.url.pathname, SITE).href;

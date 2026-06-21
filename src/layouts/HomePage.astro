@@ -165,12 +165,12 @@ const hasFresh = freshCards.length > 0;
  */
 const NEWS_HOME_WINDOW = 2;
 const homeNews = articles
-  .filter((entry) => entry.data.category === 'novosti')
+  .filter((entry) => entry.data.category === 'news')
   .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
   .filter((entry) => Math.floor((Date.now() - entry.data.publishedAt.getTime()) / 86400000) <= NEWS_HOME_WINDOW)
   .slice(0, 5)
   .map((entry) => ({
-    href: articleHref(lang, 'novosti', entry.data.slug),
+    href: articleHref(lang, 'news', entry.data.slug),
     title: entry.data.title,
     date: formatDate(entry.data.verifiedAt ?? entry.data.publishedAt, lang),
     iso: entry.data.publishedAt.toISOString().slice(0, 10),
@@ -197,24 +197,24 @@ const showcaseRestaurants = await getCollectionSafe(
 // реальные места/маршруты при наполнении (решение владельца). Структуру pick-ов
 // (article/route/restaurant/place-карточка) сохраняем — менять только слаги/курацию.
 const showcasePicks = [
-  { kind: 'article', category: 'goroda', slug: 'kotor', kicker: 'city' },
-  { kind: 'restaurant', slug: 'placeholder-budva', edaSlug: 'gde-poest-budva', kicker: 'food' },
+  { kind: 'article', category: 'cities', slug: 'kotor', kicker: 'city' },
+  { kind: 'restaurant', slug: 'placeholder-budva', edaSlug: 'where-to-eat-budva', kicker: 'food' },
   { kind: 'route', slug: 'montenegro-road-trip', kicker: 'route' },
   // Место «Развлечения» как place-карточка (поповер: адрес/часы/карта/сайт) со
   // знаком качества — заготовка; реальное заведение + mapUrl добавит владелец.
   {
     kind: 'article',
-    category: 'razvlecheniya',
+    category: 'entertainment',
     slug: 'placeholder-nightlife',
     kicker: 'nightlife',
     quality: true,
     place: true,
   },
-  { kind: 'article', category: 'dostoprimechatelnosti', slug: 'durmitor', kicker: 'sight' },
-  { kind: 'restaurant', slug: 'placeholder-kotor', edaSlug: 'gde-poest-kotor', kicker: 'food' },
-  { kind: 'article', category: 'eda', slug: 'chto-poprobovat', kicker: 'food' },
+  { kind: 'article', category: 'attractions', slug: 'durmitor', kicker: 'sight' },
+  { kind: 'restaurant', slug: 'placeholder-kotor', edaSlug: 'where-to-eat-kotor', kicker: 'food' },
+  { kind: 'article', category: 'food', slug: 'what-to-eat', kicker: 'food' },
   { kind: 'route', slug: 'boka-kotorska-day-trip', kicker: 'route' },
-  { kind: 'article', category: 'goroda', slug: 'budva', kicker: 'city' },
+  { kind: 'article', category: 'cities', slug: 'budva', kicker: 'city' },
 ] as const;
 const showcaseItems: ShowcaseItem[] = [];
 for (const pick of showcasePicks) {
@@ -222,7 +222,7 @@ for (const pick of showcasePicks) {
     const r = showcaseRestaurants.find((x) => x.data.slug === pick.slug);
     if (!r || !r.data.cover) continue;
     showcaseItems.push({
-      href: `${sectionHref(lang, 'eda')}${pick.edaSlug}/#r-${r.data.slug}`,
+      href: `${sectionHref(lang, 'food')}${pick.edaSlug}/#r-${r.data.slug}`,
       title: r.data.name,
       cover: r.data.cover,
       kicker: dict.home.showcase.kickers[pick.kicker],
@@ -248,7 +248,7 @@ for (const pick of showcasePicks) {
       ? routes.find((r) => r.data.slug === pick.slug)
       : articles.find((a) => a.data.category === pick.category && a.data.slug === pick.slug);
   if (!entry || !entry.data.cover) continue;
-  const category = pick.kind === 'route' ? 'marshruty' : pick.category;
+  const category = pick.kind === 'route' ? 'routes' : pick.category;
   const p = pick as {
     quality?: boolean;
     city?: string;
@@ -293,7 +293,7 @@ for (const pick of showcasePicks) {
     // Знак качества на карточке-статье — только по запросу владельца (Teatro).
     quality: p.quality === true,
     // Опознавательный пин-чип города (для заведений). Задаётся явно у pick:
-    // напр. { kind:'article', category:'eda', slug:'…', kicker:'food', city:'Будва' }.
+    // напр. { kind:'article', category:'food', slug:'…', kicker:'food', city:'Будва' }.
     // У текущих контентных карточек (города/маршруты) не задан → чип не рисуется.
     city: p.city,
   });
@@ -360,7 +360,7 @@ for (const pick of showcasePicks) {
         <div class="container" data-news-feed data-news-window="2">
           <div class="news-strip__head">
             <h2 class="block__heading">{dict.newsFeed.recentHeading}</h2>
-            <a class="news-strip__all" href={sectionHref(lang, 'novosti')}>
+            <a class="news-strip__all" href={sectionHref(lang, 'news')}>
               {dict.newsFeed.all}
               <Icon name="arrow-right" size={16} />
             </a>
@@ -391,7 +391,7 @@ for (const pick of showcasePicks) {
       <ShowcaseRail lang={lang} items={showcaseItems} label={dict.home.showcase.aria} />
       <p class="trust-line" data-reveal>
         {dict.home.trustLead}{' '}
-        <a class="trust-line__link" href={sectionHref(lang, 'o-sajte')}>
+        <a class="trust-line__link" href={sectionHref(lang, 'about')}>
           {dict.home.about.link}
           <Icon name="arrow-right" size={16} />
         </a>
@@ -424,7 +424,7 @@ for (const pick of showcasePicks) {
         <h2 class="services-band__title">{dict.relocation.uslugi.heading}</h2>
         <p class="services-band__lead">{dict.relocation.uslugi.text}</p>
       </div>
-      <a class="services-band__cta" href={`${sectionHref(lang, 'relokatsiya')}uslugi/`}>
+      <a class="services-band__cta" href={`${sectionHref(lang, 'relocation')}services/`}>
         {dict.relocation.uslugi.cta}
         <Icon name="arrow-right" size={18} />
       </a>
@@ -464,7 +464,7 @@ for (const pick of showcasePicks) {
     <div class="container about">
       <h2 class="block__heading" data-reveal>{dict.home.about.heading}</h2>
       <p class="about__text" data-reveal>{dict.home.about.text}</p>
-      <a class="about__link" href={sectionHref(lang, 'o-sajte')} data-reveal>
+      <a class="about__link" href={sectionHref(lang, 'about')} data-reveal>
         {dict.home.about.link}
         <Icon name="arrow-right" size={18} />
       </a>

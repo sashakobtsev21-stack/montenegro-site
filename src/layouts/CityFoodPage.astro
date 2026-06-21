@@ -47,9 +47,9 @@ const description = clampDesc(city.lead);
 const SITE = Astro.site ?? new URL('https://montenegroguidebook.com');
 const pageUrl = new URL(Astro.url.pathname, SITE).href;
 const homeUrl = new URL(sectionHref(lang, 'home'), SITE).href;
-const edaUrl = new URL(sectionHref(lang, 'eda'), SITE).href;
+const edaUrl = new URL(sectionHref(lang, 'food'), SITE).href;
 
-const edaHref = sectionHref(lang, 'eda');
+const edaHref = sectionHref(lang, 'food');
 // Кросс-ссылки с фолбэком на язык по умолчанию (ru), если перевода на текущий язык
 // ещё нет (фазовая раскатка en) — чтобы не было битых ссылок (§12).
 const articlesAll = await getCollectionSafe('articles', (entry) => entry.data.draft !== true);
@@ -60,16 +60,16 @@ const hasArticle = (category: string, slug: string): boolean =>
 /** Существует ли материал хоть на одном языке — чтобы не рисовать битую ссылку до наполнения (§12). */
 const hasArticleAnyLang = (category: string, slug: string): boolean =>
   articlesAll.some((e) => e.data.category === category && e.data.slug === slug);
-const hasCuisineGuide = hasArticleAnyLang('eda', 'chto-poprobovat');
-const hasCityGuide = hasArticleAnyLang('goroda', cfg.citySlug);
+const hasCuisineGuide = hasArticleAnyLang('food', 'what-to-eat');
+const hasCityGuide = hasArticleAnyLang('cities', cfg.citySlug);
 const cuisineHref = articleHref(
-  hasArticle('eda', 'chto-poprobovat') ? lang : DEFAULT_LANG,
-  'eda',
-  'chto-poprobovat',
+  hasArticle('food', 'what-to-eat') ? lang : DEFAULT_LANG,
+  'food',
+  'what-to-eat',
 );
 const cityGuideHref = articleHref(
-  hasArticle('goroda', cfg.citySlug) ? lang : DEFAULT_LANG,
-  'goroda',
+  hasArticle('cities', cfg.citySlug) ? lang : DEFAULT_LANG,
+  'cities',
   cfg.citySlug,
 );
 
@@ -132,7 +132,7 @@ const breadcrumbLd = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: dict.eda.breadcrumbHome, item: homeUrl },
-    { '@type': 'ListItem', position: 2, name: dict.nav.eda, item: edaUrl },
+    { '@type': 'ListItem', position: 2, name: dict.nav.food, item: edaUrl },
     { '@type': 'ListItem', position: 3, name: city.cityName, item: pageUrl },
   ],
 };
@@ -151,7 +151,7 @@ const breadcrumbLd = {
       <nav class="crumbs" aria-label={dict.breadcrumbs.aria}>
         <a href={sectionHref(lang, 'home')}>{dict.eda.breadcrumbHome}</a>
         <span class="crumbs__sep" aria-hidden="true">/</span>
-        <a href={edaHref}>{dict.nav.eda}</a>
+        <a href={edaHref}>{dict.nav.food}</a>
         <span class="crumbs__sep" aria-hidden="true">/</span>
         <span aria-current="page">{city.cityName}</span>
       </nav>

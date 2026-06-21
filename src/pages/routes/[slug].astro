@@ -1,0 +1,29 @@
+---
+/**
+ * Динамический маршрут страницы маршрута (en — корень): /routes/{slug}/ (§7, §8.2).
+ * getStaticPaths берёт опубликованные en-записи `routes`. availableLangs — языки
+ * с этим slug (для hreflang, §12).
+ */
+import type { GetStaticPaths } from 'astro';
+import { getCollectionSafe } from '../../loaders/getCollectionSafe';
+import RoutePage from '../../layouts/RoutePage.astro';
+
+export const getStaticPaths = (async () => {
+  const all = await getCollectionSafe('routes', (entry) => entry.data.draft !== true);
+  const ORDER = ['ru', 'uk', 'en'] as const;
+  const en = all.filter((entry) => entry.data.lang === 'en');
+  return en.map((entry) => ({
+    params: { slug: entry.data.slug },
+    props: {
+      entry,
+      availableLangs: ORDER.filter((l) =>
+        all.some((e) => e.data.lang === l && e.data.slug === entry.data.slug),
+      ),
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+const { entry, availableLangs } = Astro.props;
+---
+
+<RoutePage lang="en" entry={entry} availableLangs={availableLangs} />

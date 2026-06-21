@@ -10,19 +10,19 @@ export const DEFAULT_LANG: Lang = 'en';
 /** Разделы IA (§7). `home` — это `/`, остальные совпадают с категориями коллекций. */
 export type SectionKey =
   | 'home'
-  | 'dostoprimechatelnosti'
-  | 'goroda'
-  | 'eda'
-  | 'razvlecheniya'
-  | 'marshruty'
+  | 'attractions'
+  | 'cities'
+  | 'food'
+  | 'entertainment'
+  | 'routes'
   | 'transport'
-  | 'arenda-avto'
-  | 'strahovka'
-  | 'novosti'
-  | 'relokatsiya'
-  | 'planirovanie'
-  | 'o-sajte'
-  | 'kontakty';
+  | 'car-rental'
+  | 'insurance'
+  | 'news'
+  | 'relocation'
+  | 'planning'
+  | 'about'
+  | 'contact';
 
 /**
  * Контентные разделы, которые получают шаблон Хаба (§8.3). Совпадают с
@@ -30,15 +30,15 @@ export type SectionKey =
  * шаблон-директория (§8.6, EdaDirectory).
  */
 export type HubSectionKey =
-  | 'dostoprimechatelnosti'
-  | 'goroda'
-  | 'razvlecheniya'
-  | 'marshruty'
+  | 'attractions'
+  | 'cities'
+  | 'entertainment'
+  | 'routes'
   | 'transport'
-  | 'arenda-avto'
-  | 'strahovka'
-  | 'novosti'
-  | 'planirovanie';
+  | 'car-rental'
+  | 'insurance'
+  | 'news'
+  | 'planning';
 
 /** Вводный текст конкретного хаба (§8.3). */
 export interface HubSectionContent {
@@ -197,11 +197,11 @@ export interface UIDictionary {
     /** Блок «5 главных плиток входа». */
     entriesHeading: string;
     tiles: {
-      dostoprimechatelnosti: string;
-      goroda: string;
-      eda: string;
-      razvlecheniya: string;
-      marshruty: string;
+      attractions: string;
+      cities: string;
+      food: string;
+      entertainment: string;
+      routes: string;
     };
     /** Витрина партнёров (золотая лента-карусель, §8.4/§16). */
     showcase: {
@@ -429,7 +429,7 @@ export interface UIDictionary {
   };
   /**
    * Копирайт AffiliateBox для хабов с партнёрами (§8.3, §16).
-   * Partial: только для трёх хабов с партнёрками (arenda-avto, transport, goroda);
+   * Partial: только для трёх хабов с партнёрками (car-rental, transport, cities);
    * остальные хабы не имеют этого поля — render guard проверяет наличие.
    */
   hubAffiliate: Partial<Record<HubSectionKey, { title: string; note: string }>>;

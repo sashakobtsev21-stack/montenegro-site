@@ -17,17 +17,17 @@ import { contentGlob } from './loaders/contentGlob';
 const LANGS = ['ru', 'uk', 'en'] as const;
 
 const CATEGORIES = [
-  'dostoprimechatelnosti',
-  'goroda',
-  'eda',
-  'razvlecheniya',
-  'marshruty',
+  'attractions',
+  'cities',
+  'food',
+  'entertainment',
+  'routes',
   'transport',
-  'arenda-avto',
-  'relokatsiya',
-  'strahovka',
-  'novosti',
-  'planirovanie',
+  'car-rental',
+  'relocation',
+  'insurance',
+  'news',
+  'planning',
 ] as const;
 
 /** Уровни цен для директории «Где поесть» (§8.6, §11). Валюта Черногории — евро (€). */
@@ -294,7 +294,7 @@ const articles = defineCollection({
 const routes = defineCollection({
   loader: contentGlob({ pattern: '**/*.{md,mdx}', base: './src/content/routes' }),
   schema: articleBase.extend({
-    category: z.literal('marshruty'),
+    category: z.literal('routes'),
     /**
      * Маршрут всегда с обложкой: переопределяем опциональный cover базы (§11) на
      * обязательный — карточка маршрута и OG-картинка без фото не имеют смысла, а

@@ -174,7 +174,7 @@ async function initMap(frame) {
   if (!isCatalog && (routeLine || latLngs.length > 1)) {
     const wine =
       getComputedStyle(document.documentElement).getPropertyValue('--color-wine').trim() ||
-      '#6b1f2e';
+      '#0e5263';
     L.polyline(routeLine || latLngs, { color: wine, weight: 4, opacity: 0.8 }).addTo(map);
   }
 

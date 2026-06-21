@@ -1,19 +1,22 @@
 /*
- * Дизайн-токены — Georgia Guidebook (SPEC §10).
- * Значения утверждены владельцем в §10; R2 (ui-ux-pro-max) их уточнит.
+ * Дизайн-токены — Montenegro Guidebook (SPEC §10).
  * Единственный источник цветов/отступов/радиусов/типографики.
  * Хардкод hex в компонентах запрещён — только var(--...) отсюда.
+ * Токены проброшены в Tailwind 4 через @theme в global.css (utility-классы).
  *
- * Токены проброшены в Tailwind 4 через @theme в global.css,
- * чтобы быть доступными как utility-классы (bg-wine, p-16 и т.п.).
+ * АДРИАТИЧЕСКАЯ ПАЛИТРА (re-skin движка-донора под Черногорию): морской teal
+ * (Бока-Которска) + терракота (черепица старых городов Котора/Будвы) + известняк.
+ * ВАЖНО: имена переменных --color-wine/--color-sun ИСТОРИЧЕСКИЕ (от движка Грузии),
+ * но несут НОВЫЕ адриатические цвета — переименование тронуло бы 150+ ссылок и
+ * Tailwind-утилиты, поэтому меняем только значения (роли см. в комментариях).
  */
 
 :root {
-  /* --- Палитра (§10) --- */
-  --color-wine: #6b1f2e; /* вино-саперави: акцент / CTA-альтернатива */
-  --color-sun: #e8a33d; /* солнце: CTA, AffiliateBox */
-  --color-slate: #23282e; /* сланец: текст */
-  --color-stone: #f2efe9; /* камень: фон секций */
+  /* --- Палитра (адриатическая, §10) --- */
+  --color-wine: #0e5263; /* [роль: основной акцент] адриатический teal: заголовки/ссылки/фокус/иконки */
+  --color-sun: #be5836; /* [роль: CTA] терракота (черепичные крыши): кнопки, AffiliateBox */
+  --color-slate: #1e2a30; /* чернильно-графитовый (морской подтон): текст */
+  --color-stone: #f3f1e9; /* известняк/песок: фон секций */
   --color-white: #ffffff;
 
   /* --- Шрифты (§10) --- */
@@ -67,12 +70,12 @@
 
   /* Текст. */
   --text-body: var(--color-slate); /* body — сланец */
-  --text-heading: var(--color-wine); /* H1/H2 — вино-саперави */
+  --text-heading: var(--color-wine); /* H1/H2 — адриатический teal */
   --text-muted: color-mix(in srgb, var(--color-slate) 70%, var(--color-stone)); /* приглушённый */
-  --text-on-cta: var(--color-slate); /* текст на солнечной кнопке (контраст ≥4.5) */
-  --text-on-wine: var(--color-white); /* текст на вине */
+  --text-on-cta: var(--color-white); /* белый текст на терракотовой кнопке (≥4.5 на #be5836) */
+  --text-on-wine: var(--color-white); /* текст на teal-поверхности */
 
-  /* Ссылки — вино. */
+  /* Ссылки — адриатический teal. */
   --link: var(--color-wine);
   --link-hover: color-mix(in srgb, var(--color-wine) 80%, black);
 
@@ -82,12 +85,11 @@
   --border-card: color-mix(in srgb, var(--color-slate) 14%, transparent);
   --border-card-hover: color-mix(in srgb, var(--color-wine) 35%, transparent);
 
-  /* CTA — солнце ТОЛЬКО для кнопок и AffiliateBox (не декоративно). */
+  /* CTA — терракота ТОЛЬКО для кнопок и AffiliateBox (не декоративно). */
   --cta-bg: var(--color-sun);
   --cta-bg-hover: color-mix(in srgb, var(--color-sun) 88%, black);
-  /* Граница CTA/AffiliateBox: солнце на белом = ~2.1:1 — провал WCAG 1.4.11 (UI ≥3:1).
-     Затемнённый вариант для ВИДИМОЙ границы виджета (аудит 2026-06-17, a11y). */
-  --border-cta: #b87520; /* ~3.5:1 на белом */
+  /* Граница CTA/AffiliateBox: видимый контур виджета (UI ≥3:1, WCAG 1.4.11). */
+  --border-cta: #a84b2c; /* глубокая терракота, ~4.5:1 на белом */
 
   /* Ховер-фон плиток/интерактива (лёгкий камень). */
   --surface-hover: color-mix(in srgb, var(--color-stone) 60%, var(--color-white));
@@ -114,7 +116,7 @@
   );
   --gold-glow: 0 6px 20px color-mix(in srgb, var(--color-gold) 28%, transparent);
 
-  /* Фокус (видимый, §15) — вино. */
+  /* Фокус (видимый, §15) — адриатический teal. */
   --focus-ring: var(--color-wine);
 
   /* Переходы интерфейса (150–300 мс, направление). */

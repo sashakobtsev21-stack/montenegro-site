@@ -1,7 +1,7 @@
 ---
 /**
  * Button (§10, направление «Полевой журнал»).
- *   - primary  — солнце #E8A33D фон + сланец-текст (CTA, контраст ≥4.5:1 §15).
+ *   - primary  — терракота #be5836 фон + белый текст (CTA, контраст ≥4.5:1 §15).
  *     Солнце используется ТОЛЬКО для CTA и AffiliateBox (§10) — не декоративно.
  *   - secondary — вино-outline (ghost), спокойная альтернатива.
  * Рендерится как <a> (если есть href) или <button>. Радиус 8 (§10).
@@ -85,7 +85,7 @@ const cls = ['btn', `btn--${variant}`, className].filter(Boolean).join(' ');
     transform: translateX(3px);
   }
 
-  /* primary — солнце, текст сланцем (контраст #23282E на #E8A33D ≈ 7.0:1). */
+  /* primary — терракота, текст белым (контраст #fff на #be5836 ≈ 5.8:1). */
   .btn--primary {
     background: var(--cta-bg);
     color: var(--text-on-cta);

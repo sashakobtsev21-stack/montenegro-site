@@ -19,7 +19,7 @@
       "allowSubId": true
     },
     "trip-tours": {
-      "urlTemplate": "https://www.trip.com/package-tours/list?tab=1261&kwd=Georgia&poid=&poitype=&kwdfrom=srch&Allianceid=8701645&SID=319548076&trip_sub1={subid}&trip_sub3=D17960553",
+      "urlTemplate": "https://www.trip.com/package-tours/list?tab=1261&kwd=Montenegro&poid=&poitype=&kwdfrom=srch&Allianceid=8701645&SID=319548076&trip_sub1={subid}&trip_sub3=D17960553",
       "allowSubId": true
     },
     "safetywing": {

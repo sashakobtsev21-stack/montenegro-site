@@ -75,7 +75,7 @@ const CONTENT_DATES = collectContentDates();
 
 // https://astro.build/config
 export default defineConfig({
-  // ⚠ ПЛЕЙСХОЛДЕР: домен ещё не куплен — заглушка, реальный задаётся на деплое.
+  // Прод-домен: куплен и подключён к воркеру Cloudflare (сайт онлайн, GA активна).
   site: 'https://montenegroguidebook.com',
   trailingSlash: 'always',
   output: 'static',

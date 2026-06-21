@@ -1,5 +1,5 @@
 /**
- * Georgia Guidebook — Worker-роут поверх Static Assets (SPEC §13, §16).
+ * Montenegro Guidebook — Worker-роут поверх Static Assets (SPEC §13, §16).
  *
  * Хостинг — Cloudflare Workers (Static Assets): статика из ./dist отдаётся
  * системой ассетов напрямую (binding ASSETS), а единственная динамика —

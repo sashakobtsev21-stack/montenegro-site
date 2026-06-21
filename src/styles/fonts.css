@@ -9,7 +9,7 @@
  *
  * unicode-range разделяет cyrillic / latin: на ru/uk-страницах грузится
  * только cyrillic-файл; latin-файл подтянется лишь для латиницы в бренде
- * «Georgia Guidebook». font-display: swap — текст виден сразу (фолбэк),
+ * «Montenegro Guidebook». font-display: swap — текст виден сразу (фолбэк),
  * без FOIT и без сдвига при LCP. Диапазоны — стандартные google-fonts сабсеты.
  */
 

@@ -1,5 +1,5 @@
 {
-  // Cloudflare Workers (Static Assets) — хостинг Georgia Guidebook (SPEC §13).
+  // Cloudflare Workers (Static Assets) — хостинг Montenegro Guidebook (SPEC §13).
   // Статика из ./dist отдаётся системой ассетов; динамика — только /go/
   // в worker/index.ts (SPEC §16). Наличие этого файла не даёт `wrangler deploy`
   // запускать авто-`astro add cloudflare` (SSR-адаптер/KV/Images нам не нужны).

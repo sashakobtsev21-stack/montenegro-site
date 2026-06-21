@@ -198,7 +198,7 @@ export function attractionTypeLabel(lang: Lang, slug: string): string {
   return (labels as Record<string, string>)[slug] ?? slug;
 }
 
-/** Локализованный лейбл региона (мхаре) по слугу (§7 → `region` → словарь). */
+/** Локализованный лейбл региона Черногории по слугу (§7 → `region` → словарь). */
 export function regionLabel(lang: Lang, slug: string): string {
   const labels = t(lang).regions;
   return (labels as Record<string, string>)[slug] ?? slug;

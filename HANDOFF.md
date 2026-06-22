@@ -1,5 +1,7 @@
 # HANDOFF — montenegro-site
 
+_Обновлено: 2026-06-22 — опубликованы города `podgorica-travel-guide` (столица) и `kotor` (`/cities/kotor/`, 13 фото CC); хаб `/cities/` наполняется. `npm run qa` = GO._
+
 Краткий ввод для следующей сессии/ассистента. Подробности — `SPEC.md` (продукт), `CLAUDE.md` (правила), `CONTENT_GUIDE.md` (как писать), `AUDIT-2026-06-22.md` (аудит), `ROADMAP-FIX.md` (что чинить), `PROGRESS.md` (снимок).
 
 ## С чего начать

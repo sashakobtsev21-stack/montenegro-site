@@ -212,7 +212,11 @@ type ShowcasePick = {
 const podgoricaCity = lang === 'en' ? 'Podgorica' : 'Подгорица';
 const kotorCity = lang === 'en' ? 'Kotor' : 'Котор';
 const budvaCity = lang === 'en' ? 'Budva' : 'Будва';
-const showcasePicks: ShowcasePick[] = [
+// Подборка: 3 опубликованных города (язык-зависимый пин-чип) + ключевые
+// опубликованные статьи (есть в en и ru, у всех cover, draft:false). Kicker —
+// из валидных ключей словаря (city/route/sight/food/nightlife). Категории — из
+// frontmatter статьи. ДЕДУП по slug ниже (showcasePicks → уникальные slug).
+const rawShowcasePicks: ShowcasePick[] = [
   {
     kind: 'article',
     category: 'cities',
@@ -222,7 +226,16 @@ const showcasePicks: ShowcasePick[] = [
   },
   { kind: 'article', category: 'cities', slug: 'kotor', kicker: 'city', city: kotorCity },
   { kind: 'article', category: 'cities', slug: 'budva', kicker: 'city', city: budvaCity },
+  { kind: 'article', category: 'planning', slug: 'montenegro-travel-guide', kicker: 'sight' },
+  { kind: 'article', category: 'planning', slug: 'best-time-to-visit-montenegro', kicker: 'sight' },
+  { kind: 'article', category: 'car-rental', slug: 'renting-a-car-in-montenegro', kicker: 'route' },
+  { kind: 'article', category: 'attractions', slug: 'durmitor-national-park', kicker: 'sight' },
+  { kind: 'article', category: 'relocation', slug: 'cost-of-living-in-montenegro', kicker: 'sight' },
 ];
+// Дедуп по slug — на случай повторов в подборке (один slug = одна карточка).
+const showcasePicks: ShowcasePick[] = rawShowcasePicks.filter(
+  (pick, i, arr) => arr.findIndex((p) => p.slug === pick.slug) === i,
+);
 const showcaseItems: ShowcaseItem[] = [];
 for (const pick of showcasePicks) {
   if (pick.kind === 'restaurant') {

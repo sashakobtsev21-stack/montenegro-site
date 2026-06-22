@@ -1,14 +1,16 @@
 /*
- * showcase-rail.js — витрина на главной (§8.4/§16).
+ * showcase-rail.js — витрина на главной (§8.4/§16): БЕСШОВНАЯ НЕПРЕРЫВНАЯ крутилка.
  * Прогрессивное улучшение поверх отрендеренной ленты (CSP script-src 'self').
- *  - авто-прокрутка справа-налево (rAF, мягкая, ~линейная);
- *  - перетаскивание мышью/пальцем (drag) и нативная горизонтальная прокрутка;
- *  - после отпускания прокрутка ПРОДОЛЖАЕТ крутиться;
- *  - пауза, пока курсор/фокус на любой карточке (спотлайт: соседние затемняются
- *    через CSS :has, лента стоит — чтобы прочитать описание/нажать «На карте»);
- *  - КЛИК по фото (без перетаскивания) долетает до кнопки лайтбокса: захват
- *    указателя ставим ТОЛЬКО после реального движения, иначе клик «съедается»;
- *  - prefers-reduced-motion: без авто-движения (только ручная прокрутка).
+ *
+ * Ключевое: лента крутится ПО КРУГУ и НЕ останавливается даже при малом числе
+ * карточек. JS клонирует уникальный набор карточек столько раз, чтобы общая
+ * ширина дорожки была >= 2.5x ширины вьюпорта → всегда есть запас для движения.
+ * Петля заворачивается ровно на ширину ОДНОГО уникального набора → бесшовно,
+ * без рывка. Клоны скрыты от a11y (aria-hidden, не в фокус-порядке).
+ *
+ * Поведение сохранено: пауза, пока курсор/фокус на карточке (спотлайт);
+ * drag/свайп и нативная горизонтальная прокрутка; prefers-reduced-motion —
+ * без авто-движения; клик-vs-drag (клик по фото долетает до лайтбокса).
  */
 (() => {
   const rail = document.querySelector('[data-showcase]');
@@ -20,26 +22,63 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const SPEED = 0.4; // px/кадр — медленно
 
+  // Уникальный набор карточек — как отрендерил Astro (без статических клонов).
+  const unit = Array.from(track.children);
+  if (!unit.length) return;
+
+  let unitWidth = 0;
+  const measure = () => {
+    unitWidth = 0;
+    for (const c of unit) {
+      const cs = getComputedStyle(c);
+      const mr = parseFloat(cs.marginInlineEnd) || parseFloat(cs.marginRight) || 0;
+      unitWidth += c.getBoundingClientRect().width + mr;
+    }
+  };
+
+  // Доклонировать набор столько раз, чтобы дорожка была заметно шире вьюпорта.
+  const refill = () => {
+    track.querySelectorAll('[data-clone]').forEach((c) => c.remove());
+    measure();
+    if (unitWidth <= 0) return;
+    const need = vp.clientWidth * 2.5 + unitWidth;
+    let total = unitWidth;
+    let guard = 0;
+    while (total < need && guard < 40) {
+      for (const c of unit) {
+        const clone = c.cloneNode(true);
+        clone.dataset.clone = '1';
+        clone.setAttribute('aria-hidden', 'true');
+        clone
+          .querySelectorAll('a,button,[tabindex],input,select,textarea')
+          .forEach((el) => el.setAttribute('tabindex', '-1'));
+        track.appendChild(clone);
+      }
+      total += unitWidth;
+      guard++;
+    }
+  };
+
   let dragging = false;
   let captured = false;
-  let hovering = false; // курсор над карточкой → пауза + спотлайт
+  let hovering = false;
   let focusWithin = false;
   let startX = 0;
   let startScroll = 0;
   let moved = false;
   let activePointer = null;
-
-  const half = () => track.scrollWidth / 2;
-
-  // scrollLeft квантуется к целым → дробный SPEED теряется (лента «стоит»). Копим
-  // позицию во float-аккумуляторе и каждый кадр пишем её в scrollLeft.
   let pos = 0;
 
+  const wrap = (p) => {
+    if (unitWidth <= 0) return p;
+    if (p >= unitWidth) return p % unitWidth;
+    if (p < 0) return ((p % unitWidth) + unitWidth) % unitWidth;
+    return p;
+  };
+
   const tick = () => {
-    if (!reduce && !dragging && !hovering && !focusWithin) {
-      pos += SPEED;
-      const h = half();
-      if (h > 0 && pos >= h) pos -= h; // бесшовная петля (лента продублирована)
+    if (!reduce && !dragging && !hovering && !focusWithin && unitWidth > 0) {
+      pos = wrap(pos + SPEED);
       vp.scrollLeft = pos;
     }
     requestAnimationFrame(tick);
@@ -47,20 +86,10 @@
 
   // Ручная прокрутка / drag / колесо меняют scrollLeft мимо аккумулятора — ресинк.
   vp.addEventListener('scroll', () => {
-    if (Math.abs(vp.scrollLeft - pos) > 2) {
-      pos = vp.scrollLeft;
-      const h = half();
-      if (h > 0) {
-        if (pos >= h) pos -= h;
-        else if (pos < 0) pos += h;
-      }
-    }
+    if (Math.abs(vp.scrollLeft - pos) > 2) pos = wrap(vp.scrollLeft);
   });
 
-  // --- Перетаскивание ---
-  // Захват указателя НЕ делаем на pointerdown: иначе клик по фото не дойдёт до
-  // кнопки лайтбокса (виден курсор-лупа, но ничего не открывается). Захватываем
-  // только когда палец реально сдвинулся (drag), тогда же глушим будущий клик.
+  // --- Drag (захват указателя только после реального движения) ---
   vp.addEventListener('pointerdown', (e) => {
     if (e.button && e.button !== 0) return;
     dragging = true;
@@ -101,11 +130,7 @@
   };
   vp.addEventListener('pointerup', endDrag);
   vp.addEventListener('pointercancel', endDrag);
-  // Главный фикс «не крутится, когда держишь за карточку»: нажатие на фото/ссылку
-  // запускало нативный drag-and-drop картинки/ссылки → pointercancel → прокрутка
-  // обрывалась. Глушим нативный drag внутри ленты целиком.
   vp.addEventListener('dragstart', (e) => e.preventDefault());
-  // Клик после реального перетаскивания не должен «проваливаться» в ссылку/лайтбокс.
   vp.addEventListener(
     'click',
     (e) => {
@@ -126,34 +151,40 @@
     focusWithin = false;
   });
 
-  // --- Пауза авто-прокрутки + спотлайт, пока курсор над любой карточкой. ---
-  const cells = Array.from(rail.querySelectorAll('.showcase__cell'));
-  cells.forEach((cell) => {
-    cell.addEventListener('pointerenter', (e) => {
-      if (e.pointerType === 'touch') return; // на тач паузим только тапом ниже
-      hovering = true;
-    });
-    cell.addEventListener('pointerleave', () => {
-      hovering = false;
-    });
+  // Пауза + спотлайт, пока курсор над любой карточкой (делегирование — покрывает и клоны).
+  rail.addEventListener('pointerover', (e) => {
+    if (e.pointerType === 'touch') return;
+    if (e.target.closest('.showcase__cell')) hovering = true;
+  });
+  rail.addEventListener('pointerout', (e) => {
+    if (e.pointerType === 'touch') return;
+    const to = e.relatedTarget;
+    if (!to || !rail.contains(to) || !to.closest('.showcase__cell')) hovering = false;
   });
 
-  // На тач-устройствах тап по карточке заведения раскрывает описание (нет :hover).
-  const places = Array.from(rail.querySelectorAll('[data-scard-place]'));
-  places.forEach((card) => {
-    card.addEventListener('pointerup', (e) => {
-      if (e.pointerType !== 'touch' || moved) return;
-      const target = e.target;
-      // тап по фото/стрелкам/ссылке отрабатывают свои обработчики
-      if (target.closest('[data-gallery-item],[data-rcard-prev],[data-rcard-next],a'))
-        return;
-      const open = card.classList.contains('is-open');
-      places.forEach((c) => c.classList.remove('is-open'));
-      if (!open) card.classList.add('is-open');
-    });
+  // Тач: тап по карточке заведения раскрывает описание (нет :hover). Делегирование.
+  rail.addEventListener('pointerup', (e) => {
+    if (e.pointerType !== 'touch' || moved) return;
+    const card = e.target.closest('[data-scard-place]');
+    if (!card) return;
+    if (e.target.closest('[data-gallery-item],[data-rcard-prev],[data-rcard-next],a')) return;
+    const open = card.classList.contains('is-open');
+    rail.querySelectorAll('[data-scard-place]').forEach((c) => c.classList.remove('is-open'));
+    if (!open) card.classList.add('is-open');
   });
 
-  pos = 1;
-  vp.scrollLeft = 1; // небольшой стартовый сдвиг — чтобы можно было листать и влево
+  // Перестроить дорожку при ресайзе (ширина вьюпорта/карточек меняется).
+  let rt;
+  window.addEventListener('resize', () => {
+    clearTimeout(rt);
+    rt = setTimeout(() => {
+      refill();
+      pos = wrap(pos);
+    }, 200);
+  });
+
+  refill();
+  pos = 0;
+  vp.scrollLeft = 0;
   requestAnimationFrame(tick);
 })();

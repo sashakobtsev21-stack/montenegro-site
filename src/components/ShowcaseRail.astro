@@ -48,10 +48,7 @@ const dict = t(lang);
 
 const QUALITY_MARK = '/images/quality/seal-gold.webp';
 
-const cells = [
-  ...items.map((it) => ({ ...it, clone: false })),
-  ...items.map((it) => ({ ...it, clone: true })),
-];
+const cells = items.map((it) => ({ ...it, clone: false }));
 ---
 
 <section class="showcase" aria-label={label} data-reveal data-showcase>

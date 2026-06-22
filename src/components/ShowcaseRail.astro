@@ -204,13 +204,8 @@ const cells = [
                           rel="noopener nofollow"
                           tabindex={c.clone ? -1 : undefined}
                         >
-                          <Icon
-                            name={c.website.includes('instagram.com') ? 'instagram' : 'globe'}
-                            size={16}
-                          />
-                          <span>
-                            {c.website.includes('instagram.com') ? 'Instagram' : dict.eda.website}
-                          </span>
+                          <Icon name={c.website.includes('instagram.com') ? 'instagram' : 'globe'} size={16} />
+                          <span>{c.website.includes('instagram.com') ? 'Instagram' : dict.eda.website}</span>
                         </a>
                       )
                     )}
@@ -288,7 +283,8 @@ const cells = [
     position: relative;
   }
   .showcase__viewport {
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
     scrollbar-width: none;
     cursor: grab;
     -webkit-mask-image: linear-gradient(
@@ -316,22 +312,6 @@ const cells = [
        нельзя сделать visible при overflow-x:auto, резервируем высоту паддингом). */
     padding: 22px 0 198px;
     list-style: none;
-    /* Непрерывная CSS-крутилка: дорожка = 2 копии набора, сдвиг на -50% →
-       бесшовная петля. Длительность ∝ ширине набора задаёт showcase-rail.js. */
-    animation: showcase-marquee var(--showcase-dur, 60s) linear infinite;
-  }
-  @keyframes showcase-marquee {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-50%);
-    }
-  }
-  /* Пауза при наведении/фокусе (вместо JS). */
-  .showcase:hover .showcase__track,
-  .showcase__track:focus-within {
-    animation-play-state: paused;
   }
   .showcase__cell {
     flex: 0 0 auto;
@@ -657,13 +637,6 @@ const cells = [
     .scard:hover .scard__img,
     .scard--place:hover .scard__img {
       transform: none;
-    }
-    .showcase__track {
-      animation: none;
-      transform: none;
-    }
-    .showcase__viewport {
-      overflow-x: auto;
     }
   }
 </style>

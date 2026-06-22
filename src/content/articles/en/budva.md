@@ -109,7 +109,7 @@ A few kilometres south of Budva, the islet of **Sveti Stefan** is the single mos
 
 ### Nightlife
 
-Budva is, simply, the nightlife capital of Montenegro. Through July and August the bars around and below the Old Town walls and the beach clubs along the riviera stay open late, and large open-air clubs and summer festivals draw a young, party-minded crowd from across the region. If a lively, loud summer scene is what you are after, this is the place on the coast to find it; if it is not, base yourself in quieter Kotor or up the riviera and visit Budva by day.
+Budva is, simply, the nightlife capital of Montenegro. Through July and August the bars around and below the Old Town walls and the beach clubs along the riviera stay open late, and large open-air clubs and summer festivals draw a young, party-minded crowd from across the region. For the bars, beach clubs, big venues like Top Hill and the season, see our full [Budva nightlife guide](/entertainment/budva-nightlife/). If a lively, loud summer scene is what you are after, this is the place on the coast to find it; if it is not, base yourself in quieter Kotor or up the riviera and visit Budva by day.
 
 <figure class="figure">
 <img src="/images/budva/sveti-stefan-beach.webp" alt="Wide view of the beach and clear water beside the Sveti Stefan causeway near Budva" width="1280" height="426" loading="lazy" decoding="async" />

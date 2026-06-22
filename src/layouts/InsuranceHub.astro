@@ -47,13 +47,14 @@ const updatedDate = formatDate(new Date(`${ins.updatedIso}T00:00:00Z`), lang);
 
 const rentalHref = sectionHref(lang, 'car-rental');
 /** Мост хаб→подробный гайд-статья (перелинковка §14, аудит 2026-06-17 P0-3). */
-const guideHref = `${sectionHref(lang, 'insurance')}kak-vybrat-strahovku/`;
+const guideSlug = 'montenegro-travel-insurance';
+const guideHref = `${sectionHref(lang, 'insurance')}${guideSlug}/`;
 /** Рисуем мост только когда гайд-статья реально существует (до наполнения — нет битой ссылки, §12). */
 const hasGuide =
   (
     await getCollectionSafe(
       'articles',
-      (e) => e.data.category === 'insurance' && e.data.slug === 'kak-vybrat-strahovku',
+      (e) => e.data.category === 'insurance' && e.data.slug === guideSlug,
     )
   ).length > 0;
 ---

@@ -222,6 +222,7 @@ export interface UIDictionary {
         sight: string;
         food: string;
         nightlife: string;
+        guide: string;
       };
     };
     /** Блок «Все разделы». */

@@ -101,6 +101,7 @@ export const en: UIDictionary = {
         sight: 'See',
         food: 'Food',
         nightlife: 'Nightlife',
+        guide: 'Guide',
       },
     },
     allSectionsHeading: 'All sections',

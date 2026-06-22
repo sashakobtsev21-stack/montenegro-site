@@ -87,6 +87,7 @@ Activities shift with the calendar. **Summer** (roughly June–September) is for
 
 ## Nearby / read also
 
+- [Ostrog Monastery](/attractions/ostrog-monastery/)
 - [Montenegro travel guide](/planning/montenegro-travel-guide/)
 - [Best time to visit Montenegro](/planning/best-time-to-visit-montenegro/)
 - [Renting a car in Montenegro](/car-rental/renting-a-car-in-montenegro/)

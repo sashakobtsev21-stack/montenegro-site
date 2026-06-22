@@ -87,6 +87,7 @@ draft: false
 
 ## Рядом и по теме
 
+- [Монастырь Острог](/ru/attractions/ostrog-monastery/)
 - [Путеводитель по Черногории](/ru/planning/montenegro-travel-guide/)
 - [Когда лучше ехать в Черногорию](/ru/planning/best-time-to-visit-montenegro/)
 - [Аренда авто в Черногории](/ru/car-rental/renting-a-car-in-montenegro/)

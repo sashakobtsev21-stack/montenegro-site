@@ -1,6 +1,6 @@
 # HANDOFF — montenegro-site
 
-_Обновлено: 2026-06-22 — опубликованы города `podgorica-travel-guide` (столица) и `kotor` (`/cities/kotor/`, 13 фото CC); хаб `/cities/` наполняется. `npm run qa` = GO._
+_Обновлено: 2026-06-22 — опубликованы 2 НОВОСТИ: `exit-festival-montenegro-2026` (фестивали EXIT, лето 2026) и `montenegro-airports-summer-2026` (60+ прямых рейсов TGD/TIV); тройки en/ru/uk, по 2 фото CC, перелинк на `/cities/kotor/`. `npm run qa` = GO. Ранее: города `podgorica-travel-guide` (столица) и `kotor`._
 
 Краткий ввод для следующей сессии/ассистента. Подробности — `SPEC.md` (продукт), `CLAUDE.md` (правила), `CONTENT_GUIDE.md` (как писать), `AUDIT-2026-06-22.md` (аудит), `ROADMAP-FIX.md` (что чинить), `PROGRESS.md` (снимок).
 

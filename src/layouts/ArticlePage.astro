@@ -42,7 +42,7 @@ interface Props {
   /** Языки, на которых есть эта статья (slug) — для hreflang (§12), из getStaticPaths. */
   availableLangs?: Lang[];
 }
-const { lang, entry, siblings, availableLangs = ['ru', 'uk'] } = Astro.props;
+const { lang, entry, siblings, availableLangs = ['en', 'ru'] } = Astro.props;
 const dict = t(lang);
 const data = entry.data;
 

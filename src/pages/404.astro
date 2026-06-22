@@ -3,7 +3,7 @@
  * Кастомная 404 (§7; аудит 2026-06-17 — закрыта «слепая зона»). Cloudflare отдаёт
  * один 404.html на любой ненайденный путь, поэтому рендерим на языке по умолчанию
  * (en). Полная навигация и переключатель языка — в шапке (Header из BaseLayout),
- * так что ru/uk-читатель сразу переключится на свой язык/раздел. noindex.
+ * так что ru-читатель сразу переключится на свой язык/раздел. noindex.
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { t, sectionHref, DEFAULT_LANG } from '../i18n';
@@ -13,14 +13,13 @@ const lang = DEFAULT_LANG;
 const dict = t(lang);
 const nf = dict.notFound;
 /**
- * На 404 переключатель языка и hreflang ограничиваем одним языком (en): зеркальных
- * /ru/404, /uk/404 не существует — иначе шапка/hreflang дадут битые ссылки. Вместо
+ * На 404 переключатель языка и hreflang ограничиваем одним языком (en): зеркального
+ * /ru/404 не существует — иначе шапка/hreflang дадут битые ссылки. Вместо
  * свитчера даём в теле явные входы на главную всех языков (эти страницы существуют).
  */
 const homes = [
   { href: sectionHref('en', 'home'), label: t('en').notFound.home },
   { href: sectionHref('ru', 'home'), label: t('ru').notFound.home },
-  { href: sectionHref('uk', 'home'), label: t('uk').notFound.home },
 ];
 ---
 
@@ -94,7 +93,7 @@ const homes = [
   .nf__home:focus-visible {
     background: var(--cta-bg-hover);
   }
-  /* Вторичные (ru/uk) — контурные, чтобы основной CTA (en) был акцентом. */
+  /* Вторичные (ru) — контурные, чтобы основной CTA (en) был акцентом. */
   .nf__home--alt {
     background: var(--surface-card);
     color: var(--text-body);

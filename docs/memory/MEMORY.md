@@ -4,7 +4,7 @@
 
 ## Ключевые решения (с датами)
 
-- **Гео/язык (РЕШЕНО):** EN-first, Tier-1 (Запад) — первичны; ru/uk — крепкий вторичный рынок. Языки en (корень) / ru (`/ru/`) / uk (`/uk/`); один slug на всех, паритет числовых фактов, взаимные hreflang + x-default. Подбор тем — от EN-интента. (`docs/STRATEGY.md`)
+- **Гео/язык (РЕШЕНО):** EN-first, Tier-1 (Запад) — первичны; ru — крепкий вторичный рынок. Языки en (корень) / ru (`/ru/`); **uk удалён 2026-06-22** (старые /uk/-URL → 301 на корень). Один slug в паре, паритет числовых фактов, взаимные hreflang en↔ru + x-default=en. Подбор тем — от EN-интента. (`docs/STRATEGY.md`)
 - **Валюта — евро €** (у Черногории евро без собственного ЦБ): цены в €, в новостях «курс» не отслеживаем.
 - **Движок:** Astro 6.4.6 static/SSG + Tailwind 4 + Leaflet; хостинг Cloudflare Workers (Static Assets); деплой = push в `main`. Без React/CMS/БД.
 - **Монетизация `/go/`:** роут `worker/index.ts` читает `src/data/partners.json`, подставляет `?c={slug}` как SubID, 302 на target; неизвестный партнёр/невалидный target → безопасный фолбэк на свой сайт (анти-open-redirect); `/go/` исключён из sitemap (`astro.config.mjs`). Только через `/go/` + `rel="sponsored nofollow noopener"`.

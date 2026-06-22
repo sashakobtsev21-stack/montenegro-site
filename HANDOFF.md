@@ -1,6 +1,6 @@
 # HANDOFF — montenegro-site
 
-_Обновлено: 2026-06-22 — опубликованы 2 НОВОСТИ: `exit-festival-montenegro-2026` (фестивали EXIT, лето 2026) и `montenegro-airports-summer-2026` (60+ прямых рейсов TGD/TIV); тройки en/ru/uk, по 2 фото CC, перелинк на `/cities/kotor/`. `npm run qa` = GO. Ранее: города `podgorica-travel-guide` (столица) и `kotor`._
+_Обновлено: 2026-06-22 — **УДАЛЁН украинский язык (uk)**: сайт теперь en (корень) + ru (`/ru/`). Снято дерево `src/pages/uk/`, uk-контент во всех коллекциях, словарь `i18n/uk.ts`, агент `uk-translator`; hreflang/x-default только en↔ru; sitemap → en,ru; `check-parity` теперь требует пару en+ru; добавлен 301 `/uk/* → корень` в `public/_redirects`. Гейты build/check/test/test:links/lint — все зелёные (55 страниц). Ранее: 2 новости (`exit-festival-montenegro-2026`, `montenegro-airports-summer-2026`), города `podgorica-travel-guide` (столица) и `kotor`._
 
 Краткий ввод для следующей сессии/ассистента. Подробности — `SPEC.md` (продукт), `CLAUDE.md` (правила), `CONTENT_GUIDE.md` (как писать), `AUDIT-2026-06-22.md` (аудит), `ROADMAP-FIX.md` (что чинить), `PROGRESS.md` (снимок).
 
@@ -9,7 +9,7 @@ _Обновлено: 2026-06-22 — опубликованы 2 НОВОСТИ: `
 2. Прогон перед работой: `npm run qa` (должен быть **GO**).
 
 ## Что важно знать
-- **EN-first**, языки en/ru/uk, slug одинаков на всех трёх, паритет числовых фактов + взаимные hreflang. Валюта — **евро €**.
+- **EN-first**, языки en/ru (uk удалён 2026-06-22), slug одинаков в обоих, паритет числовых фактов + взаимные hreflang (en↔ru, x-default=en). Валюта — **евро €**.
 - **Город = статья `category=cities`** (английский слаг; коллекция `cities` НЕ используется — пуста во всех форках).
 - **Партнёрки только через `/go/{partner}?c={slug}`** (`rel="sponsored nofollow noopener"`); прямые URL запрещены. Карта — `src/data/partners.json`, роут — `worker/index.ts`.
 - **Новости** (`/news`): механика движка (окно раздела 10 дн, блок главной 2 дн, ежедневный rebuild) — **не трогать**; текст скилла локализован под Черногорию.

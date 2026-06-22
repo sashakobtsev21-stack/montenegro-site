@@ -36,7 +36,7 @@ interface Props {
   /** Языки, на которых есть этот маршрут (slug) — для hreflang (§12), из getStaticPaths. */
   availableLangs?: Lang[];
 }
-const { lang, entry, availableLangs = ['ru', 'uk'] } = Astro.props;
+const { lang, entry, availableLangs = ['en', 'ru'] } = Astro.props;
 const dict = t(lang);
 const data = entry.data;
 /** Реальная дорожная геометрия маршрута (запечена на сборке, §8.2); нет — фолбэк на прямые. */

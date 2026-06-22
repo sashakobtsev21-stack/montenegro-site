@@ -1,5 +1,5 @@
 // Скаффолдер контента Montenegro Guidebook (ROADMAP #20b).
-// Генерирует ТРИ языковые версии (ru/uk/en) скелета с корректным по
+// Генерирует ДВЕ языковые версии (en/ru) скелета с корректным по
 // content.config.ts frontmatter + папку фото public/images/<slug>/ + .gitkeep.
 //
 // Использование:
@@ -7,7 +7,7 @@
 //   type: article | news | route | restaurant | service | city
 //
 // Что делает:
-//   • пишет src/content/<коллекция>/{ru,uk,en}/<slug>.md (если файла нет — не перезатирает);
+//   • пишет src/content/<коллекция>/{en,ru}/<slug>.md (если файла нет — не перезатирает);
 //   • ставит draft: true (скелет не попадает в сборку, пока его не доведут);
 //   • вшивает per-type DoD-чеклист комментарием + TODO-маркеры по правилу 4 (факты не выдумывать);
 //   • поле cover ОБЯЗАТЕЛЬНО (правило «фото у всего контента») — оставлено TODO,
@@ -19,7 +19,7 @@ import { mkdir, writeFile, access } from 'node:fs/promises';
 import { constants } from 'node:fs';
 import { dirname } from 'node:path';
 
-const LANGS = ['ru', 'uk', 'en'];
+const LANGS = ['en', 'ru'];
 
 const ARTICLE_CATEGORIES = [
   'attractions',
@@ -59,12 +59,12 @@ const city = opts.city || 'TODO: город';
 // per-type DoD-чеклист (ROADMAP #20a) — вшивается комментарием в каждый скелет.
 const DOD = {
   article: [
-    'пара ru+uk на месте (en — по возможности), одинаковый slug;',
+    'пара en+ru на месте (en — ведущий), одинаковый slug;',
     'cover (CC: автор+лицензия в coverCredit, ИЛИ своё фото) + ≥3 инлайн-figure ИЛИ ≥6 gallery — фото ОБЯЗАТЕЛЬНЫ;',
     'факты только из briefs/<slug>.md или надёжного источника (sources); нет данных → TODO, не выдумывать (правило 4);',
     'visit (цена/часы) — только с источником + checkedAt + «уточняйте»; иначе не указывать;',
     '≥2 внутренние ссылки на связанные статьи; хаб раздела ссылается сюда;',
-    'title ≤60, description ≤155, взаимные hreflang ru↔uk↔en, schema.org проходит Rich Results Test;',
+    'title ≤60, description ≤155, взаимные hreflang en↔ru, schema.org проходит Rich Results Test;',
     '1–3 AffiliateBox через /go/{partner}?c=<slug> (rel sponsored nofollow noopener);',
     'build+check+test+test:links зелёные; затем снять draft.',
   ],
@@ -106,9 +106,7 @@ function articleBody(lang, category) {
   const intro =
     lang === 'ru'
       ? 'TODO: вводный абзац — живо и по делу, без выдуманных фактов.'
-      : lang === 'uk'
-        ? 'TODO: вступний абзац — жваво й по суті, без вигаданих фактів.'
-        : 'TODO: intro paragraph — lively and to the point, no invented facts.';
+      : 'TODO: intro paragraph — lively and to the point, no invented facts.';
   return `${dodComment(category === 'news' ? 'news' : 'route' === category ? 'route' : type)}\n\n${intro}\n`;
 }
 
@@ -271,5 +269,5 @@ if (!(await exists(gk))) await writeFile(gk, '', 'utf8');
 console.log(
   `\nГотово: ${created} файл(ов) создано, ${skipped} пропущено. Папка фото: ${imgDir}/\n` +
     `Дальше: брифы/факты → текст → фото (scripts/commons-candidates + build-gallery) →\n` +
-    `переводы (uk/en) → fact-check → content-editor → гейты (build/check/test/test:links) → снять draft.`,
+    `перевод (ru) → fact-check → content-editor → гейты (build/check/test/test:links) → снять draft.`,
 );

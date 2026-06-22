@@ -1,9 +1,8 @@
 /**
- * Точка входа i18n (SPEC §12). Язык определяется путём (`/uk/...` → uk,
- * иначе ru), без автодетекта и редиректов по гео/Accept-Language.
+ * Точка входа i18n (SPEC §12). Язык определяется путём (`/ru/...` → ru,
+ * иначе en), без автодетекта и редиректов по гео/Accept-Language.
  */
 import { ru } from './ru';
-import { uk } from './uk';
 import { en } from './en';
 import {
   LANGS,
@@ -60,7 +59,7 @@ export const EDA_CITY_PAGES = [
   { key: 'podgorica', slug: 'where-to-eat-podgorica', citySlug: 'podgorica' },
 ] as const satisfies ReadonlyArray<{ key: EdaCityKey; slug: string; citySlug: string }>;
 
-const dictionaries: Record<Lang, UIDictionary> = { ru, uk, en };
+const dictionaries: Record<Lang, UIDictionary> = { en, ru };
 
 /** Словарь UI-строк для языка. */
 export function t(lang: Lang): UIDictionary {
@@ -109,7 +108,7 @@ export function format(template: string, vars: Record<string, string>): string {
 }
 
 /**
- * Префикс пути для языка: ru — корень, uk — `/uk`.
+ * Префикс пути для языка: en — корень, ru — `/ru`.
  * Финальный слэш добавляется на уровне URL (trailingSlash: 'always').
  */
 export function langPrefix(lang: Lang): string {
@@ -153,7 +152,7 @@ export function sectionHref(lang: Lang, section: SectionKey): string {
 }
 
 /**
- * URL статьи: `/{category}/{slug}/` (ru) или `/{lang}/{category}/{slug}/` (uk).
+ * URL статьи: `/{category}/{slug}/` (en) или `/{lang}/{category}/{slug}/` (ru).
  * Всегда с завершающим слэшем (§7). Используется в карточках, хабах,
  * перелинковке и getStaticPaths шаблона статьи.
  */
@@ -217,7 +216,7 @@ export function serviceRubricLabel(lang: Lang, slug: string): string {
 }
 
 /** BCP-47 локаль для Intl по языку версии (§12). */
-const LOCALE: Record<Lang, string> = { ru: 'ru-RU', uk: 'uk-UA', en: 'en-US' };
+const LOCALE: Record<Lang, string> = { en: 'en-US', ru: 'ru-RU' };
 
 /**
  * Видимая дата для бейджей «Проверено · {дата}» (§9). Дата приходит из

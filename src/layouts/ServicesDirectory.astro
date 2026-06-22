@@ -58,7 +58,7 @@ const items = [...all].sort((a, b) => {
   const sa = isSponsored(a.data) ? 0 : 1;
   const sb = isSponsored(b.data) ? 0 : 1;
   if (sa !== sb) return sa - sb;
-  return a.data.name.localeCompare(b.data.name, lang === 'uk' ? 'uk' : lang === 'en' ? 'en' : 'ru');
+  return a.data.name.localeCompare(b.data.name, lang === 'en' ? 'en' : 'ru');
 });
 
 const hasItems = items.length > 0;

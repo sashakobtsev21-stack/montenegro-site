@@ -1,7 +1,7 @@
 ---
 /**
  * BaseLayout — head/SEO/hreflang, шапка, подвал (SPEC §9).
- * На R1 это каркас: даёт canonical, взаимные hreflang ru↔uk, OG, базовую
+ * На R1 это каркас: даёт canonical, взаимные hreflang en↔ru, OG, базовую
  * семантику и навигацию. Конкретные шаблоны (Article/Route/Hub) наследуют его в R3.
  */
 import '../styles/global.css';
@@ -39,8 +39,8 @@ interface Props {
   utility?: boolean;
   /**
    * Языки, на которых СУЩЕСТВУЕТ эта страница (для hreflang, §12). По умолчанию
-   * все 3 (статические страницы/хабы есть на всех языках). Контентные шаблоны
-   * (ArticlePage/RoutePage) передают вычисленный список — en только если перевод есть.
+   * оба (статические страницы/хабы есть на всех языках). Контентные шаблоны
+   * (ArticlePage/RoutePage) передают вычисленный список — ru только если перевод есть.
    */
   availableLangs?: Lang[];
 }
@@ -53,13 +53,13 @@ const {
   ogType = 'website',
   noindex = false,
   utility = false,
-  availableLangs = ['ru', 'uk', 'en'],
+  availableLangs = ['en', 'ru'],
 } = Astro.props;
-const OG_LOCALE: Record<Lang, string> = { ru: 'ru_RU', uk: 'uk_UA', en: 'en_US' };
+const OG_LOCALE: Record<Lang, string> = { en: 'en_US', ru: 'ru_RU' };
 const dict = t(lang);
 /**
  * Языки для переключателя в шапке/подвале. На служебной утилите (404) зеркал нет —
- * показываем только текущий язык, иначе LangSwitcher даст битые /ru/404, /uk/404.
+ * показываем только текущий язык, иначе LangSwitcher даст битые /ru/404.
  */
 const navLangs: Lang[] = utility ? [lang] : availableLangs;
 
@@ -114,7 +114,7 @@ const siteLd = {
 
     {/* Перф (аудит 2026-06-20): preload дисплей-шрифта Unbounded — он рисует H1/бренд
         над сгибом (часто LCP-элемент). Латиница нужна всегда (бренд + EN H1), кириллица —
-        на ru/uk (их H1). font-display:swap уже стоит; preload убирает позднюю подмену. */}
+        на ru (её H1). font-display:swap уже стоит; preload убирает позднюю подмену. */}
     <link
       rel="preload"
       href="/fonts/unbounded-latin-600-normal.woff2"
@@ -201,7 +201,7 @@ const siteLd = {
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180.png" />
 
     <!--
-      Preload LCP-критичных шрифтов (§15): cyrillic-сабсеты для ru/uk —
+      Preload LCP-критичных шрифтов (§15): cyrillic-сабсеты для ru —
       Unbounded 600 (H1) и Manrope 400 (body). Латиница и веса 500/600
       подтянутся по факту использования (font-display: swap, без CLS).
     -->

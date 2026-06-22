@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.1.0",
   "private": true,
-  "description": "Montenegro Guidebook — гид по Черногории (en/ru/uk), статика на Astro",
+  "description": "Montenegro Guidebook — гид по Черногории (en/ru), статика на Astro",
   "engines": {
     "node": ">=20"
   },

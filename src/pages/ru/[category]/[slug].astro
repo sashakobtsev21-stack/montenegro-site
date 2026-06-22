@@ -10,7 +10,7 @@ import ArticlePage from '../../../layouts/ArticlePage.astro';
 
 export const getStaticPaths = (async () => {
   const all = await getCollectionSafe('articles', (entry) => entry.data.draft !== true);
-  const ORDER = ['ru', 'uk', 'en'] as const;
+  const ORDER = ['en', 'ru'] as const;
   const ru = all.filter((entry) => entry.data.lang === 'ru');
   return ru.map((entry) => ({
     params: { category: entry.data.category, slug: entry.data.slug },

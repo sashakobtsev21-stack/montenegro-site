@@ -22,7 +22,7 @@ ADR в проекте не ведутся (`docs/adr/*` отсутствует) 
 ## Guidelines
 - Читай файлы перед правкой. Не создавай лишних файлов. Функции компактные, типизированные интерфейсы для публичных API, валидация входа на границах.
 - Перед коммитом: `npm run build && npm run check` — оба зелёные.
-- Сложные доменные зоны делегируй: каркас/CF/CI → astro-platform-engineer; SEO → seo-engineer; контент → seo-content-writer / uk-translator.
+- Сложные доменные зоны делегируй: каркас/CF/CI → astro-platform-engineer; SEO → seo-engineer; контент → seo-content-writer / en-translator.
 
 ## Чего НЕ делать
 Не добавлять тяжёлые зависимости, React или вторую аналитику. Не менять URL после индексации (только 301 в `public/_redirects`). Не писать контент статей.

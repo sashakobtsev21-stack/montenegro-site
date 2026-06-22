@@ -24,7 +24,7 @@ description: Полный многоагентный аудит сайта Monte
 - `reviewer` — корректность/типы/паттерны/запреты CLAUDE.
 - `architect` — IA/URL (§7), границы модулей, контент-модель (§11).
 - `security-auditor` — CSP/_headers, open-redirect /go/, секреты, CVE (§18).
-- `tester` — ссылки/schema/паритет ru-uk-en/гейты (§21).
+- `tester` — ссылки/schema/паритет en-ru/гейты (§21).
 - `monetization-strategist` — рекламный инвентарь, /go/+rel, ненавязчивость (§16).
 
 ## Фаза 2 — Обсуждение (агенты спорят)

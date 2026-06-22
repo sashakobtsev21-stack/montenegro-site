@@ -3,7 +3,7 @@
  * Все UI-строки — только через словарь; хардкод в компонентах запрещён.
  */
 
-export const LANGS = ['ru', 'uk', 'en'] as const;
+export const LANGS = ['en', 'ru'] as const;
 export type Lang = (typeof LANGS)[number];
 export const DEFAULT_LANG: Lang = 'en';
 

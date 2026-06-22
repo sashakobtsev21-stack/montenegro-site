@@ -84,10 +84,10 @@ interface HubCard {
 
 /** Город места — по суффиксу slug (-budva/-kotor/-podgorica), иначе «другое». */
 const CITY_NAMES: Record<string, string> = {
-  budva: lang === 'uk' ? 'Будва' : lang === 'en' ? 'Budva' : 'Будва',
-  kotor: lang === 'uk' ? 'Котор' : lang === 'en' ? 'Kotor' : 'Котор',
-  podgorica: lang === 'uk' ? 'Подгориця' : lang === 'en' ? 'Podgorica' : 'Подгорица',
-  other: lang === 'uk' ? 'Інше' : lang === 'en' ? 'Elsewhere' : 'Другое',
+  budva: lang === 'en' ? 'Budva' : 'Будва',
+  kotor: lang === 'en' ? 'Kotor' : 'Котор',
+  podgorica: lang === 'en' ? 'Podgorica' : 'Подгорица',
+  other: lang === 'en' ? 'Elsewhere' : 'Другое',
 };
 const CITY_ORDER = ['budva', 'kotor', 'podgorica', 'other'];
 const cityKeyOf = (slug: string): string =>

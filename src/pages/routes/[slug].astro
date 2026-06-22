@@ -10,7 +10,7 @@ import RoutePage from '../../layouts/RoutePage.astro';
 
 export const getStaticPaths = (async () => {
   const all = await getCollectionSafe('routes', (entry) => entry.data.draft !== true);
-  const ORDER = ['ru', 'uk', 'en'] as const;
+  const ORDER = ['en', 'ru'] as const;
   const en = all.filter((entry) => entry.data.lang === 'en');
   return en.map((entry) => ({
     params: { slug: entry.data.slug },

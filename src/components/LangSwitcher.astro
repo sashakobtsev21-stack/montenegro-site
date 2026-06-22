@@ -11,14 +11,13 @@ interface Props {
   lang: Lang;
   availableLangs?: Lang[];
 }
-const { lang, availableLangs = ['ru', 'uk', 'en'] } = Astro.props;
+const { lang, availableLangs = ['en', 'ru'] } = Astro.props;
 const dict = t(lang);
 
 /** Короткий лейбл + эндоним языка (для кнопки и aria-label). */
 const LANG_META: Record<Lang, { label: string; name: string }> = {
-  ru: { label: 'РУ', name: 'Русский' },
-  uk: { label: 'УК', name: 'Українська' },
   en: { label: 'EN', name: 'English' },
+  ru: { label: 'РУ', name: 'Русский' },
 };
 
 const path = Astro.url.pathname;

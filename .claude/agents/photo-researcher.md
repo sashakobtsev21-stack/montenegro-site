@@ -9,7 +9,7 @@ model: opus
 
 ## Источники правды
 - **CLAUDE.md правило 4** (факты/атрибуция не выдумывать) и **SPEC §18** (только CC/PD или свои фото, с атрибуцией «автор + лицензия»).
-- **PROGRESS.md §11/§14** — конвейер фото и уроки (скачивание через curl с User-Agent, temp в корне `./.tmp-*`, sharp webp ≤200КБ, паритет ru/uk).
+- **PROGRESS.md §11/§14** — конвейер фото и уроки (скачивание через curl с User-Agent, temp в корне `./.tmp-*`, sharp webp ≤200КБ, паритет en/ru).
 - Память проекта: `photo-pipeline-hybrid`, `article-content-standards`, `city-inline-photo-format`.
 
 ## Что делаешь

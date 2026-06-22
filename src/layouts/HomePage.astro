@@ -1,7 +1,7 @@
 ---
 /**
  * HomePage (§8.4) — главная, направление «Полевой журнал».
- * Один компонент для ru (`/`) и uk (`/uk/`) — язык приходит пропсом, весь
+ * Один компонент для en (`/`) и ru (`/ru/`) — язык приходит пропсом, весь
  * текст из словарей (§12). Контента в коллекциях нет (R2) → честные пустые
  * состояния, без выдуманных статей/мест/цен (CLAUDE правило 4).
  *
@@ -259,7 +259,7 @@ for (const pick of showcasePicks) {
   if (p.place) {
     // Статья-место (Teatro): рендерим как place-карточку витрины с поповером
     // (адрес/часы/карта/сайт) и каруселью фото — как у заведений.
-    const defaultCity = lang === 'uk' ? 'Будва' : lang === 'en' ? 'Budva' : 'Будва';
+    const defaultCity = lang === 'en' ? 'Budva' : 'Будва';
     showcaseItems.push({
       href: articleHref(lang, category, entry.data.slug),
       title: p.cardTitle ?? entry.data.title,

@@ -25,7 +25,7 @@ const snap = await getLiveSnapshot();
 const fmtT = (n: number | null): string => (typeof n === 'number' ? `${Math.round(n)}°` : '—');
 const fmtFx = (n: number | null): string => (typeof n === 'number' ? `${n.toFixed(2)} €` : '—');
 
-const locale = lang === 'uk' ? 'uk-UA' : lang === 'en' ? 'en-US' : 'ru-RU';
+const locale = lang === 'en' ? 'en-US' : 'ru-RU';
 let buildTime = '';
 try {
   buildTime = new Intl.DateTimeFormat(locale, {

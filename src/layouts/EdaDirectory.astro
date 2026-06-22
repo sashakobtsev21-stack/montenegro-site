@@ -1,7 +1,7 @@
 ---
 /**
  * EdaDirectory (§8.6) — директория «Где поесть».
- * Один компонент для ru (`/eda/`) и uk (`/uk/eda/`) — язык приходит пропсом,
+ * Один компонент для en (`/eda/`) и ru (`/ru/eda/`) — язык приходит пропсом,
  * весь текст из словарей (§12). Данные — из коллекции `restaurants` (§11),
  * фильтр по lang + не draft.
  *
@@ -108,11 +108,9 @@ const ogImage = places.find((p) => p.data.cover)?.data.cover?.src;
  * Заменяет фильтр по городу — город теперь виден как заголовок секции.
  */
 const CITY_ORDER =
-  lang === 'uk'
-    ? ['Будва', 'Котор', 'Подгориця', 'У дорозі']
-    : lang === 'en'
-      ? ['Budva', 'Kotor', 'Podgorica', 'En route']
-      : ['Будва', 'Котор', 'Подгорица', 'По дороге'];
+  lang === 'en'
+    ? ['Budva', 'Kotor', 'Podgorica', 'En route']
+    : ['Будва', 'Котор', 'Подгорица', 'По дороге'];
 const cityRank = (city: string): number => {
   const i = CITY_ORDER.indexOf(city);
   return i === -1 ? CITY_ORDER.length : i;

@@ -32,6 +32,7 @@ const ARTICLE_CATEGORIES = [
   'relocation',
   'insurance',
   'news',
+  'planning',
 ];
 
 // --- argv --------------------------------------------------------------

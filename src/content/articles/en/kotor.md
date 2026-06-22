@@ -136,6 +136,8 @@ Kotor sits at the back of the bay on the coast road, well connected by both road
 
 Kotor's cooking is coastal Montenegrin and Adriatic: fresh fish and seafood, *risotto* and pasta reflecting the long Venetian influence, grilled meats, *Njeguški* prosciutto and cheese from the mountains above the bay, and local **Vranac** red and **Krstač** white wines. The restaurants right on the main squares are the most touristy and priciest; you generally eat better and cheaper a few lanes back, or out in Dobrota and the bay villages. We don't list fixed prices we can't verify, so check the latest menus locally — but expect Old Town prices to sit at the higher end for Montenegro in peak season.
 
+For specific addresses, see our vetted picks in the [where to eat in Kotor](/food/where-to-eat-kotor/) directory, or browse the whole [food section](/food/).
+
 ## Practical tips for visiting Kotor
 
 A few things worth knowing before you go:

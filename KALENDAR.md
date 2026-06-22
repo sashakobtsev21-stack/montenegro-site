@@ -20,7 +20,7 @@
 
 ## Неделя 4 (15–21.07) — Маршрут (road trip) + Бока-достопримечательности
 - Пн 13.07 — 📊 Замер GA/GSC (конверсия денежной страницы car rental в GA; новые запросы из GSC)
-- Ср 15.07 — [Статья] Montenegro Road Trip: Routes, Stops & Driving Times · `montenegro road trip` · /montenegro-road-trip/ · категория routes (МАРШРУТ — фото каждой остановки) · 💰 аренда авто · перелинк: → Car rental Montenegro (W3), → Montenegro 7-day itinerary (W1)
+- ✅ Ср 15.07 — [МАРШРУТ] Bay of Kotor & Coast Road Trip Itinerary · `bay of kotor road trip` · /routes/bay-of-kotor-coast/ · коллекция **routes** (МАРШРУТ — фото КАЖДОЙ остановки) · 💰 trip-carhire / trip-hotels · **опубликовано 2026-06-22**, пара en/ru, `npm run qa` = GO. _(Реализовано как первый маршрут коллекции `routes` (а не статья `category=routes`/слаг `montenegro-road-trip`) — по стандарту репо «маршрут = коллекция routes», стартовый пакет «маршрут Montenegro Road Trip / Bay of Kotor: фото каждой остановки». 6 остановок: Котор → Пераст/Богородица-на-Рифе → Будва → Свети-Стефан → Ловчен/мавзолей Негоша → Цетине опц.; days4/140км/€60; cover + 6 фото остановок + 2 инлайн-фигуры (9 CC-webp); геометрия OSRM запечена. Перелинк: Котор, Будва, Подгорица, аренда авто, best-time, Montenegro guide, хаб /routes/.)_
 - Пт 17.07 — [Статья] Perast & Our Lady of the Rocks: Visiting Guide · `perast montenegro` · /perast-our-lady-of-the-rocks/ · категория attractions · фото ≥5 · 💰 лодочные туры · перелинк: → Bay of Kotor boat tour (W1), → Things to do in Kotor (W1)
 - Вс 19.07 — [Статья] Sveti Stefan: What to Know Before You Go · `sveti stefan montenegro` · /sveti-stefan-montenegro/ · категория attractions · фото ≥5 · 💰 отели / туры · перелинк: → Best beaches in Montenegro (W2), → Budva travel guide (W3)
 

@@ -14,7 +14,7 @@
 
 ## Неделя 3 (08–14.07) — Города-курорты + деньги (авто)
 - Пн 06.07 — 📊 Замер GA/GSC (растущие страницы Котор/itinerary; правка title/meta по CTR)
-- Ср 08.07 — [Статья] Budva Travel Guide: Old Town, Beaches & Nightlife · `budva montenegro` · /budva-travel-guide/ · категория goroda (город Будва, ≥10 фото) · 💰 отели · перелинк: → Best beaches in Montenegro (W2), → Tivat & Porto Montenegro (W3)
+- ✅ Ср 08.07 — [Статья] Budva, Montenegro: Old Town, Beaches & Nightlife · `budva montenegro` · /cities/budva/ · категория **cities** (город Будва, 13 фото CC Wikimedia — cover + 7 инлайн + 6 gallery) · 💰 trip-hotels / trip-tours · **опубликовано 2026-06-22**, пара en/ru, `npm run qa` = GO. _(Реализовано как статья-ГОРОД `category=cities`, англ. слаг `budva` — по стандарту репо «город = cities», а не план. слаг `/budva-travel-guide/`/`goroda`, как Котор/Подгорица. Добавлена 3-м пиком в витрину главной. Перелинк: Котор ×2, Подгорица, Montenegro guide, best-time, аренда авто, хаб /cities/; доперелинковать на Best beaches / Sveti Stefan / Tivat после их публикации.)_
 - Пт 10.07 — [Статья] Tivat & Porto Montenegro Guide · `tivat montenegro` · /tivat-porto-montenegro/ · категория goroda (город Тиват, ≥10 фото) · 💰 отели / яхт-чартер · перелинк: → Budva travel guide (W3), → Yacht charter Montenegro (W12)
 - Вс 12.07 — [Статья] Car Rental in Montenegro: Tips & Where to Book · `car rental montenegro` · /car-rental-montenegro/ · категория attractions (practical) · фото ≥5 · 💰 аренда авто / страховка · перелинк: → Montenegro 7-day itinerary (W1), → Driving in Montenegro (W6)
 

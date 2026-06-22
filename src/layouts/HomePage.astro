@@ -211,6 +211,7 @@ type ShowcasePick = {
 };
 const podgoricaCity = lang === 'en' ? 'Podgorica' : 'Подгорица';
 const kotorCity = lang === 'en' ? 'Kotor' : 'Котор';
+const budvaCity = lang === 'en' ? 'Budva' : 'Будва';
 const showcasePicks: ShowcasePick[] = [
   {
     kind: 'article',
@@ -220,6 +221,7 @@ const showcasePicks: ShowcasePick[] = [
     city: podgoricaCity,
   },
   { kind: 'article', category: 'cities', slug: 'kotor', kicker: 'city', city: kotorCity },
+  { kind: 'article', category: 'cities', slug: 'budva', kicker: 'city', city: budvaCity },
 ];
 const showcaseItems: ShowcaseItem[] = [];
 for (const pick of showcasePicks) {

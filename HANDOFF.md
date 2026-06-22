@@ -1,6 +1,6 @@
 # HANDOFF — montenegro-site
 
-_Обновлено: 2026-06-22 — **ВИТРИНА главной наполнена городами**: `showcasePicks` в `src/layouts/HomePage.astro` (был пуст) заполнен городами `podgorica-travel-guide` + `kotor` (`category:'cities'`, `kicker:'city'`, city-чип) — золотая лента `block--showcase` видна на `/` и `/ru/` (резолвинг по языку, обе статьи в en+ru с cover). `showcasePicks` переведён с `as const` на тип `ShowcasePick` (структура пик-ов сохранена). Переключатель языка = РОВНО en+ru (uk нет). Гейты build/check/test/test:links/lint — все зелёные (55 страниц). Ранее: удалён uk (en+ru), 2 новости (`exit-festival-montenegro-2026`, `montenegro-airports-summer-2026`), города `podgorica-travel-guide` (столица) и `kotor`._
+_Обновлено: 2026-06-22 — **Статья-ГОРОД Budva опубликована** (`/cities/budva/`, пара en/ru, `category=cities`, `region:coastal`): Старый город + цитадель, пляжи Могрен/Яз/Бечичи, Свети-Стефан + Будванская ривьера, ночная жизнь, дейтрипы Котор/Свети-Стефан, как добраться (Tivat TIV ~20 км). 13 фото CC Wikimedia (cover + 7 инлайн + 6 gallery, webp ≤200КБ). Добавлена третьим пиком в витрину главной (`showcasePicks`, чип Budva/Будва). Гейты build/check/test/test:links/lint — все зелёные (57 страниц), `npm run qa` = GO. Ранее: витрина главной (Podgorica+Kotor), удалён uk (en+ru), 2 новости, города Podgorica (столица) и Kotor._
 
 Краткий ввод для следующей сессии/ассистента. Подробности — `SPEC.md` (продукт), `CLAUDE.md` (правила), `CONTENT_GUIDE.md` (как писать), `AUDIT-2026-06-22.md` (аудит), `ROADMAP-FIX.md` (что чинить), `PROGRESS.md` (снимок).
 

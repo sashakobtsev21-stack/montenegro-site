@@ -8,7 +8,7 @@
 
 ## Неделя 2 (01–07.07) — Столица + пляжный хаб
 - Пн 29.06 — 📊 Замер GA/GSC (первый замер: базовые показы/индексация стартовых страниц)
-- Ср 01.07 — [Статья] Podgorica Travel Guide: Capital of Montenegro · `podgorica montenegro` · /podgorica-travel-guide/ · категория goroda (СТОЛИЦА, ≥15 фото) · 💰 отели / аренда авто · перелинк: → Montenegro 7-day itinerary (W1), → Tivat vs Podgorica airport (W6)
+- ✅ Ср 01.07 — [Статья] Podgorica Travel Guide: Capital of Montenegro · `podgorica montenegro` · /podgorica-travel-guide/ · категория **cities** (СТОЛИЦА; 15 фото: cover + 14, все CC Wikimedia) · 💰 отели (HotelWidget) / аренда авто · опубликовано 2026-06-22, тройка en/ru/uk, `npm run qa` = GO. _(перелинк W1/W6 — на ещё не опубликованные статьи; временно слинковано на montenegro-travel-guide, best-time, car-rental, durmitor + хаб /cities/; доперелинковать на itinerary/airport после публикации.)_
 - Пт 03.07 — [Статья] Best Beaches in Montenegro (2026) · `best beaches in montenegro` · /best-beaches-in-montenegro/ · категория attractions · фото ≥5 · 💰 отели · перелинк: → Budva travel guide (W3), → Sveti Stefan (W4)
 - Вс 05.07 — [Статья] How Many Days Do You Need in Montenegro? · `how many days in montenegro` · /how-many-days-in-montenegro/ · категория routes · фото ≥5 · 💰 туры / отели · перелинк: → Montenegro 7-day itinerary (W1), → Best beaches in Montenegro (W2)
 

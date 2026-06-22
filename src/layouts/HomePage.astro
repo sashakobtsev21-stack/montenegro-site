@@ -192,30 +192,35 @@ const showcaseRestaurants = await getCollectionSafe(
   (entry) => entry.data.lang === lang && entry.data.draft !== true,
 );
 // Витрина: подборка избранного (заведения перемешаны со статьями/маршрутами).
-// Слаги — ЗАГОТОВКИ под будущий контент Черногории: пока материала нет, карточки
-// фильтруются (рендерятся только при наличии материала с обложкой). Заменить на
-// реальные места/маршруты при наполнении (решение владельца). Структуру pick-ов
-// (article/route/restaurant/place-карточка) сохраняем — менять только слаги/курацию.
-const showcasePicks = [
-  { kind: 'article', category: 'cities', slug: 'kotor', kicker: 'city' },
-  { kind: 'restaurant', slug: 'placeholder-budva', edaSlug: 'where-to-eat-budva', kicker: 'food' },
-  { kind: 'route', slug: 'montenegro-road-trip', kicker: 'route' },
-  // Место «Развлечения» как place-карточка (поповер: адрес/часы/карта/сайт) со
-  // знаком качества — заготовка; реальное заведение + mapUrl добавит владелец.
+// Сейчас наполнена опубликованными городами (Подгорица, Котор) — есть в en и ru,
+// у обоих есть cover. Структуру пик-ов (article/route/restaurant/place-карточка)
+// сохраняем через тип ShowcasePick — при дальнейшем наполнении добавлять реальные
+// места/маршруты/города (карточки фильтруются: рендерятся только при наличии
+// материала с обложкой). Пин-чип города (city) — язык-зависимый: ru — кириллица, en — латиница.
+type ShowcasePick = {
+  kind: 'article' | 'route' | 'restaurant';
+  slug: string;
+  kicker: keyof typeof dict.home.showcase.kickers;
+  category?: SectionKey;
+  edaSlug?: string;
+  quality?: boolean;
+  city?: string;
+  place?: boolean;
+  cardTitle?: string;
+  mapUrl?: string;
+};
+const podgoricaCity = lang === 'en' ? 'Podgorica' : 'Подгорица';
+const kotorCity = lang === 'en' ? 'Kotor' : 'Котор';
+const showcasePicks: ShowcasePick[] = [
   {
     kind: 'article',
-    category: 'entertainment',
-    slug: 'placeholder-nightlife',
-    kicker: 'nightlife',
-    quality: true,
-    place: true,
+    category: 'cities',
+    slug: 'podgorica-travel-guide',
+    kicker: 'city',
+    city: podgoricaCity,
   },
-  { kind: 'article', category: 'attractions', slug: 'durmitor', kicker: 'sight' },
-  { kind: 'restaurant', slug: 'placeholder-kotor', edaSlug: 'where-to-eat-kotor', kicker: 'food' },
-  { kind: 'article', category: 'food', slug: 'what-to-eat', kicker: 'food' },
-  { kind: 'route', slug: 'boka-kotorska-day-trip', kicker: 'route' },
-  { kind: 'article', category: 'cities', slug: 'budva', kicker: 'city' },
-] as const;
+  { kind: 'article', category: 'cities', slug: 'kotor', kicker: 'city', city: kotorCity },
+];
 const showcaseItems: ShowcaseItem[] = [];
 for (const pick of showcasePicks) {
   if (pick.kind === 'restaurant') {
@@ -248,7 +253,9 @@ for (const pick of showcasePicks) {
       ? routes.find((r) => r.data.slug === pick.slug)
       : articles.find((a) => a.data.category === pick.category && a.data.slug === pick.slug);
   if (!entry || !entry.data.cover) continue;
-  const category = pick.kind === 'route' ? 'routes' : pick.category;
+  // entry найден: для route → 'routes'; иначе pick.category гарантированно задан
+  // (статья сматчилась по a.data.category === pick.category), отсюда `?? entry.data.category`.
+  const category = pick.kind === 'route' ? 'routes' : (pick.category ?? entry.data.category);
   const p = pick as {
     quality?: boolean;
     city?: string;

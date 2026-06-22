@@ -1,6 +1,6 @@
 # HANDOFF — montenegro-site
 
-_Обновлено: 2026-06-22 — **УДАЛЁН украинский язык (uk)**: сайт теперь en (корень) + ru (`/ru/`). Снято дерево `src/pages/uk/`, uk-контент во всех коллекциях, словарь `i18n/uk.ts`, агент `uk-translator`; hreflang/x-default только en↔ru; sitemap → en,ru; `check-parity` теперь требует пару en+ru; добавлен 301 `/uk/* → корень` в `public/_redirects`. Гейты build/check/test/test:links/lint — все зелёные (55 страниц). Ранее: 2 новости (`exit-festival-montenegro-2026`, `montenegro-airports-summer-2026`), города `podgorica-travel-guide` (столица) и `kotor`._
+_Обновлено: 2026-06-22 — **ВИТРИНА главной наполнена городами**: `showcasePicks` в `src/layouts/HomePage.astro` (был пуст) заполнен городами `podgorica-travel-guide` + `kotor` (`category:'cities'`, `kicker:'city'`, city-чип) — золотая лента `block--showcase` видна на `/` и `/ru/` (резолвинг по языку, обе статьи в en+ru с cover). `showcasePicks` переведён с `as const` на тип `ShowcasePick` (структура пик-ов сохранена). Переключатель языка = РОВНО en+ru (uk нет). Гейты build/check/test/test:links/lint — все зелёные (55 страниц). Ранее: удалён uk (en+ru), 2 новости (`exit-festival-montenegro-2026`, `montenegro-airports-summer-2026`), города `podgorica-travel-guide` (столица) и `kotor`._
 
 Краткий ввод для следующей сессии/ассистента. Подробности — `SPEC.md` (продукт), `CLAUDE.md` (правила), `CONTENT_GUIDE.md` (как писать), `AUDIT-2026-06-22.md` (аудит), `ROADMAP-FIX.md` (что чинить), `PROGRESS.md` (снимок).
 

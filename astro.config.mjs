@@ -4,6 +4,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
+import rehypeExternalLinks from 'rehype-external-links';
 
 /**
  * Слаги demo-материалов (`demo: true`) — исключаются из sitemap (аудит 2026-06-17, P0):
@@ -82,6 +83,13 @@ export default defineConfig({
   build: {
     // Files emitted as directory/index.html so URLs keep a trailing slash (§7).
     format: 'directory',
+  },
+  markdown: {
+    // Внешние http(s)-ссылки в теле статей получают rel="nofollow noopener noreferrer"
+    // (SEO + безопасность). Внутренние/относительные ссылки и /go/-редиректы (Worker-роут,
+    // §16) — это относительные пути, плагин их НЕ трогает (срабатывает только на абсолютных
+    // http(s)-URL). target НЕ задаём осознанно: не открываем внешние ссылки в новой вкладке.
+    rehypePlugins: [[rehypeExternalLinks, { rel: ['nofollow', 'noopener', 'noreferrer'] }]],
   },
   integrations: [
     // Карта сайта всех языковых версий (§14). i18n-режим добавляет взаимные

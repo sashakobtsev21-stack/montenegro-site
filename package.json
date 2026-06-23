@@ -30,7 +30,8 @@
   "dependencies": {
     "@astrojs/sitemap": "3.7.3",
     "astro": "6.4.6",
-    "leaflet": "1.9.4"
+    "leaflet": "1.9.4",
+    "rehype-external-links": "^3.0.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",

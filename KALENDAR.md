@@ -149,3 +149,83 @@
 **Замеры:** Замер GA/GSC — каждый понедельник, 15 мин (первый замер Пн 29.06, т.к. Пн 22.06 раньше старта). Смотрим: топ-растущие страницы по кликам/показам в GSC, новые запросы с импрешенами без позиций (контент-пробелы), CTR проседающих страниц (правка title/meta), какие денежные связки (авто/туры/eSIM/чартер) реально конвертят в GA. Правила корректировки по данным GA: (1) если страница хаба растёт быстрее ожиданий — на следующей неделе добавляем смежную статью того же кластера и усиливаем внутреннюю перелинковку на неё; (2) если P0-тема не набирает показов за 3-4 недели — сдвигаем смежные темы вниз очереди, не плодим дубли; (3) растущие запросы из GSC, которых нет в плане, добавляем в очередь P1/P2 на ближайшее свободное окно; (4) сезонные окна (см. ниже) не двигаем по GA — они привязаны к календарю спроса. План недели фиксируется в воскресенье вечером на основе понедельничного замера прошлой недели.
 
 **Сезонность:** Окно публикации июнь-сентябрь = пик высокого сезона побережья, поэтому в первые недели грузим спрос «здесь и сейчас» (Котор/Бока, пляжи, нацпарки, аренда авто, itinerary, boat tour) — это то, что ищут уже приехавшие/едущие. 'Montenegro in September' ставим на неделю 9 (19.08) — за ~2-3 недели до сентябрьского окна (sweet spot из отчёта: 'September' разгонять к июлю-августу). 'Best time to visit' и 'Weather by month' — evergreen, ставим в недели 6-10 как опору планирования следующего сезона. Рафтинг по Таре (апрель-октябрь) — в сезоне, ставим неделю 5. Digital-nomad/relocation (P1, evergreen со всплеском осенью) — недели 10-12, к осеннему всплеску планирования переезда; визу держим актуальной (программа заявлена до 31.12.2026). **Въезд/виза/ETIAS (entry-requirements, W1) — поставить ДО октября:** ETIAS для Шенгена стартует в конце 2026, статья должна быть проиндексирована к запуску (Черногория вне Шенгена — безвиз до 90 дней — но связь с ETIAS объяснить для въезжающих через HR/Дубровник); YMYL — официальные источники + дата проверки + дисклеймер, держать актуальной. ВЫХОДИТ ЗА 13-НЕДЕЛЬНОЕ ОКНО (отметить на будущее): сезонные планировочные кластеры 'best time / itinerary / beaches / car rental' для лета-2027 надо разгонять февраль-апрель 2027 (за 2-3 мес до окна) — переопубликовать/обновить; зимний ski-контент Жабляк/Дурмитор (декабрь-март) — публиковать октябрь-ноябрь 2026; события (Sea Dance, Котор Карнавал, регаты Боки) — точечно под даты года через /news, проверяя даты перед публикацией.
+
+---
+## Расширение плана — long-tail backlog (Этап 2, под трафик/рекламную модель)
+
+> **Итог:** 47 слотов (отдедуплено против опубл. в `src/content` и 13-недельного плана). По кластерам: Cities/towns 8 · Attractions/POIs 9 · Itineraries 5 · Best time/weather+seasonal 6 · Budget 1 · Transport 6 · Food 3 · Day trips 1 · Comparisons/decision 5 · Practical 6 · EN-track 0 (весь backlog — EN-first, Tier-1 Запад). **Приоритет: EN-first, Tier-1; head → mid → long-tail внутри кластера.** Это очередь P1/P2 на свободные окна и под подтверждённый GSC-спрос — НЕ двигать вперёд голов/P0 из основного плана. ⚠ слоты с пометкой DEDUPE — согласовать с владельцем перед публикацией (риск двойной публикации с планом).
+
+### Cities & towns
+- [Статья] Ulcinj Travel Guide: Beaches, Old Town & Velika Plaza · key `ulcinj montenegro` · /ulcinj-montenegro/ · категория cities · фото≥10 (город) · 💰 отели · кластер cities-towns [mid]
+- [Статья] Bar, Montenegro: Old Town, Port & Day Trips · key `bar montenegro` · /bar-montenegro/ · категория cities · фото≥10 (город) · 💰 отели / трансфер · кластер cities-towns [mid]
+- [Статья] Cetinje Travel Guide: Old Royal Capital & Museums · key `cetinje montenegro` · /cetinje-montenegro/ · категория cities · фото≥10 (город) · 💰 туры · кластер cities-towns [mid]
+- [Статья] Žabljak & Durmitor Base Town: Where to Stay in the North · key `zabljak montenegro` · /zabljak-montenegro/ · категория cities · фото≥10 (город) · 💰 отели · кластер cities-towns [mid]
+- [Статья] Perast Travel Guide: Baroque Town on the Bay of Kotor · key `perast travel guide` · /perast-travel-guide/ · категория cities · фото≥10 (город) · 💰 отели · кластер cities-towns [mid] · ⚠ DEDUPE: разводить с план. attraction `perast-our-lady-of-the-rocks` (визит на островки) — здесь town-level (где жить/есть)
+- [Статья] Kolašin Travel Guide: Mountain Resort & Biogradska Gora Base · key `kolasin montenegro` · /kolasin-montenegro/ · категория cities · фото≥10 (город) · 💰 отели / ски-пасс · кластер cities-towns [long-tail]
+- [Статья] Petrovac Travel Guide: Quiet Riviera Beach Town · key `petrovac montenegro` · /petrovac-montenegro/ · категория cities · фото≥10 (город) · 💰 отели · кластер cities-towns [long-tail]
+- [Статья] Nikšić Travel Guide: Montenegro's Second City & Lakes · key `niksic montenegro` · /niksic-montenegro/ · категория cities · фото≥10 (город) · 💰 отели · кластер cities-towns [long-tail]
+
+### Attractions & POIs
+- [Статья] Best Beaches in Budva: Mogren, Jaz, Slovenska & More · key `budva beaches` · /budva-beaches/ · категория attractions · фото≥5 · 💰 отели · кластер attractions-pois [mid] · сателлит план. country `best-beaches`
+- [Статья] Blue Cave Montenegro: Boat Tours from Kotor & Herceg Novi · key `blue cave montenegro` · /blue-cave-montenegro/ · категория attractions · фото≥5 · 💰 туры (GetYourGuide) · кластер attractions-pois [mid]
+- [Статья] Biogradska Gora National Park: Lake, Forest & Hikes · key `biogradska gora national park` · /biogradska-gora-national-park/ · категория attractions · фото≥5 · 💰 туры · кластер attractions-pois [mid]
+- [Статья] Sveti Đorđe & Our Lady of the Rocks: The Islands of Perast · key `our lady of the rocks perast` · /our-lady-of-the-rocks/ · категория attractions · фото≥5 · 💰 туры · кластер attractions-pois [mid] · ⚠ DEDUPE: если план. `perast-our-lady-of-the-rocks` выходит объединённым — FOLD сюда; не публиковать обе. Согласовать с владельцем
+- [Статья] Prokletije National Park: Hiking the Accursed Mountains · key `prokletije national park` · /prokletije-national-park/ · категория attractions · фото≥5 · 💰 туры / гид · кластер attractions-pois [long-tail]
+- [Статья] Ada Bojana: Montenegro's Island Beach & Kitesurf Spot · key `ada bojana montenegro` · /ada-bojana-montenegro/ · категория attractions · фото≥5 · 💰 туры / активности · кластер attractions-pois [long-tail]
+- [Статья] Lipa Cave: Visiting Montenegro's Show Cave near Cetinje · key `lipa cave montenegro` · /lipa-cave-montenegro/ · категория attractions · фото≥5 · 💰 туры / билеты · кластер attractions-pois [long-tail]
+- [Статья] Luštica Peninsula Guide: Beaches, Bays & Hidden Coves · key `lustica peninsula montenegro` · /lustica-peninsula-montenegro/ · категория attractions · фото≥5 · 💰 отели / туры · кластер attractions-pois [long-tail]
+- [Статья] Kotor to Lovćen: Ladder of Kotor Hike & Serpentine Road · key `ladder of kotor hike` · /ladder-of-kotor-hike/ · категория attractions · фото≥5 · 💰 туры / аренда авто · кластер attractions-pois [long-tail]
+
+### Itineraries
+- [Статья] Montenegro Road Trip Itinerary: The Ultimate Self-Drive Route · key `montenegro road trip` · /montenegro-road-trip/ · категория routes · фото≥5 · 💰 аренда авто · кластер itineraries [head]
+- [Статья] Montenegro 10-Day Itinerary: Coast, Mountains & Lakes · key `montenegro 10 day itinerary` · /montenegro-10-day-itinerary/ · категория routes · фото≥5 · 💰 аренда авто / отели · кластер itineraries [mid] · сателлит канон. 7-day хаба
+- [Статья] Montenegro Without a Car: How to Travel by Bus & Tours · key `montenegro without a car` · /montenegro-without-a-car/ · категория routes · фото≥5 · 💰 туры / трансфер · кластер itineraries [mid]
+- [Статья] Montenegro Family Itinerary: Best Things to Do with Kids · key `montenegro with kids` · /montenegro-with-kids/ · категория routes · фото≥5 · 💰 отели / туры · кластер itineraries [mid]
+- [Статья] Croatia & Montenegro Itinerary: Combined 7–10 Day Trip · key `croatia and montenegro itinerary` · /croatia-montenegro-itinerary/ · категория routes · фото≥5 · 💰 аренда авто / отели · кластер itineraries [mid]
+
+### Best time & weather
+- [Статья] Montenegro Sea Temperature by Month: When to Swim · key `montenegro sea temperature` · /montenegro-sea-temperature/ · категория planning · фото≥5 · 💰 отели · кластер best-time-weather [mid] · сателлит план. `weather-by-month`
+- [Статья] Best Time to Visit Montenegro for Hiking & the Mountains · key `montenegro hiking season` · /best-time-hiking-montenegro/ · категория planning · фото≥5 · 💰 туры / гид · кластер best-time-weather [long-tail] · 🛰 сателлит /best-time-to-visit-montenegro/ (опубл.)
+
+### Seasonal
+- [Статья] Montenegro in October: Weather, Sea & What's Open · key `montenegro in october` · /montenegro-in-october/ · категория planning · фото≥5 · 💰 отели · кластер seasonal [mid] · сиблинг план. `montenegro-in-september`
+- [Статья] Montenegro in Winter: Skiing, Christmas & Off-Season Travel · key `montenegro in winter` · /montenegro-in-winter/ · категория planning · фото≥5 · 💰 отели / ски-пасс · кластер seasonal [mid] · окно публ. окт-ноя 2026
+- [Статья] Skiing in Montenegro: Kolašin 1600 & Savin Kuk (Žabljak) · key `skiing in montenegro` · /skiing-in-montenegro/ · категория attractions · фото≥5 · 💰 ски-пасс / прокат · кластер seasonal [long-tail] · окно публ. окт-ноя 2026
+
+### Budget & cost
+- [Статья] Montenegro Travel: One Week Coast & Mountains Budget Breakdown · key `montenegro one week cost` · /montenegro-week-trip-budget/ · категория articles · фото≥5 · 💰 отели / страховка · кластер budget-cost [mid] · разводить с план. `is-montenegro-expensive` и опубл. /cost-of-living-in-montenegro/
+
+### Transport
+- [Статья] Tivat Airport to Kotor: Taxi, Transfer & Bus Options · key `tivat airport to kotor` · /tivat-airport-to-kotor/ · категория articles · фото≥5 · 💰 трансфер · кластер transport [head]
+- [Статья] Kotor to Dubrovnik: Bus, Transfer & Border Crossing · key `kotor to dubrovnik` · /kotor-to-dubrovnik/ · категория articles · фото≥5 · 💰 трансфер · кластер transport [head] · ⚠ DEDUPE: реверс план. `dubrovnik-to-kotor` — если владелец делает страницу двунаправленной, FOLD
+- [Статья] Podgorica to Kotor: Bus, Transfer & Driving Guide · key `podgorica to kotor` · /podgorica-to-kotor/ · категория articles · фото≥5 · 💰 трансфер / аренда авто · кластер transport [mid]
+- [Статья] Kotor Cruise Port Guide: What to Do on a Day in Port · key `kotor cruise port` · /kotor-cruise-port-guide/ · категория articles · фото≥5 · 💰 туры · кластер transport [mid]
+- [Статья] Budva to Kotor: Bus, Boat & How to Get Between Them · key `budva to kotor` · /budva-to-kotor/ · категория articles · фото≥5 · 💰 трансфер / туры · кластер transport [mid] · ⚠ DEDUPE: реверс план. `kotor-to-budva-bus` (+ multi-mode/boat) — если планируемая страница станет двунаправленной, FOLD
+- [Статья] Ferry to Montenegro: Bari & Ancona to Bar (Italy Crossings) · key `ferry to montenegro` · /ferry-to-montenegro/ · категория articles · фото≥5 · 💰 паромы / билеты · кластер transport [long-tail] · пара к Bar city page
+
+### Food
+- [Статья] Montenegrin Food: 15 Traditional Dishes You Must Try · key `montenegrin food` · /montenegrin-food-dishes/ · категория articles · фото≥5 · 💰 туры / рестораны · кластер food [mid] · хаб food-вертикали
+- [Статья] Where to Eat in Kotor: Best Restaurants & Konobas · key `where to eat in kotor` · /where-to-eat-in-kotor/ · категория articles · фото≥5 · 💰 рестораны / туры · кластер food [mid] · связать с опубл. /konoba-scala-santa/, /restaurant-galion/, /cave-coffee-kotor/
+- [Статья] Montenegro Wine Guide: Vranac, Plantaže & Skadar Vineyards · key `montenegro wine` · /montenegro-wine-guide/ · категория articles · фото≥5 · 💰 туры (винные) · кластер food [long-tail] · связать с опубл. /lake-skadar/
+
+### Day trips
+- [Статья] Best Day Trips from Budva (Sveti Stefan, Kotor, Skadar) · key `day trips from budva` · /day-trips-from-budva/ · категория routes · фото≥5 · 💰 туры / аренда авто · кластер day-trips [mid] · сиблинг план. `day-trips-from-kotor`
+
+### Comparisons & decision
+- [Статья] Is Montenegro Worth Visiting? An Honest 2026 Take · key `is montenegro worth visiting` · /is-montenegro-worth-visiting/ · категория articles · фото≥5 · 💰 нет · кластер comparisons-decision [head]
+- [Статья] Montenegro vs Albania: Which Balkan Country to Visit · key `montenegro vs albania` · /montenegro-vs-albania/ · категория articles · фото≥5 · 💰 нет · кластер comparisons-decision [mid] · ⚠ паритет: нейтральные pros/cons, НЕ «дешевле Албании» (правило STRATEGY)
+- [Статья] Kotor or Budva: Where Should You Stay in Montenegro? · key `kotor or budva` · /kotor-or-budva/ · категория articles · фото≥5 · 💰 отели · кластер comparisons-decision [mid] · сателлит план. `where-to-stay` хаба
+- [Статья] Is Kotor Worth Visiting? What to Expect (Crowds & Highlights) · key `is kotor worth visiting` · /is-kotor-worth-visiting/ · категория articles · фото≥5 · 💰 туры · кластер comparisons-decision [long-tail] · связать с опубл. /kotor/
+- [Статья] Currency & Money in Montenegro: Euro, ATMs & Card Tips · key `montenegro currency` · /montenegro-currency-money/ · категория planning · фото≥5 · 💰 нет · кластер comparisons-decision [head] (practical)
+
+### Practical
+- [Статья] Montenegro Packing List: What to Bring (Season by Season) · key `montenegro packing list` · /montenegro-packing-list/ · категория planning · фото≥5 · 💰 снаряжение (Amazon) · кластер practical [mid]
+- [Статья] SIM Cards & Mobile Data in Montenegro (Telenor, m:tel, One) · key `montenegro sim card` · /montenegro-sim-card/ · категория planning · фото≥5 · 💰 eSIM / связь · кластер practical [mid] · сателлит план. eSIM-страницы (физ-SIM intent)
+- [Статья] Do They Speak English in Montenegro? Language & Useful Phrases · key `language in montenegro` · /language-in-montenegro/ · категория planning · фото≥5 · 💰 нет · кластер practical [long-tail]
+- [Статья] Tipping in Montenegro: How Much & When (Restaurants, Taxis) · key `tipping in montenegro` · /tipping-in-montenegro/ · категория planning · фото≥5 · 💰 нет · кластер practical [long-tail]
+
+### Where to stay
+- _Хаб `where-to-stay` ведётся в основном плане; сюда отнесён сателлит-сравнение `kotor-or-budva` (см. Comparisons). Город-уровневые «где жить» — в Cities & towns (Žabljak, Perast и др.)._
+
+### EN-track (Tier-1 Запад)
+- _Весь backlog выше — EN-first под Tier-1 Запад (правило хаба: Черногория EN-first, ru/uk вторичны). Отдельных не-EN слотов в Этапе-2 нет; ru/uk — вторичный трек по приоритетным головам после публикации EN._

@@ -18,6 +18,7 @@
 ## Неделя 1 (22–28.06) — Старт хаба: Котор/Бока + канон itinerary-хаба
 - 📰 Ср 24.06 — /news (дайджест) · сбор → фильтр → превью владельцу → «ок» → публикация
   - [x] ОПУБЛИКОВАНО 2026-06-24: `flynas-riyadh-podgorica-2026` (en+ru) — flynas возобновляет сезонный Эр-Рияд–Подгорица с 25.06.2026, 3×/нед, A320 (источник EX-YU Aviation). qa=GO.
+  - [x] ОПУБЛИКОВАНО 2026-06-24: `made-in-ny-jazz-festival-tivat-2026` (en+ru) — 11-й Made in NY Jazz Festival, Porto Montenegro (Тиват), 26.06.2026 21:00, вход свободный; John Scofield Trio / Frank McComb / Yaacov Mayman (источник Porto Montenegro). qa=GO.
 - 📰 Пт 26.06 — /news (дайджест) · сбор → фильтр → превью владельцу → «ок» → публикация
 - _Дни новостей W1: Пн нет (старт хаба, первый замер GA — Пн 29.06 в W2); Ср 24.06 + Пт 26.06._
 - ✅ Ср 24.06 — [Статья] Kotor, Montenegro: Old Town, Walls & Bay Guide · `kotor montenegro` · /cities/kotor/ · категория **cities** (город Котор, 13 фото CC Wikimedia) · 💰 trip-hotels / trip-tours · **опубликовано 2026-06-22**, пара en/ru, `npm run qa` = GO. _(Реализовано как статья-ГОРОД `category=cities`, англ. слаг `kotor` — по стандарту репо «город = cities», а не план. слаг `things-to-do-in-kotor`/`goroda`. Перелинк: Подгорица, Montenegro guide, best-time, Durmitor, аренда авто, хаб /cities/; доперелинковать на itinerary/boat tour/Perast после их публикации.)_

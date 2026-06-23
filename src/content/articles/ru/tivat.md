@@ -12,7 +12,7 @@ updatedAt: 2026-06-23
 cover:
   src: '/images/tivat/cover.webp'
   alt: 'Суперъяхты у причалов марины Порто Монтенегро в Тивате, за ними Которский залив и горы'
-coverCredit: 'Photo: Miomir Magdevski / Wikimedia Commons, CC BY-SA 4.0'
+coverCredit: 'Photo: Miomir Magdevski / Wikimedia Commons, CC BY-SA 4.0 (commons.wikimedia.org/wiki/File:Porto_Montenegro,_summer_2019_01.jpg)'
 gallery:
   - src: '/images/tivat/marina-sunset.webp'
     alt: 'Яхты и лодки у причалов тиватской марины на закате'
@@ -111,7 +111,7 @@ draft: false
 
 <figure class="figure">
 <img src="/images/tivat/airport.webp" alt="Пассажирский терминал аэропорта Тиват с вывеской Aerodrom Tivat и пальмой" width="1120" height="840" loading="lazy" decoding="async" />
-<figcaption>Аэропорт Тиват (TIV) примерно в 3 км от центра — самые загруженные летом ворота в Боку Которскую. <span class="figure__credit">Photo: Maxton / Wikimedia Commons, CC BY-SA 4.0</span></figcaption>
+<figcaption>Аэропорт Тиват (TIV) примерно в 3 км от центра — самые загруженные летом ворота в Боку Которскую. <span class="figure__credit">Photo: Maxton / Wikimedia Commons, CC BY-SA 4.0 (commons.wikimedia.org/wiki/File:Passanger_terminal_at_the_Tivat_Airport.jpg)</span></figcaption>
 </figure>
 
 <figure class="figure">

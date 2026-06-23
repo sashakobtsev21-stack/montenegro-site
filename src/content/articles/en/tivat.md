@@ -12,7 +12,7 @@ updatedAt: 2026-06-23
 cover:
   src: '/images/tivat/cover.webp'
   alt: 'Superyachts moored along the Porto Montenegro marina in Tivat with the Bay of Kotor and mountains behind'
-coverCredit: 'Photo: Miomir Magdevski / Wikimedia Commons, CC BY-SA 4.0'
+coverCredit: 'Photo: Miomir Magdevski / Wikimedia Commons, CC BY-SA 4.0 (commons.wikimedia.org/wiki/File:Porto_Montenegro,_summer_2019_01.jpg)'
 gallery:
   - src: '/images/tivat/marina-sunset.webp'
     alt: 'Yachts and small boats moored in Tivat marina at golden-hour sunset'
@@ -111,7 +111,7 @@ Tivat is one of the easiest places to reach on the whole coast, because the airp
 
 <figure class="figure">
 <img src="/images/tivat/airport.webp" alt="The passenger terminal of Tivat Airport with the Aerodrom Tivat sign and a palm tree" width="1120" height="840" loading="lazy" decoding="async" />
-<figcaption>Tivat Airport (TIV) sits about 3 km from the centre — the busiest summer gateway to the Bay of Kotor. <span class="figure__credit">Photo: Maxton / Wikimedia Commons, CC BY-SA 4.0</span></figcaption>
+<figcaption>Tivat Airport (TIV) sits about 3 km from the centre — the busiest summer gateway to the Bay of Kotor. <span class="figure__credit">Photo: Maxton / Wikimedia Commons, CC BY-SA 4.0 (commons.wikimedia.org/wiki/File:Passanger_terminal_at_the_Tivat_Airport.jpg)</span></figcaption>
 </figure>
 
 <figure class="figure">

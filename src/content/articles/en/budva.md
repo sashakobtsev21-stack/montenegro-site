@@ -28,7 +28,7 @@ gallery:
     credit: 'Photo: Daniya.Mostovaya / Wikimedia Commons, CC BY-SA 4.0'
   - src: '/images/budva/slovenska-beach.webp'
     alt: "Slovenska beach, Budva's long town beach lined with loungers"
-    credit: 'Photo: Bratislav / Wikimedia Commons, Public domain'
+    credit: 'Photo: Bratislav Tabaš / Wikimedia Commons, Public domain'
   - src: '/images/budva/view-from-wall.webp'
     alt: 'View of Budva and the coast seen from the Old Town city wall'
     credit: 'Photo: Bratislav Tabaš / Wikimedia Commons, CC BY-SA 3.0'

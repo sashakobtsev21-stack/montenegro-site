@@ -28,7 +28,7 @@ gallery:
     credit: 'Photo: Daniya.Mostovaya / Wikimedia Commons, CC BY-SA 4.0'
   - src: '/images/budva/slovenska-beach.webp'
     alt: 'Славянский пляж — длинный городской пляж Будвы с лежаками'
-    credit: 'Photo: Bratislav / Wikimedia Commons, Public domain'
+    credit: 'Photo: Bratislav Tabaš / Wikimedia Commons, Public domain'
   - src: '/images/budva/view-from-wall.webp'
     alt: 'Вид на Будву и побережье со стены Старого города'
     credit: 'Photo: Bratislav Tabaš / Wikimedia Commons, CC BY-SA 3.0'

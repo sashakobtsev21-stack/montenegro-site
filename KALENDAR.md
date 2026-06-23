@@ -1,6 +1,10 @@
 # Контент-календарь Черногория — 24.06.2026 – 23.09.2026 (~3 статьи/нед)
 Фон: /news по графику (сбор → фильтр → превью владельцу → «ок» → публикация; см. «News schedule» ниже — НЕ слепой daily). Замеры GA/GSC — по понедельникам (15 мин).
 
+**Статус публикаций (сверено с `src/content` 23.06.2026):** опубликовано **14 статей плана** (kotor, podgorica, budva, tivat, how-many-days-in-montenegro, durmitor-national-park, best-time-to-visit-montenegro, lake-skadar, ostrog-monastery, cost-of-living-in-montenegro, montenegro-travel-guide, montenegro-travel-insurance, budva-nightlife, renting-a-car-in-montenegro) + **1 маршрут** (bay-of-kotor-coast) + **3 ресторана** (cave-coffee-kotor, konoba-scala-santa, restaurant-galion). Новости вне счётчика плана (exit-festival-montenegro-2026, montenegro-airports-summer-2026 — категория news). Пометка `[x] ОПУБЛИКОВАНО` ниже = слот примирён с фактическим slug.
+
+**Опубликовано вне 13-недельного плана (сироты, помечены `[x]`):** `montenegro-travel-guide` (planning, зонтичный гид), `montenegro-travel-insurance` (insurance, YMYL/деньги), `budva-nightlife` (entertainment), `cost-of-living-in-montenegro` (relocation — см. примирение W11), `lake-skadar` (attractions — см. примирение W9), 3 ресторана директории еды (`cave-coffee-kotor`, `konoba-scala-santa`, `restaurant-galion`). Это легитимный опубликованный контент; внесены в учёт, чтобы план = реальность.
+
 ## News schedule (Montenegro)
 - **Дни: Пн + Ср + Пт** (Mon + Wed + Fri). НЕ daily.
 - Near-daily — только в виде исключения: летние фестивали (Sea Dance / Kotor Carnival / регаты Боки) или крупное изменение правил (визы/въезд/налоги).
@@ -31,8 +35,8 @@
 - 📰 Пт 10.07 — /news (дайджест, в этот день также выходит статья) · превью владельцу → «ок» → публикация
 - _Дни новостей W3: Пн 06.07 (с замером) + Ср 08.07 + Пт 10.07._
 - ✅ Ср 08.07 — [Статья] Budva, Montenegro: Old Town, Beaches & Nightlife · `budva montenegro` · /cities/budva/ · категория **cities** (город Будва, 13 фото CC Wikimedia — cover + 7 инлайн + 6 gallery) · 💰 trip-hotels / trip-tours · **опубликовано 2026-06-22**, пара en/ru, `npm run qa` = GO. _(Реализовано как статья-ГОРОД `category=cities`, англ. слаг `budva` — по стандарту репо «город = cities», а не план. слаг `/budva-travel-guide/`/`goroda`, как Котор/Подгорица. Добавлена 3-м пиком в витрину главной. Перелинк: Котор ×2, Подгорица, Montenegro guide, best-time, аренда авто, хаб /cities/; доперелинковать на Best beaches / Sveti Stefan / Tivat после их публикации.)_
-- Пт 10.07 — [Статья] Tivat & Porto Montenegro Guide · `tivat montenegro` · /cities/tivat/ · категория **cities** (город Тиват, ≥10 фото) · 💰 отели / яхт-чартер · перелинк: → Budva (W3), → Yacht charter Montenegro (W12)
-- Вс 12.07 — [Статья] Car Rental in Montenegro: Tips & Where to Book · `car rental montenegro` · /car-rental-montenegro/ · категория attractions (practical) · фото ≥5 · 💰 аренда авто / страховка · перелинк: → Montenegro 7-day itinerary (W1), → Driving in Montenegro (W6)
+- [x] **ОПУБЛИКОВАНО (slug: `tivat`)** · Пт 10.07 — [Статья] Tivat & Porto Montenegro Guide · `tivat montenegro` · категория **cities** (город Тиват) · 💰 отели / яхт-чартер · перелинк: → Budva (W3), → Yacht charter Montenegro (W12). _Опубл. как город `category=cities`, слаг `tivat` (по стандарту репо «город = cities»), не план. `/cities/tivat/`._
+- [x] **ОПУБЛИКОВАНО (slug: `renting-a-car-in-montenegro`)** · Вс 12.07 — [Статья] Car Rental in Montenegro: Tips & Where to Book · `car rental montenegro` · категория **car-rental** · 💰 аренда авто / страховка · перелинк: → Montenegro 7-day itinerary (W1), → Driving in Montenegro (W6). _Slug выровнен с опубл.: план. `car-rental-montenegro` → факт `renting-a-car-in-montenegro` (опубл. `category=car-rental`). Канонический slug — `renting-a-car-in-montenegro`._
 - 🆕 **ВСТАВКА P1 (по аудиту, окно W3–W4)** — [Статья] Herceg Novi Travel Guide: Old Town, Forts & Riviera · `herceg novi montenegro` · /cities/herceg-novi/ · категория **cities** (город Херцег-Нови, ≥10 фото) · 💰 trip-hotels / trip-tours · перелинк: → Kotor (W1), → Things to do in Montenegro (W1), → Bay of Kotor coast road trip (W4). _Незакрытый базовый город побережья (есть Kotor/Budva/Tivat/Podgorica) — добираем гео-покрытие Боки._
 
 ## Неделя 4 (15–21.07) — Маршрут (road trip) + Бока-достопримечательности
@@ -50,7 +54,7 @@
 - 📰 Ср 22.07 — /news (дайджест, в этот день также выходит статья) · превью владельцу → «ок» → публикация
 - 📰 Пт 24.07 — /news (дайджест, в этот день также выходит статья) · превью владельцу → «ок» → публикация
 - _Дни новостей W5: Пн 20.07 (с замером) + Ср 22.07 + Пт 24.07._
-- Ср 22.07 — [Статья] Durmitor National Park & Black Lake: Complete Guide · `durmitor national park` · /durmitor-national-park/ · категория attractions · фото ≥5 · 💰 аренда авто / туры · перелинк: → Bay of Kotor coast road trip (W4), → Tara canyon rafting (W5)
+- [x] **ОПУБЛИКОВАНО (slug: `durmitor-national-park`)** · Ср 22.07 — [Статья] Durmitor National Park & Black Lake: Complete Guide · `durmitor national park` · категория **attractions** (`attractionType=gory-priroda`, `region=northern`) · 💰 аренда авто / туры · перелинк: → Bay of Kotor coast road trip (W4), → Tara canyon rafting (W5)
 - Пт 24.07 — [Статья] Tara Canyon: Rafting, Zipline & Viewpoints · `tara canyon montenegro` · /tara-canyon-rafting/ · категория attractions · фото ≥5 · 💰 туры · перелинк: → Durmitor national park (W5), → Best day trips from Kotor (W7)
 - Вс 26.07 — [Статья] Kotor City Walls & Fortress of San Giovanni · `kotor city walls` · /kotor-city-walls-fortress/ · категория attractions · фото ≥5 · 💰 нет · перелинк: → Kotor (W1), → Bay of Kotor boat tour (W1)
 
@@ -61,7 +65,7 @@
 - _Дни новостей W6: Пн 27.07 (с замером) + Ср 29.07 + Пт 31.07._
 - Ср 29.07 — [Статья] Driving in Montenegro: Rules, Roads & Parking · `driving in montenegro` · /driving-in-montenegro/ · категория attractions (practical) · фото ≥5 · 💰 аренда авто · перелинк: → Car rental Montenegro (W3), → Bay of Kotor coast road trip (W4)
 - Пт 31.07 — [Статья] Tivat vs Podgorica Airport: Which to Fly Into · `tivat airport montenegro` · /tivat-vs-podgorica-airport/ · категория attractions (practical) · фото ≥5 · 💰 трансфер / аренда авто · перелинк: → Driving in Montenegro (W6), → Montenegro airport transfers (W7)
-- Вс 02.08 — [Статья] Best Time to Visit Montenegro (Month by Month) · `best time to visit montenegro` · /best-time-to-visit-montenegro/ · категория attractions (planning) · фото ≥5 · 💰 отели · перелинк: → Montenegro 7-day itinerary (W1), → Montenegro weather by month (W8)
+- [x] **ОПУБЛИКОВАНО (slug: `best-time-to-visit-montenegro`)** · Вс 02.08 — [Статья] Best Time to Visit Montenegro (Month by Month) · `best time to visit montenegro` · категория **planning** · 💰 отели · перелинк: → Montenegro 7-day itinerary (W1), → Montenegro weather by month (W8). _Опубл. как `category=planning` (не план. attractions), слаг `best-time-to-visit-montenegro`._
 
 ## Неделя 7 (05–11.08) — Day trips из Котора + трансферы
 - Пн 03.08 — 📊 Замер GA/GSC (растущие запросы GSC → в очередь P1/P2; CTR planning-страниц) + 📰 /news (дайджест)
@@ -87,7 +91,7 @@
 - 📰 Пт 21.08 — /news (дайджест, в этот день также выходит статья) · превью владельцу → «ок» → публикация
 - _Дни новостей W9: Пн 17.08 (с замером) + Ср 19.08 + Пт 21.08._
 - Ср 19.08 — [Статья] Montenegro in September: Worth It? (Sea, Crowds, Prices) · `montenegro in september` · /montenegro-in-september/ · категория attractions (seasonal — окно перед сентябрём) · фото ≥5 · 💰 отели · перелинк: → Best time to visit Montenegro (W6), → Best beaches in Montenegro (W2)
-- Пт 21.08 — [Статья] Lake Skadar: Boat Tours, Wine & Viewpoints · `lake skadar montenegro` · /lake-skadar/ · категория attractions · фото ≥5 · 💰 туры · перелинк: → Best day trips from Kotor (W7), → Ostrog monastery (W9)
+- [x] **ОПУБЛИКОВАНО (slug: `lake-skadar`)** · Пт 21.08 — [Статья] Lake Skadar: Boat Tours, Wine & Viewpoints · `lake skadar montenegro` · категория **attractions** (`attractionType=vodopady-kanony-ozera`, `region=central`) · 💰 туры · перелинк: → Best day trips from Kotor (W7), → Ostrog monastery (W9)
 - ✅ Вс 23.08 — [Статья] Ostrog Monastery: How to Visit Montenegro's Cliff Shrine · `ostrog monastery` · /attractions/ostrog-monastery/ · категория **attractions** (`attractionType=hramy-monastyri`, `region=central`; 5 фото CC Wikimedia: cover + 4 инлайн, все webp ≤200КБ) · 💰 trip-tours · **опубликовано 2026-06-22**, пара en/ru, `npm run qa` = GO. _(Лид = прямой ответ: монастырь в отвесной скале, главная святыня Черногории, мощи Св. Василия. Разделы: что это/история (†1671) · верхний монастырь и мощи · нижний монастырь и подъём 3 км (босиком) · как добраться (~50 км от Подгорицы, серпантин, парковки) · дресс-код/часы (ориентир + «уточняйте», вход свободный). Факты: Wikipedia / montenegro.travel / montenegropulse. Перелинк: ↔ Durmitor (встречная ссылка добавлена), → Подгорица, Montenegro guide, аренда авто + хаб /attractions/. Lake Skadar (W9) ещё не опубликован — доперелинковать после. Добавлен в `showcasePicks` главной.)_
 
 ## Неделя 10 (26.08–01.09) — Итинерари добивка + nomad-старт
@@ -104,7 +108,7 @@
 - 📰 Ср 02.09 — /news (дайджест, в этот день также выходит статья) · превью владельцу → «ок» → публикация
 - 📰 Пт 04.09 — /news (дайджест, в этот день также выходит статья) · превью владельцу → «ок» → публикация
 - _Дни новостей W11: Пн 31.08 (с замером) + Ср 02.09 + Пт 04.09._
-- Ср 02.09 — [Статья] Cost of Living in Montenegro (2026 Budget Breakdown) · `cost of living montenegro` · /cost-of-living-montenegro/ · категория attractions (relocation) · фото ≥5 · 💰 long-stay аренда / страховка · перелинк: → Montenegro digital nomad visa (W10), → Is Montenegro expensive (W12)
+- [x] **ОПУБЛИКОВАНО (slug: `cost-of-living-in-montenegro`)** · Ср 02.09 — [Статья] Cost of Living in Montenegro (2026 Budget Breakdown) · `cost of living montenegro` · категория **relocation** · 💰 long-stay аренда / страховка · перелинк: → Montenegro digital nomad visa (W10), → Is Montenegro expensive (W12). _Slug выровнен с опубл.: план. `cost-of-living-montenegro` → факт `cost-of-living-in-montenegro` (опубл. `category=relocation`). Канонический slug — `cost-of-living-in-montenegro`._
 - Пт 04.09 — [Статья] Living in Budva vs Tivat vs Podgorica for Remote Workers · `living in montenegro` · /living-in-montenegro-nomad/ · категория attractions (relocation) · фото ≥5 · 💰 long-stay аренда · перелинк: → Cost of living Montenegro (W11), → Coworking & coliving Montenegro (W11) · ⚠️ **депри: низкий объём** — defensible как осенний nomad-хаб, можно оставить позже по сезону (двигать вниз очереди, не вперёд P0/P1).
 - Вс 06.09 — [Статья] Coworking & Coliving in Montenegro · `coworking montenegro` · /coworking-coliving-montenegro/ · категория attractions (relocation) · фото ≥5 · 💰 коворкинг / коливинг · перелинк: → Living in Montenegro nomad (W11), → Montenegro digital nomad visa (W10) · ⚠️ **депри: низкий объём** — defensible как осенний nomad-хаб, можно оставить позже по сезону (двигать вниз очереди, не вперёд P0/P1).
 

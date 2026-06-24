@@ -12,7 +12,7 @@ cover:
 coverCredit: 'Photo: Nick Savchenko / Wikimedia Commons, CC BY-SA 2.0'
 gallery: []
 affiliate:
-  - partner: 'ekta'
+  - partner: 'safetywing'
     label: 'Подобрать страховку для поездки'
     position: 'body-end'
 sources: ['gov.me', 'montenegro.travel', 'europa.eu']

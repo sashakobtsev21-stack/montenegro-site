@@ -8,6 +8,7 @@ import '../styles/global.css';
 import { t, mirrorPath, DEFAULT_LANG, type Lang } from '../i18n';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import CookieConsent from '../components/CookieConsent.astro';
 
 interface Props {
   /** <title>; ≤ 60 символов (CLAUDE правило 7). */
@@ -254,6 +255,9 @@ const siteLd = {
         <path d="M12 19V5M5 12l7-7 7 7" />
       </svg>
     </button>
+
+    {/* Баннер согласия на cookies под GA4 (Consent Mode v2, §17/§18). */}
+    <CookieConsent lang={lang} />
 
     <!--
       Reveal при скролле + stagger hero — внешний vanilla-модуль со 'self'

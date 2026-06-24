@@ -1,5 +1,7 @@
 /*
  * Google Analytics 4 (gtag.js) — ЕДИНСТВЕННАЯ аналитика сайта (CLAUDE правило 8, SPEC §17).
+ * Consent Mode v2: по умолчанию analytics_storage='denied', баннер поднимает
+ * consent до 'granted'. До согласия GA работает без analytics cookies.
  * Внешний self-скрипт (script-src 'self', §18): без inline → не нужен sha256-хеш в CSP.
  * Инициализирует dataLayer и догружает библиотеку gtag с www.googletagmanager.com
  * (домен добавлен в script-src/connect-src). Эндпоинты сбора google-analytics.com —
@@ -17,6 +19,19 @@ if (/(^|\.)montenegroguidebook\.com$/.test(location.hostname)) {
   window.gtag = function () {
     window.dataLayer.push(arguments);
   };
+  window.gtag('consent', 'default', {
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
+    analytics_storage: 'denied',
+  });
+  try {
+    if (localStorage.getItem('mg-consent') === 'granted') {
+      window.gtag('consent', 'update', { analytics_storage: 'granted' });
+    }
+  } catch (e) {
+    /* localStorage недоступен — остаёмся на denied */
+  }
   window.gtag('js', new Date());
   window.gtag('config', ID);
 

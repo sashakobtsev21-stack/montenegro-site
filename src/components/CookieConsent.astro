@@ -1,0 +1,103 @@
+---
+/**
+ * CookieConsent — баннер согласия на cookies под GA4 (Consent Mode v2).
+ * GA по умолчанию работает с analytics_storage='denied' (см. analytics.js);
+ * баннер при «Accept/Принять» поднимает consent до 'granted'. Выбор хранится в localStorage.
+ */
+import type { Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = {
+  en: {
+    text: 'We use cookies only for analytics (Google Analytics) to understand what readers find useful. Analytics runs only with your consent.',
+    accept: 'Accept',
+    decline: 'Decline',
+    aria: 'Cookie consent',
+  },
+  ru: {
+    text: 'Мы используем cookies только для аналитики (Google Analytics), чтобы понимать, что полезно читателям. Аналитика включается лишь с вашего согласия.',
+    accept: 'Принять',
+    decline: 'Отклонить',
+    aria: 'Согласие на использование cookies',
+  },
+} satisfies Record<Lang, { text: string; accept: string; decline: string; aria: string }>;
+const c = copy[lang];
+---
+
+<div class="cc" data-cookie-consent role="dialog" aria-label={c.aria} aria-live="polite" hidden>
+  <p class="cc__text">{c.text}</p>
+  <div class="cc__actions">
+    <button type="button" class="cc__btn cc__btn--accept" data-consent-accept>{c.accept}</button>
+    <button type="button" class="cc__btn" data-consent-decline>{c.decline}</button>
+  </div>
+</div>
+
+<script is:inline src="/js/consent-banner.js" defer></script>
+
+<style>
+  .cc {
+    position: fixed;
+    inset-inline: var(--space-3);
+    bottom: var(--space-3);
+    z-index: 80;
+    max-width: 44rem;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-widget);
+    box-shadow: var(--shadow-raised);
+    font-size: var(--text-sm);
+    color: var(--color-slate);
+  }
+  .cc[hidden] {
+    display: none;
+  }
+  .cc__text {
+    margin: 0;
+    line-height: 1.5;
+  }
+  .cc__actions {
+    display: flex;
+    gap: var(--space-2);
+    justify-content: flex-end;
+  }
+  .cc__btn {
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-widget);
+    background: transparent;
+    color: var(--color-slate);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .cc__btn--accept {
+    background: var(--color-sea);
+    border-color: var(--color-sea);
+    color: var(--color-white);
+  }
+  .cc__btn:focus-visible {
+    outline: 2px solid var(--color-sea);
+    outline-offset: 2px;
+  }
+  @media (min-width: 480px) {
+    .cc {
+      flex-direction: row;
+      align-items: center;
+    }
+    .cc__text {
+      flex: 1;
+    }
+    .cc__actions {
+      flex: none;
+    }
+  }
+</style>

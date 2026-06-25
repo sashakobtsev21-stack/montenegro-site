@@ -28,6 +28,19 @@ interface Env {
 const DATA = partnersData as unknown as PartnersMap;
 const SAFE_FALLBACK = '/';
 
+function httpsRedirect(url: URL): Response | null {
+  if (url.protocol !== 'http:') return null;
+  const target = new URL(url.href);
+  target.protocol = 'https:';
+  return new Response(null, {
+    status: 301,
+    headers: {
+      Location: target.href,
+      'X-Content-Type-Options': 'nosniff',
+    },
+  });
+}
+
 /** Фолбэк обязан быть относительным путём своего сайта (анти open-redirect). */
 function safeFallback(origin: string): string {
   const fallback = DATA.fallback ?? SAFE_FALLBACK;
@@ -75,6 +88,9 @@ function handleGo(url: URL): Response {
 export default {
   fetch(request: Request, env: Env): Response | Promise<Response> {
     const url = new URL(request.url);
+    const redirect = httpsRedirect(url);
+    if (redirect) return redirect;
+
     if (request.method === 'GET' && url.pathname.startsWith('/go/')) {
       return handleGo(url);
     }

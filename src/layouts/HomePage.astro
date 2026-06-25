@@ -53,48 +53,42 @@ const description = dict.home.heroSubtitle;
  * сразу за ним ставит srcset выбранного кадра (без двойной загрузки),
  * fetchpriority=high; <noscript> — дефолтный кадр для отключённого JS.
  */
-// Hero — full-bleed фон со СКРИМОМ. Раньше упирался в 1280px webp: на широком
-// десктопе кадр апскейлился до ~1920 и мылил. Чинится разрешением (битрейт под
-// тёмным скримом вторичен), но жёсткий бюджет §15 (каждая картинка ≤200КБ, гейт qa)
-// не даёт детальным кадрам влезть в 1600+ на webp. Поэтому AVIF (сжимает заметно
-// плотнее) до 1600px + webp-фолбэк до 1280px для ~5% браузеров без AVIF (<picture>).
-// `sizes="100vw"`: мобайл (70%+ трафика, §15) и Lighthouse-mobile берут 640/960/1280;
-// 1600 уезжает только на десктоп. quality AVIF — per-image (q): детальные
-// Котор/Будва жмём сильнее, мягкое озеро Дурмитора/небо Ловчена — мягче; вариант ≤~175КБ.
-const AVIF_WIDTHS = [640, 960, 1280, 1600];
-const WEBP_WIDTHS = [640, 960, 1280];
+// Hero — full-bleed фон со скримом. Десктопу отдаём до 1920px AVIF / 1600px WebP,
+// чтобы широкий экран не апскейлил 1280px-кадры и не выглядел мыльно.
+const AVIF_WIDTHS = [640, 960, 1280, 1600, 1920];
+const WEBP_WIDTHS = [640, 960, 1280, 1600];
 const heroSources = [
   {
     img: heroKotor,
-    q: 44,
+    q: 60,
     credit: 'Chensiyuan · Wikimedia Commons · CC BY-SA 4.0',
     href: 'https://commons.wikimedia.org/wiki/File:Kotor_Montenegro_panorama_2016.jpg',
     focus: '50% 45%',
   },
   {
     img: heroDurmitor,
-    q: 52,
+    q: 64,
     credit: 'Ingo Mehling · Wikimedia Commons · CC BY-SA 4.0',
     href: 'https://commons.wikimedia.org/wiki/File:Crno_jezero_-_1.jpg',
     focus: '50% 50%',
   },
   {
     img: heroSvetiStefan,
-    q: 48,
+    q: 62,
     credit: 'Marcin Konsek · Wikimedia Commons · CC BY-SA 4.0',
     href: 'https://commons.wikimedia.org/wiki/File:Sveti_Stefan_(06).jpg',
     focus: '50% 50%',
   },
   {
     img: heroBudva,
-    q: 44,
+    q: 60,
     credit: 'Wistula · Wikimedia Commons · CC BY-SA 4.0',
     href: 'https://commons.wikimedia.org/wiki/File:Budva_Altstadt.jpg',
     focus: '50% 45%',
   },
   {
     img: heroLovcen,
-    q: 54,
+    q: 66,
     credit: 'Ingo Mehling · Wikimedia Commons · CC BY-SA 4.0',
     href: 'https://commons.wikimedia.org/wiki/File:Jezerski_Vrh,_Njegos_mausoleum_-_1.jpg',
     focus: '50% 50%',
@@ -103,9 +97,8 @@ const heroSources = [
 const heroVariants = await Promise.all(
   heroSources.map(async (s) => {
     const [avif, webp] = await Promise.all([
-      getImage({ src: s.img, width: 1600, widths: AVIF_WIDTHS, format: 'avif', quality: s.q }),
-      // webp-фолбэк ≤1280px — держит каждый вариант ≤200КБ (§15) для браузеров без AVIF
-      getImage({ src: s.img, width: 1280, widths: WEBP_WIDTHS, format: 'webp', quality: 64 }),
+      getImage({ src: s.img, width: 1920, widths: AVIF_WIDTHS, format: 'avif', quality: s.q }),
+      getImage({ src: s.img, width: 1600, widths: WEBP_WIDTHS, format: 'webp', quality: 76 }),
     ]);
     return {
       avifSrcset: avif.srcSet.attribute,

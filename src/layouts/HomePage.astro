@@ -152,16 +152,13 @@ const freshCards = [...articles]
 const hasFresh = freshCards.length > 0;
 
 /**
- * Блок «Новости» на главной (§8.4): свежие за 2 дня. Серверный фильтр — по дате
- * СБОРКИ; клиентский /js/news-freshness.js держит окно между сборками (до
- * ежедневного rebuild через Cloudflare Deploy Hook — подключим позже).
+ * Блок «Новости» на главной (§8.4): всегда последние 3 опубликованные новости.
+ * Не фильтруем по возрасту, чтобы блок не пустел между новостными циклами.
  */
-const NEWS_HOME_WINDOW = 2;
 const homeNews = articles
   .filter((entry) => entry.data.category === 'news')
   .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
-  .filter((entry) => Math.floor((Date.now() - entry.data.publishedAt.getTime()) / 86400000) <= NEWS_HOME_WINDOW)
-  .slice(0, 5)
+  .slice(0, 3)
   .map((entry) => ({
     href: articleHref(lang, 'news', entry.data.slug),
     title: entry.data.title,

@@ -122,40 +122,53 @@ const articles = await getCollectionSafe(
   (entry) =>
     entry.data.lang === lang && entry.data.draft !== true && entry.data.demo !== true,
 );
-const searchItems: SearchItem[] = articles.map((entry) => ({
+const routes = await getCollectionSafe(
+  'routes',
+  (entry) => entry.data.lang === lang && entry.data.draft !== true && entry.data.demo !== true,
+);
+const visibleCutoff = Date.now();
+const visibleArticles = articles.filter((entry) => entry.data.publishedAt.getTime() <= visibleCutoff);
+const visibleRoutes = routes.filter((entry) => entry.data.publishedAt.getTime() <= visibleCutoff);
+
+const searchItems: SearchItem[] = visibleArticles.map((entry) => ({
   title: entry.data.title,
   url: articleHref(lang, entry.data.category, entry.data.slug),
   section: dict.nav[entry.data.category as SectionKey] ?? entry.data.category,
 }));
 
 /**
- * Свежие материалы (§8.4): 6 самых новых статей этого языка — витрина на
- * главной с перелинковкой в разделы. Порядок: новее → старее (publishedAt
- * desc), тай-брейк по slug (детерминизм сборки).
+ * Свежие материалы (§8.4): 6 самых новых опубликованных материалов этого языка.
+ * Новости показываются отдельной лентой выше, будущие даты не всплывают до срока.
  */
-const freshCards = [...articles]
+const freshCards = [
+  ...visibleArticles.filter((entry) => entry.data.category !== 'news'),
+  ...visibleRoutes,
+]
   .sort((a, b) => {
     const diff = b.data.publishedAt.getTime() - a.data.publishedAt.getTime();
     return diff !== 0 ? diff : a.data.slug.localeCompare(b.data.slug);
   })
   .slice(0, 6)
-  .map((entry) => ({
-    key: entry.id,
-    href: articleHref(lang, entry.data.category, entry.data.slug),
-    title: entry.data.title,
-    description: entry.data.description,
-    cover: entry.data.cover,
-    date: formatDate(entry.data.verifiedAt ?? entry.data.updatedAt, lang),
-    verified: (entry.data.verifiedAt ? 'verified' : 'updated') as 'verified' | 'updated',
-    verifiedPhoto: entry.data.verifiedPhoto,
-  }));
+  .map((entry) => {
+    const verifiedAt = 'verifiedAt' in entry.data ? entry.data.verifiedAt : undefined;
+    return {
+      key: entry.id,
+      href: articleHref(lang, entry.data.category, entry.data.slug),
+      title: entry.data.title,
+      description: entry.data.description,
+      cover: entry.data.cover,
+      date: formatDate(verifiedAt ?? entry.data.updatedAt, lang),
+      verified: (verifiedAt ? 'verified' : 'updated') as 'verified' | 'updated',
+      verifiedPhoto: 'verifiedPhoto' in entry.data ? entry.data.verifiedPhoto : undefined,
+    };
+  });
 const hasFresh = freshCards.length > 0;
 
 /**
  * Блок «Новости» на главной (§8.4): всегда последние 3 опубликованные новости.
  * Не фильтруем по возрасту, чтобы блок не пустел между новостными циклами.
  */
-const homeNews = articles
+const homeNews = visibleArticles
   .filter((entry) => entry.data.category === 'news')
   .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
   .slice(0, 3)
@@ -173,10 +186,6 @@ const hasHomeNews = homeNews.length > 0;
  * обложка/заголовок берутся из коллекции — реальные данные, не выдумываем
  * (CLAUDE правило 4). Маршруты живут в отдельной коллекции `routes`.
  */
-const routes = await getCollectionSafe(
-  'routes',
-  (entry) => entry.data.lang === lang && entry.data.draft !== true && entry.data.demo !== true,
-);
 const showcaseRestaurants = await getCollectionSafe(
   'restaurants',
   (entry) => entry.data.lang === lang && entry.data.draft !== true,
@@ -262,8 +271,8 @@ for (const pick of showcasePicks) {
   }
   const entry =
     pick.kind === 'route'
-      ? routes.find((r) => r.data.slug === pick.slug)
-      : articles.find((a) => a.data.category === pick.category && a.data.slug === pick.slug);
+      ? visibleRoutes.find((r) => r.data.slug === pick.slug)
+      : visibleArticles.find((a) => a.data.category === pick.category && a.data.slug === pick.slug);
   if (!entry || !entry.data.cover) continue;
   // entry найден: для route → 'routes'; иначе pick.category гарантированно задан
   // (статья сматчилась по a.data.category === pick.category), отсюда `?? entry.data.category`.
@@ -372,11 +381,11 @@ for (const pick of showcasePicks) {
     </a>
   </section>
 
-  {/* Новости — свежие за 2 дня; блок скрывается, если свежего нет (§8.4). */}
+  {/* Новости — последние 3 опубликованные новости; блок скрывается, если новостей нет (§8.4). */}
   {
     hasHomeNews && (
       <section class="block news-strip" data-news-section data-reveal>
-        <div class="container" data-news-feed data-news-window="2">
+        <div class="container" data-news-feed>
           <div class="news-strip__head">
             <h2 class="block__heading">{dict.newsFeed.recentHeading}</h2>
             <a class="news-strip__all" href={sectionHref(lang, 'news')}>

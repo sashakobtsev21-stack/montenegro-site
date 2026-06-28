@@ -35,11 +35,11 @@
       "allowSubId": false
     },
     "localrent": {
-      "urlTemplate": "https://localrent.tpx.gr/UQ6UCamv?sub_id={subid}",
+      "urlTemplate": "https://localrent.tpx.gr/YlAoImTq?sub_id={subid}",
       "allowSubId": true
     },
     "aviasales": {
-      "urlTemplate": "https://aviasales.tpx.gr/LvwXGMXr?sub_id={subid}",
+      "urlTemplate": "https://aviasales.tpx.gr/EhNbez89?sub_id={subid}",
       "allowSubId": true
     },
     "discovercars": {
@@ -53,6 +53,18 @@
     "booking": {
       "urlTemplate": "https://www.booking.com/",
       "allowSubId": false
+    },
+    "yesim": {
+      "urlTemplate": "https://yesim.tpx.gr/MSDGcQK7?sub_id={subid}",
+      "allowSubId": true
+    },
+    "kiwitaxi": {
+      "urlTemplate": "https://kiwitaxi.tpx.gr/h1TwpC9K?sub_id={subid}",
+      "allowSubId": true
+    },
+    "bikesbooking": {
+      "urlTemplate": "https://bikesbooking.tpx.gr/H3kR0jvo?sub_id={subid}",
+      "allowSubId": true
     }
   }
 }

@@ -1,6 +1,6 @@
 ---
 title: 'Budva Launches Summer Events Through 1 September'
-description: 'Budva tourism office has launched Uživaj u Budvi, a 25 June-1 September 2026 summer programme with 38+ free coastal events.'
+description: 'Budva tourism office has launched Uživaj u Budvi, this summer programme runs 25 June-1 September with 38+ free coastal events.'
 slug: 'budva-summer-events-2026'
 lang: 'en'
 category: 'news'
@@ -17,11 +17,11 @@ sources:
 draft: false
 ---
 
-Budva's tourism organisation has launched **Uživaj u Budvi** ("Enjoy Budva"), a summer programme running from **25 June to 1 September 2026** with **more than 38 events** across Budva, Petrovac and Pržno. For travellers already on the coast, it adds easy evening culture around the Old Town.
+Budva's tourism organisation has launched **Uživaj u Budvi** ("Enjoy Budva"), this summer's coastal programme running from **25 June to 1 September** with **more than 38 events** across Budva, Petrovac and Pržno. For travellers already on the coast, it adds easy evening culture around the Old Town.
 
 ## What is confirmed
 
-The official Budva tourism page lists the programme dates as **25 June-1 September 2026** and says the series covers **more than 38 events** through summer and into the post-season. June dates include KUD "Kanjoš" on **25 June**, WOFA dance-festival appearances on **27, 29 and 30 June**, and klapa performances in Pržno, Petrovac and in front of Budva Old Town.
+The official Budva tourism page lists the programme dates as **25 June-1 September** and says the series covers **more than 38 events** through summer and into the post-season (page accessed June 2026). June dates include KUD "Kanjoš" on **25 June**, WOFA dance-festival appearances on **27, 29 and 30 June**, and klapa performances in Pržno, Petrovac and in front of Budva Old Town.
 
 ## Why it matters for visitors
 

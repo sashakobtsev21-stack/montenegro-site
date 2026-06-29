@@ -25,6 +25,7 @@ dist/
 .tmp-*
 public/images/_scratch/
 _scratch/
+scratchpad/
 scripts/_*.mjs
 
 # OS / editor

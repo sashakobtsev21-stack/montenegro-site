@@ -1,15 +1,15 @@
 # HANDOFF — Montenegro Guidebook
 > Снимок для возобновления (обновляется после каждой доработки). Подробная история — `PROGRESS.md`; план — `ROADMAP.md`/`KALENDAR.md`; аудит — `AUDIT.md`.
 
-**Дата:** 2026-06-29 · **Фаза:** R4 наполнение · **Статей:** ~24 (цель ~80) · **Сайт:** live (`montenegroguidebook.com`) · **Языки:** en/ru · **Последний коммит:** `17e7d73 docs(montenegro): refresh ROADMAP -- R4 content-fill phase (24->~80, until 31.07), blockers`
+**Дата:** 2026-06-29 · **Фаза:** R4 наполнение · **Статей:** ~27 (цель ~80) · **Сайт:** live (`montenegroguidebook.com`) · **Языки:** en/ru · **Последний коммит:** публикация слотов 29.06 (getting-around / road-trip / tivat→kotor)
 
 ## Где остановились
-- Контент: последние опубликованные (28.06) — `montenegro-entry-requirements` (planning/YMYL: въезд/виза/ETIAS) и `best-beaches-in-montenegro` (attractions, head-term пляжного кластера). Полный лог — `PROGRESS.md`.
+- Контент: слоты Пн 29.06 опубликованы (en+ru, qa=GO, test:links=GO): `getting-around-montenegro` (transport, head-page хаба), `montenegro-road-trip` (routes, 7 фото/остановок, геометрия запечена), `tivat-airport-to-kotor` (transport, аэропорт→город). Все фото — CC c атрибуцией+sourceUrl, цены — диапазоны 2026 + «уточняйте». Починена битая перелинковка ru `getting-around` (ссылки → `/ru/...`). Предыдущие (28.06): `montenegro-entry-requirements`, `best-beaches-in-montenegro`. Полный лог — `PROGRESS.md`.
 - Календарь вычищен: будущие даты = только `○` к написанию (выполненного на будущих датах нет); план до 31.07; темп 3/будний день; маршруты по Вс.
 - Сеть: доки выровнены (ядро 12/12, добавлен AUDIT.md); дашборд `grafana/dashboard.html` актуален; `/work` публикует автономно при полной уверенности.
 
 ## Что дальше
-- Темы из `KALENDAR.md` на ближайшие дни (побережье/Котор/Будва, транспорт, релокация). SEO-актуализация по GSC ~06.07.
+- Слоты Вт 30.06 (`KALENDAR.md` W2): Kotor↔Dubrovnik (трансфер/граница), Kotor↔Budva (bus/taxi/driving), Driving in Montenegro — все сателлиты getting-around-хаба (опубл.), перелинковать на него. Дальше транспорт/where-to-stay по плану. SEO-актуализация по GSC ~06.07.
 
 ## Блокеры владельца
 - GSC: Request Indexing + дождаться обработки sitemap. Партнёрки (Travelpayouts: DiscoverCars/GetYourGuide/Booking + починить EKTA-атрибуцию). Моат-решение (владелец не в стране). Дисплей-реклама (рек.: старт без).

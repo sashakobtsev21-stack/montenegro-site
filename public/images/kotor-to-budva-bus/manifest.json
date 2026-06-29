@@ -1,0 +1,23 @@
+[
+  {
+    "out": "public/images/kotor-to-budva-bus/cover.webp",
+    "cover": true,
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Budva_%2826871759151%29.jpg/1280px-Budva_%2826871759151%29.jpg"
+  },
+  {
+    "out": "public/images/kotor-to-budva-bus/kotor-port.webp",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/05-12-2017_-_Kotor%2C_Montenegro_castle_overlooking_the_port.jpg/1280px-05-12-2017_-_Kotor%2C_Montenegro_castle_overlooking_the_port.jpg"
+  },
+  {
+    "out": "public/images/kotor-to-budva-bus/intercity-bus.webp",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/4._decembar.JPG/1280px-4._decembar.JPG"
+  },
+  {
+    "out": "public/images/kotor-to-budva-bus/tivat-route.webp",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/2024-02-02_A_view_from_the_hiking_area_near_Donja_Lastva_2.jpg/1280px-2024-02-02_A_view_from_the_hiking_area_near_Donja_Lastva_2.jpg"
+  },
+  {
+    "out": "public/images/kotor-to-budva-bus/budva-fortress.webp",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/%D0%91%D1%83%D0%B4%D0%B2%D0%B0._%D0%9A%D1%80%D0%B5%D0%BF%D0%BE%D1%81%D1%82%D1%8C_-_panoramio.jpg/1280px-%D0%91%D1%83%D0%B4%D0%B2%D0%B0._%D0%9A%D1%80%D0%B5%D0%BF%D0%BE%D1%81%D1%82%D1%8C_-_panoramio.jpg"
+  }
+]

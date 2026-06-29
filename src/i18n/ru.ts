@@ -46,6 +46,7 @@ export const ru: UIDictionary = {
     closeMenu: 'Закрыть меню',
     menuShort: 'Меню',
     primaryNav: 'Основная навигация',
+    menuNav: 'Все разделы',
   },
   lang: {
     label: 'Язык',
@@ -229,6 +230,8 @@ export const ru: UIDictionary = {
   },
   gallery: {
     heading: 'Фотографии',
+    dialogName: 'Просмотр фотографии',
+    open: 'Открыть фото',
     close: 'Закрыть',
     prev: 'Предыдущее',
     next: 'Следующее',

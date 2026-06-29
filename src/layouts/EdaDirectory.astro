@@ -625,6 +625,15 @@ const breadcrumbLd = {
     background: var(--color-wine);
     border-color: var(--color-wine);
   }
+  /* Тач-зона ≥44px на мобайле (§6/§15): фильтры — частое первичное действие. */
+  @media (max-width: 600px) {
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding-block: var(--space-2);
+    }
+  }
   .filterbar__clear {
     align-self: flex-start;
     font-family: var(--font-body);

@@ -25,12 +25,14 @@ const { lang, visit } = Astro.props;
 const dict = t(lang);
 const v = dict.visit;
 const hasContent = Boolean(visit.price || visit.hours || visit.note);
+// Уникальный id заголовка → aria-labelledby не ломается при двух блоках на странице.
+const headingId = `visit-heading-${Math.random().toString(36).slice(2, 8)}`;
 ---
 
 {
   hasContent && (
-    <section class="visit" aria-labelledby="visit-heading">
-      <h2 id="visit-heading" class="visit__heading">
+    <section class="visit" aria-labelledby={headingId}>
+      <h2 id={headingId} class="visit__heading">
         <Icon name="coins" size={20} class="visit__icon" />
         <span>{v.heading}</span>
       </h2>

@@ -157,7 +157,7 @@ const siteLd = {
 
     <title>{headTitle}</title>
     <meta name="description" content={description} />
-    {(noindex || utility) && <meta name="robots" content="noindex, nofollow" />}
+    {(noindex || utility) && <meta name="robots" content="noindex, follow" />}
     {!utility && <link rel="canonical" href={canonical} />}
 
     {/* Взаимные hreflang по доступным языкам + x-default → en (DEFAULT_LANG, §12).

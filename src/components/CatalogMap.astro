@@ -160,6 +160,10 @@ const headingId = `${id}-heading`;
   .cmap__btn:active {
     transform: scale(var(--press-scale));
   }
+  /* Фокус-кольцо повторяет форму пилюли (а не прямоугольник из global.css). */
+  .cmap__btn:focus-visible {
+    border-radius: var(--radius-pill);
+  }
   .cmap__hint {
     margin: 0;
     max-width: 46ch;

@@ -32,7 +32,8 @@ const { lang, images, heading } = Astro.props;
 const dict = t(lang);
 const g = dict.gallery;
 const title = heading ?? g.heading;
-const headingId = 'gallery-heading';
+// Уникальный id заголовка → aria-labelledby не ломается при двух галереях на странице.
+const headingId = `gallery-heading-${Math.random().toString(36).slice(2, 8)}`;
 ---
 
 {
@@ -41,6 +42,7 @@ const headingId = 'gallery-heading';
       class="gallery"
       aria-labelledby={headingId}
       data-gallery
+      data-dialog-name={g.dialogName}
       data-close={g.close}
       data-prev={g.prev}
       data-next={g.next}
@@ -50,11 +52,12 @@ const headingId = 'gallery-heading';
       </h2>
 
       <div class="gallery__grid">
-        {images.map((img) => (
+        {images.map((img, i) => (
           <figure class="gallery__figure">
             <button
               type="button"
               class="gallery__item"
+              aria-label={`${g.open}: ${img.alt || `${g.heading} ${i + 1}`}`}
               data-gallery-item
               data-full={img.src}
               data-alt={img.alt}

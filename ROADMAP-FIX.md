@@ -20,6 +20,9 @@
 ## Безопасность
 - [ ] ⚪ Квартально мониторить `npm audit` (dev — 24 уязвимости в tooling; prod — чисто).
 
+## Доступность (a11y)
+- [x] 🟡 **a11y-серия портирована** (gruzia `284cb30`) — **сделано (2026-06-30)**. Движок общий с эталоном Грузии, баги те же → перенесён эквивалент 11 фиксов: разные `aria-label` у двух `<nav>` (выпадающее меню → `menuNav` «All sections»/«Все разделы»); уникальные `id` per-instance в PhotoGallery/RelatedPosts/TOC/VisitInfo (aria-labelledby не коллизит при двух блоках на странице); контраст стрелок витрины `.scard__nav` (slate 60% + белая обводка 40%, hover 78%, WCAG 1.4.11); имя диалога-лайтбокса = назначение «Photo viewer»/«Просмотр фотографии», не «Закрыть» (WCAG 4.1.2, через `data-dialog-name` в PhotoGallery/RestaurantCard/ShowcaseRail + `lightbox.js`); Esc-закрытие поповера витрины + возврат фокуса (`showcase-rail.js`); `aria-label` на `.gallery__item` (ключ `gallery.open`); фокус-кольцо-пилюля `.cmap__btn`/`.hero__credit`; видимый skip-link при фокусе (бренд-токен `--color-wine` = адриатический teal); тач-таргеты ≥44px (чипы `/eda/` директории + переключатель языка en/ru); `noindex, nofollow`→`noindex, follow` (код к JSDoc); резерв витрины 198px→188px. i18n обновлён для en+ru (uk нет). qa=GO, test:links=GO, паритет en↔ru цел.
+
 ---
 
 ## Действия владельца (вне кода)

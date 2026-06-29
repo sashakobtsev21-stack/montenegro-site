@@ -140,6 +140,8 @@
 
   // На тач-устройствах тап по карточке заведения раскрывает описание (нет :hover).
   const places = Array.from(rail.querySelectorAll('[data-scard-place]'));
+  let lastOpener = null; // элемент, c которого открыли поповер → вернуть фокус по Esc
+  const closeAllPops = () => places.forEach((c) => c.classList.remove('is-open'));
   places.forEach((card) => {
     card.addEventListener('pointerup', (e) => {
       if (e.pointerType !== 'touch' || moved) return;
@@ -148,9 +150,35 @@
       if (target.closest('[data-gallery-item],[data-rcard-prev],[data-rcard-next],a'))
         return;
       const open = card.classList.contains('is-open');
-      places.forEach((c) => c.classList.remove('is-open'));
-      if (!open) card.classList.add('is-open');
+      closeAllPops();
+      if (!open) {
+        card.classList.add('is-open');
+        lastOpener = card;
+      }
     });
+  });
+
+  // Esc закрывает раскрытый поповер с клавиатуры (как в menu.js) + возврат фокуса.
+  // Покрывает оба состояния: тач-`is-open` и `:focus-within` (фокус на карточке).
+  rail.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' && e.key !== 'Esc') return;
+    const openCard = rail.querySelector('[data-scard-place].is-open');
+    const focusedCard =
+      document.activeElement && document.activeElement.closest
+        ? document.activeElement.closest('[data-scard-place]')
+        : null;
+    const card = openCard || focusedCard;
+    if (!card) return;
+    e.preventDefault();
+    closeAllPops();
+    // Вернуть фокус на безопасный элемент карточки (ссылку-заголовок), чтобы
+    // :focus-within сняло поповер и фокус не «упал» в body.
+    const focusTarget =
+      lastOpener === card && document.activeElement
+        ? document.activeElement
+        : card.querySelector('.scard__titlelink, a, button');
+    if (focusTarget && typeof focusTarget.focus === 'function') focusTarget.focus();
+    lastOpener = null;
   });
 
   pos = 1;

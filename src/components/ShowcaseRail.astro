@@ -69,6 +69,7 @@ const cells = [
                         class="scard__media"
                         data-rcard-gallery
                         data-gallery
+                        data-dialog-name={dict.gallery.dialogName}
                         data-close={dict.gallery.close}
                         data-prev={dict.gallery.prev}
                         data-next={dict.gallery.next}
@@ -309,8 +310,10 @@ const cells = [
     /* верх — минимальный зазор под угол медали (медаль торчит вверх на 14px +
        лёгкое свечение); больше не делаем, иначе над карточками висит пустая
        кремовая «полоса». низ — под выпадающее описание заведения (overflow-y
-       нельзя сделать visible при overflow-x:auto, резервируем высоту паддингом). */
-    padding: 22px 0 198px;
+       нельзя сделать visible при overflow-x:auto, резервируем высоту паддингом).
+       Замер в Chrome: самый высокий поповер = 182px + 6px offset → 188px; держим
+       ровно столько (был 198px с лишним «пустым» зазором ~10px). */
+    padding: 22px 0 188px;
     list-style: none;
   }
   .showcase__cell {
@@ -424,8 +427,10 @@ const cells = [
     width: 30px;
     height: 30px;
     color: var(--color-white);
-    background: color-mix(in srgb, var(--color-slate) 42%, transparent);
-    border: none;
+    /* WCAG 1.4.11 (нетекстовый контраст ≥3:1): фон-пилюля плотнее (slate 60%) +
+       тонкая белая обводка → иконка читается даже на ярких/пересвеченных фото. */
+    background: color-mix(in srgb, var(--color-slate) 60%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-white) 40%, transparent);
     border-radius: var(--radius-pill);
     cursor: pointer;
     opacity: 0;
@@ -439,7 +444,7 @@ const cells = [
   }
   .scard__nav:hover,
   .scard__nav:focus-visible {
-    background: color-mix(in srgb, var(--color-slate) 66%, transparent);
+    background: color-mix(in srgb, var(--color-slate) 78%, transparent);
   }
   .scard__nav--prev {
     left: var(--space-2);

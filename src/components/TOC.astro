@@ -27,12 +27,14 @@ const dict = t(lang);
 
 /** Только H2/H3 (§9) — H1 это заголовок страницы, H4+ в оглавление не кладём. */
 const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
+// Уникальный id заголовка → aria-labelledby не ломается при двух TOC на странице.
+const headingId = `toc-heading-${Math.random().toString(36).slice(2, 8)}`;
 ---
 
 {
   items.length > 0 && (
-    <nav class="toc" aria-labelledby="toc-heading">
-      <h2 id="toc-heading" class="toc__heading">
+    <nav class="toc" aria-labelledby={headingId}>
+      <h2 id={headingId} class="toc__heading">
         {dict.article.tocHeading}
       </h2>
       <ol class="toc__list">

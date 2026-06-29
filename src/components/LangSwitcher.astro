@@ -82,12 +82,14 @@ const others = availableLangs.filter((l) => l !== lang);
       font-size: 0.8125rem;
       gap: var(--space-1);
     }
-    /* Тач-зона ≥44px (смена языка — частое первичное действие, §6/§15). */
+    /* Тач-зона ≥44px по ОБЕИМ осям (смена языка — частое первичное действие, §6/§15). */
     .lang__current,
     .lang__link {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       min-height: 44px;
+      min-width: 44px;
       padding: 0 var(--space-2);
     }
     /* На тач разделители убираем — крупные тап-зоны + gap разводят языки. */

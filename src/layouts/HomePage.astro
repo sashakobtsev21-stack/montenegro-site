@@ -618,6 +618,10 @@ for (const pick of showcasePicks) {
     background: color-mix(in srgb, var(--color-slate) 68%, transparent);
     text-decoration: underline;
   }
+  /* Фокус-кольцо повторяет форму пилюли (а не прямоугольник из global.css). */
+  .hero__credit:focus-visible {
+    border-radius: var(--radius-pill);
+  }
   @media (min-width: 768px) {
     .hero__title {
       font-size: var(--text-4xl);

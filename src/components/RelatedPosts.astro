@@ -25,12 +25,14 @@ interface Props {
 }
 
 const { lang, heading, items } = Astro.props;
+// Уникальный id заголовка → aria-labelledby не ломается при двух блоках на странице.
+const headingId = `related-heading-${Math.random().toString(36).slice(2, 8)}`;
 ---
 
 {
   items.length > 0 && (
-    <section class="related" aria-labelledby="related-heading">
-      <h2 id="related-heading" class="related__heading">
+    <section class="related" aria-labelledby={headingId}>
+      <h2 id={headingId} class="related__heading">
         {heading}
       </h2>
       <div class="related__grid">

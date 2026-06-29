@@ -21,6 +21,8 @@ const reduceMotion =
 /** Прочитать i18n-подписи из секции галереи. */
 function readLabels(section) {
   return {
+    // Имя диалога = НАЗНАЧЕНИЕ оверлея (WCAG 4.1.2), отдельно от действия «Закрыть».
+    dialogName: section.getAttribute('data-dialog-name') || 'Photo viewer',
     close: section.getAttribute('data-close') || 'Close',
     prev: section.getAttribute('data-prev') || 'Prev',
     next: section.getAttribute('data-next') || 'Next',
@@ -77,7 +79,8 @@ function setupSection(section) {
     overlay = document.createElement('div');
     overlay.setAttribute('role', 'dialog');
     overlay.setAttribute('aria-modal', 'true');
-    overlay.setAttribute('aria-label', labels.close);
+    // Имя диалога — назначение («Просмотр фотографии»), НЕ действие «Закрыть» (WCAG 4.1.2).
+    overlay.setAttribute('aria-label', labels.dialogName);
     overlay.style.cssText =
       'position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;' +
       'align-items:center;justify-content:center;gap:var(--space-3);padding:var(--space-4);' +

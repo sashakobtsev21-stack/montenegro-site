@@ -1,0 +1,27 @@
+[
+  {
+    "out": "public/images/driving-in-montenegro/cover.webp",
+    "cover": true,
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/2024-02-21_Road_between_Perast_and_Dobrota.jpg/1280px-2024-02-21_Road_between_Perast_and_Dobrota.jpg"
+  },
+  {
+    "out": "public/images/driving-in-montenegro/durmitor-road.webp",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/2025-07-12_Durmitor_National_Park_4.jpg/1280px-2025-07-12_Durmitor_National_Park_4.jpg"
+  },
+  {
+    "out": "public/images/driving-in-montenegro/mountain-road-bar.webp",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/2024-02-15_Road_in_mountains_near_Stari_Bar_1.jpg/1280px-2024-02-15_Road_in_mountains_near_Stari_Bar_1.jpg"
+  },
+  {
+    "out": "public/images/driving-in-montenegro/border-crossing.webp",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Bo%C5%BEaj_-_Hani_i_Hotit_border_crossing_Albania-Montenegro_July_2017.jpg/1280px-Bo%C5%BEaj_-_Hani_i_Hotit_border_crossing_Albania-Montenegro_July_2017.jpg"
+  },
+  {
+    "out": "public/images/driving-in-montenegro/coastal-hill-road.webp",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/2025-05-09_Road_to_mountains%2C_%C5%A0u%C5%A1anj%2C_Bar%2C_Montenegro.jpg/1280px-2025-05-09_Road_to_mountains%2C_%C5%A0u%C5%A1anj%2C_Bar%2C_Montenegro.jpg"
+  },
+  {
+    "out": "public/images/driving-in-montenegro/village-road.webp",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/2024-02-02_A_road_in_the_hiking_area_near_Donja_Lastva_2.jpg/1280px-2024-02-02_A_road_in_the_hiking_area_near_Donja_Lastva_2.jpg"
+  }
+]

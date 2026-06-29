@@ -251,3 +251,19 @@ img {
     animation: none !important;
   }
 }
+
+/* Кредиты/подписи к фото содержат длинные неразрывные URL источников
+   (Wikimedia File:…, URL-кодированная кириллица) — принудительный перенос,
+   иначе одно «слово» даёт горизонтальный перелив на ~320px (и шире).
+   Портировано из albania-site 9f0d46f; классы кредитов этого репо:
+   figure__credit (инлайн), cover__credit (обложка), плюс кредиты компонентов
+   (галерея/карточка ресторана/остановка маршрута). */
+.prose figcaption,
+.prose .figure__credit,
+.cover__credit,
+.gallery__credit,
+.rcard__credit,
+.rt__stop-credit {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}

@@ -18,7 +18,11 @@ const DIST = 'dist';
 // Английские слаги хабов + контентная страница с широкими md-таблицами
 // (проверяет анти-overflow `.prose table`, задача B1).
 const PAGES = ['/', '/cities/', '/car-rental/', '/food/', '/entertainment/', '/insurance/', '/routes/', '/news/',
-  '/relocation/cost-of-living-in-montenegro/'];
+  '/relocation/cost-of-living-in-montenegro/',
+  // Статья с длинными неразрывными URL-кредитами фото (Wikimedia File:…,
+  // URL-кодированная кириллица в cover-кредите) — проверяет анти-overflow
+  // `.prose figcaption / .figure__credit / .cover__credit`.
+  '/attractions/best-beaches-in-montenegro/'];
 const WIDTHS = [320, 360, 414, 768, 1280];
 const TOLERANCE = 1; // субпиксели/округления
 const MIME = {

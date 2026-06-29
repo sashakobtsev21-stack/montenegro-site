@@ -87,6 +87,11 @@ The clearest budgeting decision in Montenegro is inland versus coast. **Podgoric
 
 The coast is the opposite. **Tivat and Budva are the priciest and the most seasonal**: glorious in summer, quieter and sometimes shuttered in winter, with rents that climb steeply for the warm months. Kotor and Herceg Novi sit in between — coastal character without Tivat's premium. If your income is fixed and you want to maximise savings, Podgorica wins; if you are here for the Adriatic lifestyle and can absorb the seasonal swing, the coast is worth the premium. Compare the towns themselves in our [cities](/cities/) section before deciding where to base yourself.
 
+<figure class="figure">
+<img src="/images/cost-of-living-in-montenegro/podgorica.webp" alt="Rooftops and apartment blocks of Podgorica, the capital of Montenegro, with mountains behind" width="1280" height="853" loading="lazy" decoding="async" />
+<figcaption>Podgorica, the capital — the cheapest of the major towns and the only one priced for year-round living. <span class="figure__credit">Photo: Hibasi / Wikimedia Commons, CC BY-SA 4.0</span></figcaption>
+</figure>
+
 ## Living here legally: the digital-nomad permit (verify first)
 
 Montenegro offers a **digital-nomad residence permit** aimed at remote workers employed by foreign companies, which has made it a popular base for location-independent professionals. The income threshold is set as a formula rather than a fixed figure — roughly **three times the national minimum wage** — and both the threshold and the application rules change over time.

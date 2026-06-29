@@ -85,6 +85,11 @@ Who actually does it depends on where you sleep:
 
 Why it matters: failing to register is not a formality. UK guidance warns that "if you do not register you may be fined, detained or face a court appearance," and the US State Department lists possible "fine, incarceration, deportation, and/or difficulties departing Montenegro." Keep the registration slip (often called the *white card*) until you leave; it can be checked on departure. If you book hotels or registered apartments, this all happens quietly in the background — the risk sits with informal stays.
 
+<figure class="figure">
+<img src="/images/montenegro-entry-requirements/podgorica.webp" alt="View over Podgorica, the capital of Montenegro, where many travellers arrive and register on entry" width="1280" height="853" loading="lazy" decoding="async" />
+<figcaption>Podgorica, the capital and main year-round gateway — where many arrivals handle their entry stamp and 24-hour registration. <span class="figure__credit">Photo: Das Kraftfuttermischwerk / Wikimedia Commons, CC BY 2.0</span></figcaption>
+</figure>
+
 ## ETIAS, Schengen and Montenegro: how they connect
 
 Here is the part that confuses people, because Montenegro sits **outside** both the EU and the Schengen Area.

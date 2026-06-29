@@ -60,6 +60,11 @@ For most travellers, the shoulder months are the best time to visit Montenegro. 
 
 These are the months we'd recommend for a first trip that mixes coast, culture and nature. They're ideal for the kind of multi-stop itineraries you'll find in our [Montenegro travel guide](/planning/montenegro-travel-guide/), and for getting out onto the trails before or after the high heat. The Tara River rafting season also runs right through this window — roughly May to October — so a shoulder-season trip can pair beach time with a day on the river.
 
+<figure class="figure">
+<img src="/images/best-time-to-visit-montenegro/sveti-stefan.webp" alt="The islet of Sveti Stefan and the Budva Riviera coastline in soft shoulder-season light, Montenegro" width="1280" height="851" loading="lazy" decoding="async" />
+<figcaption>Sveti Stefan in late spring — warm enough for the coast, quiet enough to enjoy it. <span class="figure__credit">Photo: Falk2 / Wikimedia Commons, CC BY-SA 4.0</span></figcaption>
+</figure>
+
 ## Winter (November–March): quiet coast, snowy mountains
 
 Winter splits Montenegro in two. On the coast it is the off-season: many towns are quiet, some restaurants and hotels close, and the weather turns cool and rainy. That said, a winter city break in Kotor or Budva can be atmospheric and very cheap, with old towns almost to yourself — just pack for rain and don't expect to swim.

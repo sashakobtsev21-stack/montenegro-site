@@ -48,6 +48,11 @@ The lake is really two basins joined by a narrow neck; in high summer the water 
 
 The Black Lake is also the natural starting point for going deeper. Several of the park's other lakes and trails branch off from here, so even if you only plan the loop, you will see signposts tempting you toward the high country.
 
+<figure class="figure">
+<img src="/images/durmitor-national-park/black-lake.webp" alt="The still, dark water of the Black Lake (Crno jezero) ringed by spruce forest in Durmitor National Park, Montenegro" width="1280" height="853" loading="lazy" decoding="async" />
+<figcaption>The Black Lake (Crno jezero), Durmitor's icon, with the surrounding forest mirrored on a calm morning. <span class="figure__credit">Photo: Alexkom000 / Wikimedia Commons, CC BY 4.0</span></figcaption>
+</figure>
+
 ## Bobotov Kuk and hiking the high peaks
 
 Durmitor is serious hiking territory. The headline summit is **Bobotov Kuk at 2,523 m**, the highest peak in the massif and a demanding full-day hike that should not be underestimated — it involves a long approach, steep ground and exposure near the top, and it is firmly for fit, experienced walkers with good weather and an early start. It is not a casual stroll, and the mountain weather can turn fast.

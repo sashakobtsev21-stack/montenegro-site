@@ -78,6 +78,11 @@ Montenegro has two airports. **Podgorica (TGD)**, near the capital, runs year-ro
 
 Once you arrive, treat this as a car country. Public transport links the main coastal towns by bus, but the mountains, national parks and the best viewpoints are far easier with your own wheels, and the coast-to-canyon drives are part of the experience. Roads are scenic but can be narrow and winding, so allow extra time. Our [renting a car in Montenegro](/car-rental/renting-a-car-in-montenegro/) guide covers what to know before you book.
 
+<figure class="figure">
+<img src="/images/montenegro-travel-guide/tivat-airport.webp" alt="The passenger terminal at Tivat Airport (TIV) on the Montenegrin coast" width="1120" height="840" loading="lazy" decoding="async" />
+<figcaption>Tivat Airport (TIV) sits right on the coast and fills up with summer charters; Podgorica (TGD) runs year-round. <span class="figure__credit">Photo: Maxton / Wikimedia Commons, CC BY-SA 4.0</span></figcaption>
+</figure>
+
 A rough rule for splitting a week: spend the larger share on a coastal base for the old towns and swimming, then carve out two or three days for a mountain loop through Durmitor, Lovćen or Lake Skadar. Distances look short on the map but mountain roads are slow.
 
 ## Entry, money and practical basics

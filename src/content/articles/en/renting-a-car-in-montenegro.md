@@ -70,6 +70,11 @@ Take it slowly, use low gears on the descents, and give way courteously on the n
 
 The walled old towns of **Kotor, Budva and Bar are car-free** — you cannot drive inside the historic walls. Park in the lots and street parking outside the gates and walk in; in high season the closest spaces fill early, so arrive in the morning or be ready to walk a little further. The same logic applies to most coastal hotspots: the closer you want to be, the more you pay and the earlier you need to arrive.
 
+<figure class="figure">
+<img src="/images/renting-a-car-in-montenegro/kotor-sea-gate.webp" alt="The Sea Gate, the main pedestrian entrance into the car-free old town of Kotor, Montenegro" width="1280" height="960" loading="lazy" decoding="async" />
+<figcaption>The Sea Gate at Kotor: leave the car in the lots outside the walls — the old town is for walking only. <span class="figure__credit">Photo: Avi1111 dr. avishai teicher / Wikimedia Commons, CC BY-SA 4.0</span></figcaption>
+</figure>
+
 Montenegro has very few tolls. The one you are most likely to meet is the **Sozina tunnel** on the Podgorica–Bar road, which costs around **€3.50** (a rough figure — check the current rate). It saves a long mountain detour and is well worth it. Keep some euro coins handy for parking machines and the tunnel, as not every point takes cards.
 
 ## Cross-border trips, permits and winter

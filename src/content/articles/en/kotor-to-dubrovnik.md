@@ -94,7 +94,7 @@ Two things flip when you go south:
 - **You cross out of Schengen into Montenegro**, so the same passport checks apply — Montenegro is not in the EU, and your EES exit from Croatia is recorded here.
 - **Many people do this as a day trip from Dubrovnik**, which means the late-morning buses and the border can be busiest mid-morning; an early start beats the crowd both at the crossing and in Kotor's old town.
 
-If Kotor is your base, the bus back from Dubrovnik is the simplest option; if Dubrovnik is your base and you only want Kotor for the day, a transfer or organised tour that handles the border can be less stressful than the public bus.
+If Kotor is your base, the bus back from Dubrovnik is the simplest option; if Dubrovnik is your base and you only want Kotor for the day, a transfer or organised tour that handles the border can be less stressful than the public bus. Once you reach the city itself, our [Dubrovnik travel guide](https://croatiaguidebook.com/cities/dubrovnik-travel-guide/) covers the Old Town walls, the best day trips and where to stay.
 
 ## Where this fits in your trip
 

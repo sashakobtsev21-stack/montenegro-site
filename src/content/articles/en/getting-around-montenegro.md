@@ -116,6 +116,7 @@ When you are ready to price a hire car or a fixed-price airport transfer, compar
 - [Renting a car in Montenegro](/car-rental/renting-a-car-in-montenegro/) — pickup points, roads, parking and costs.
 - [Driving in Montenegro](/transport/driving-in-montenegro/) — rules, speed limits, tolls, fuel and parking.
 - [Tivat Airport to Kotor](/transport/tivat-airport-to-kotor/) — taxi, transfer and the budget bus route.
+- [Kotor to Dubrovnik](/transport/kotor-to-dubrovnik/) — bus, transfer and the Croatian border crossing.
 - [Montenegro road trip itinerary](/routes/montenegro-road-trip/) — the self-drive route through coast and mountains.
 - [Montenegro travel guide](/planning/montenegro-travel-guide/) — plan the whole trip.
 - All [routes in Montenegro](/routes/) — ready-made driving ideas.

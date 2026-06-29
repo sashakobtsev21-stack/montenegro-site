@@ -1,0 +1,23 @@
+[
+  {
+    "out": "public/images/kotor-to-dubrovnik/cover.webp",
+    "cover": true,
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Bus_to_Dubrovnik.jpg/1280px-Bus_to_Dubrovnik.jpg"
+  },
+  {
+    "out": "public/images/kotor-to-dubrovnik/dubrovnik-oldtown.webp",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/29.12.16_Dubrovnik_Evening_07_%2831963556645%29.jpg/1280px-29.12.16_Dubrovnik_Evening_07_%2831963556645%29.jpg"
+  },
+  {
+    "out": "public/images/kotor-to-dubrovnik/bay-lepetane.webp",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/2024-01-31_Bay_of_Kotor_in_Lepetani.jpg/1280px-2024-01-31_Bay_of_Kotor_in_Lepetani.jpg"
+  },
+  {
+    "out": "public/images/kotor-to-dubrovnik/coastal-road.webp",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/2024-02-21_Road_between_Perast_and_Dobrota.jpg/1280px-2024-02-21_Road_between_Perast_and_Dobrota.jpg"
+  },
+  {
+    "out": "public/images/kotor-to-dubrovnik/bay-stoliv.webp",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/02_-_Stoliv.jpg/1280px-02_-_Stoliv.jpg"
+  }
+]

@@ -15,8 +15,8 @@ gallery:
     alt: 'Фасад пассажирского терминала аэропорта Тиват, на переднем плане пальма'
     credit: 'Фото: Maxton / Wikimedia Commons, CC BY-SA 4.0'
   - src: '/images/tivat-vs-podgorica-airport/podgorica-city.webp'
-    alt: 'Старая часть Подгорицы и река Морача — внутренняя столица, которую обслуживает аэропорт Подгорицы'
-    credit: 'Фото: Podgorica, břeh řeky Morača / Wikimedia Commons, CC BY 3.0'
+    alt: 'Городской вид Подгорицы с высоткой и горами позади — внутренняя столица, которую обслуживает аэропорт Подгорицы'
+    credit: 'Фото: Hibasi / Wikimedia Commons, CC BY-SA 4.0'
 affiliate:
   - partner: 'kiwitaxi'
     label: 'Заказать трансфер из аэропорта к морю'

@@ -15,8 +15,8 @@ gallery:
     alt: 'The passenger terminal frontage at Tivat Airport with a palm tree in the foreground'
     credit: 'Photo: Maxton / Wikimedia Commons, CC BY-SA 4.0'
   - src: '/images/tivat-vs-podgorica-airport/podgorica-city.webp'
-    alt: 'Podgorica old town and the Morača river, the inland capital served by Podgorica Airport'
-    credit: 'Photo: Podgorica, břeh řeky Morača / Wikimedia Commons, CC BY 3.0'
+    alt: 'Podgorica cityscape with a tower block and mountains behind, the inland capital served by Podgorica Airport'
+    credit: 'Photo: Hibasi / Wikimedia Commons, CC BY-SA 4.0'
 affiliate:
   - partner: 'kiwitaxi'
     label: 'Book an airport transfer to the coast'

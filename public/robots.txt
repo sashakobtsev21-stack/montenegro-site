@@ -1,6 +1,6 @@
 # robots.txt — Montenegro Guidebook (SPEC §14).
 # Обход разрешён, кроме партнёрских редиректов /go/ (noindex, §16).
-# Карта сайта — индекс, который генерирует @astrojs/sitemap (обе версии ru/uk).
+# Карта сайта — индекс, который генерирует @astrojs/sitemap (обе версии en/ru).
 User-agent: *
 Allow: /
 Disallow: /go/

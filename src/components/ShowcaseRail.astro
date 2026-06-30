@@ -415,35 +415,55 @@ const cells = [
   .scard--place:hover .scard__img {
     transform: scale(1.04);
   }
-  /* Стрелки карусели — появляются при наведении/фокусе, полупрозрачные. */
+  /* Стрелки карусели — появляются при наведении/фокусе, полупрозрачные.
+     Кликабельная кнопка ≥44×44px (WCAG 2.5.5 / тап-таргет мобайл), сама зона
+     прозрачная; видимая «пилюля» ~30px рисуется внутри (::before), по центру. */
   .scard__nav {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     z-index: 2;
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
-    width: 30px;
-    height: 30px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
     color: var(--color-white);
-    /* WCAG 1.4.11 (нетекстовый контраст ≥3:1): фон-пилюля плотнее (slate 60%) +
-       тонкая белая обводка → иконка читается даже на ярких/пересвеченных фото. */
-    background: color-mix(in srgb, var(--color-slate) 60%, transparent);
-    border: 1px solid color-mix(in srgb, var(--color-white) 40%, transparent);
-    border-radius: var(--radius-pill);
+    background: none;
+    border: 0;
     cursor: pointer;
     opacity: 0;
     transition:
       opacity var(--dur) var(--ease-standard),
-      background-color var(--dur) var(--ease-standard);
+      color var(--dur) var(--ease-standard);
+  }
+  /* Видимая пилюля под иконкой — ~30px, центрирована в 44px-зоне.
+     WCAG 1.4.11 (нетекстовый контраст ≥3:1): фон-пилюля плотнее (slate 60%) +
+     тонкая белая обводка → иконка читается даже на ярких/пересвеченных фото. */
+  .scard__nav::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    transform: translate(-50%, -50%);
+    background: color-mix(in srgb, var(--color-slate) 60%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-white) 40%, transparent);
+    border-radius: var(--radius-pill);
+    transition: background-color var(--dur) var(--ease-standard);
+  }
+  .scard__nav :global(svg) {
+    position: relative;
+    z-index: 1;
   }
   .scard--place:hover .scard__nav,
   .scard--place:focus-within .scard__nav {
     opacity: 1;
   }
-  .scard__nav:hover,
-  .scard__nav:focus-visible {
+  .scard__nav:hover::before,
+  .scard__nav:focus-visible::before {
     background: color-mix(in srgb, var(--color-slate) 78%, transparent);
   }
   .scard__nav--prev {

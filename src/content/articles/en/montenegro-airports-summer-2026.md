@@ -12,7 +12,7 @@ cover:
 coverCredit: 'Photo: Network Aviation / Wikimedia Commons, CC BY-SA 4.0'
 gallery: []
 affiliate:
-  - partner: 'trip-flights'
+  - partner: 'aviasales'
     label: 'Search flights to Montenegro'
     position: 'body-end'
 sources:

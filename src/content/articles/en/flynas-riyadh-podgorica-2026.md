@@ -12,7 +12,7 @@ cover:
 coverCredit: 'Photo: Emad Alhusayni (flynas) / Wikimedia Commons, Public Domain — commons.wikimedia.org/wiki/File:Flynas_aircraft_A320_neo.jpg'
 gallery: []
 affiliate:
-  - partner: 'trip-flights'
+  - partner: 'aviasales'
     label: 'Search flights to Podgorica'
     position: 'body-end'
 sources:

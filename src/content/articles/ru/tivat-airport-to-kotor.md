@@ -15,7 +15,7 @@ affiliate:
   - partner: 'kiwitaxi'
     label: 'Заказать индивидуальный трансфер Тиват — Котор'
     position: 'body-end'
-  - partner: 'trip-carhire'
+  - partner: 'localrent'
     label: 'Сравнить аренду авто в аэропорту Тивата'
     position: 'body-end'
 sources:

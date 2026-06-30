@@ -18,7 +18,7 @@ gallery:
     alt: 'The fortified old town of Budva above the Adriatic, Montenegro'
     credit: 'Photo: Natalia Semenova / Wikimedia Commons, CC BY 3.0'
 affiliate:
-  - partner: 'trip-carhire'
+  - partner: 'localrent'
     label: 'Compare car hire in Montenegro'
     position: 'body-end'
 sources:

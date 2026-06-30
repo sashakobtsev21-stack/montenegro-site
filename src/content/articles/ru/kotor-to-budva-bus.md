@@ -18,7 +18,7 @@ gallery:
     alt: 'Крепостной старый город Будвы над Адриатикой, Черногория'
     credit: 'Фото: Natalia Semenova / Wikimedia Commons, CC BY 3.0'
 affiliate:
-  - partner: 'trip-carhire'
+  - partner: 'localrent'
     label: 'Сравнить аренду авто в Черногории'
     position: 'body-end'
 sources:

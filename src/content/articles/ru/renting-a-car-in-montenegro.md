@@ -12,7 +12,7 @@ cover:
 coverCredit: 'Photo: Ziegler175 / Wikimedia Commons, CC BY-SA 3.0'
 gallery: []
 affiliate:
-  - partner: 'trip-carhire'
+  - partner: 'localrent'
     label: 'Сравнить цены на аренду авто'
     position: 'body-end'
 sources: ['montenegro.travel']

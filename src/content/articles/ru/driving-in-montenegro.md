@@ -21,7 +21,7 @@ gallery:
     alt: 'Дорожные знаки и шлагбаумы на пограничном переходе Божай / Хани-и-Хотит между Черногорией и Албанией'
     credit: 'Фото: Rakoon / Wikimedia Commons, CC0'
 affiliate:
-  - partner: 'trip-carhire'
+  - partner: 'localrent'
     label: 'Сравнить аренду авто в Черногории'
     position: 'body-end'
 sources:

@@ -12,7 +12,7 @@ cover:
 coverCredit: 'Photo: DavidivardiIL / Wikimedia Commons, CC BY 4.0 — commons.wikimedia.org/wiki/File:DAV_2794-HA-LVW_-_Wizz_Air_Airbus_A321_NEO.jpg'
 gallery: []
 affiliate:
-  - partner: 'trip-flights'
+  - partner: 'aviasales'
     label: 'Search flights to Podgorica'
     position: 'body-end'
 sources:

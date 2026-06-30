@@ -15,7 +15,7 @@ affiliate:
   - partner: 'kiwitaxi'
     label: 'Book a private Tivat–Kotor transfer'
     position: 'body-end'
-  - partner: 'trip-carhire'
+  - partner: 'localrent'
     label: 'Compare car hire at Tivat Airport'
     position: 'body-end'
 sources:

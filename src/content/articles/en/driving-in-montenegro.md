@@ -21,7 +21,7 @@ gallery:
     alt: 'Road signs and barriers at the Božaj / Hani i Hotit border crossing between Montenegro and Albania'
     credit: 'Photo: Rakoon / Wikimedia Commons, CC0'
 affiliate:
-  - partner: 'trip-carhire'
+  - partner: 'localrent'
     label: 'Compare car hire in Montenegro'
     position: 'body-end'
 sources:

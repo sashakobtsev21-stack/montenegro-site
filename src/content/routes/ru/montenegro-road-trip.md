@@ -73,7 +73,7 @@ stops:
 bestSeason: ['may', 'iyun', 'iyul', 'avgust', 'sentyabr', 'oktyabr']
 gallery: []
 affiliate:
-  - partner: 'trip-carhire'
+  - partner: 'localrent'
     label: 'Сравнить аренду авто в Черногории'
     position: 'body-end'
   - partner: 'trip-hotels'

@@ -12,7 +12,7 @@ cover:
 coverCredit: 'Photo: Diego Delso / Wikimedia Commons, CC BY-SA 3.0'
 gallery: []
 affiliate:
-  - partner: 'trip-carhire'
+  - partner: 'localrent'
     label: 'Compare car hire in Montenegro'
     position: 'body-end'
   - partner: 'kiwitaxi'

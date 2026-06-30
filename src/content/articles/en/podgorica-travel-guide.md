@@ -42,7 +42,7 @@ affiliate:
   - partner: 'trip-hotels'
     label: 'Find hotels in Podgorica'
     position: 'body-end'
-  - partner: 'trip-carhire'
+  - partner: 'localrent'
     label: 'Rent a car at Podgorica Airport'
     position: 'body-end'
 sources: ['montenegro.travel', 'podgorica.travel', 'en.wikipedia.org', 'aerodromi.me']

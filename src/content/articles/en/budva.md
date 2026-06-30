@@ -43,7 +43,6 @@ affiliate:
     label: 'Book a Budva Riviera day tour'
     position: 'body-end'
 sources: ['montenegro.travel', 'en.wikipedia.org', 'tobudva.com']
-hotelWidget: true
 draft: false
 ---
 

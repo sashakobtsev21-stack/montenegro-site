@@ -31,7 +31,6 @@ import MapEmbed from '../components/MapEmbed.astro';
 import AccessFrom from '../components/AccessFrom.astro';
 import VisitInfo from '../components/VisitInfo.astro';
 import PhotoGallery from '../components/PhotoGallery.astro';
-import HotelWidget from '../components/HotelWidget.astro';
 import coverVariants from '../data/cover-variants.json';
 
 interface Props {
@@ -316,15 +315,10 @@ const attractionLd = data.geo
       {
         /* AffiliateBox 1–3 по frontmatter (§8.1, §16). Ссылка только через
            /go/{partner}?c={slug} с rel="sponsored nofollow noopener" — это
-           инкапсулировано в самом компоненте AffiliateBox (CLAUDE правило 2).
-           Дедуп hotel-интента (аудит 2026-06-20): при hotelWidget текстовый
-           бокс trip-hotels убираем — виджет ниже и есть поиск отелей. */
-        data.affiliate.filter((box) => !(data.hotelWidget && box.partner === 'trip-hotels')).length > 0 && (
+           инкапсулировано в самом компоненте AffiliateBox (CLAUDE правило 2). */
+        data.affiliate.length > 0 && (
           <div class="affiliates" data-reveal>
-            {data.affiliate
-              .filter((box) => !(data.hotelWidget && box.partner === 'trip-hotels'))
-              .slice(0, 3)
-              .map((box) => (
+            {data.affiliate.slice(0, 3).map((box) => (
               <AffiliateBox
                 lang={lang}
                 partner={box.partner}
@@ -336,16 +330,6 @@ const attractionLd = data.geo
             ))}
           </div>
         )
-      }
-
-      {
-        /*
-         * Виджет поиска отелей Trip.com (HotelWidget §8.1, §16) — click-to-load,
-         * до клика ничего стороннего не грузится (перф §15, приватность §18).
-         * Только при флаге hotelWidget (города с высоким спросом на жильё);
-         * дополняет текстовые боксы «Жильё» (/go/), а не заменяет их.
-         */
-        data.hotelWidget && <HotelWidget lang={lang} subid={data.slug} />
       }
 
       <AboutNote lang={lang} />

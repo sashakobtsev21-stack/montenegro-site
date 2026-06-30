@@ -46,7 +46,6 @@ affiliate:
     label: 'Аренда авто в аэропорту Подгорицы'
     position: 'body-end'
 sources: ['montenegro.travel', 'podgorica.travel', 'en.wikipedia.org', 'aerodromi.me']
-hotelWidget: true
 draft: false
 ---
 

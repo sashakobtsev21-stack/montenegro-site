@@ -236,12 +236,6 @@ export const ru: UIDictionary = {
     prev: 'Предыдущее',
     next: 'Следующее',
   },
-  hotelWidget: {
-    heading: 'Поиск и бронирование отелей',
-    cta: 'Показать поиск отелей',
-    note: 'Виджет партнёра Trip.com. Загружается по клику. Цены и наличие — на стороне сервиса.',
-    frameTitle: 'Поиск отелей в Черногории — Trip.com',
-  },
   article: {
     tocHeading: 'Содержание',
     relatedHeading: 'Читайте также',

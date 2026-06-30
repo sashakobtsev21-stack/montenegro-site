@@ -40,7 +40,6 @@ affiliate:
     label: 'Лодочный тур по Которскому заливу'
     position: 'body-end'
 sources: ['montenegro.travel', 'whc.unesco.org', 'en.wikipedia.org', 'kotor.travel']
-hotelWidget: true
 draft: false
 ---
 

@@ -275,13 +275,6 @@ const articleBase = z.object({
    * Опционально, по умолчанию false — не влияет на контракт API (§23).
    */
   demo: z.boolean().default(false),
-  /**
-   * Виджет поиска отелей Trip.com (HotelWidget §8.1, §16). Опционально, по
-   * умолчанию false. Click-to-load: до клика ничего от Trip.com не грузится
-   * (перф §15, приватность §18). Включается у статей с высоким спросом на
-   * жильё (ключевые города). На контракт API (§23) не влияет.
-   */
-  hotelWidget: z.boolean().default(false),
   draft: z.boolean().default(false),
 });
 

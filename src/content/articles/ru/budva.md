@@ -43,7 +43,6 @@ affiliate:
     label: 'Экскурсия по Будванской ривьере'
     position: 'body-end'
 sources: ['montenegro.travel', 'en.wikipedia.org', 'tobudva.com']
-hotelWidget: true
 draft: false
 ---
 

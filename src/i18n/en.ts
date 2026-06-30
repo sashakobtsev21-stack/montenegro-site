@@ -236,12 +236,6 @@ export const en: UIDictionary = {
     prev: 'Previous',
     next: 'Next',
   },
-  hotelWidget: {
-    heading: 'Search and book hotels',
-    cta: 'Show hotel search',
-    note: 'Trip.com partner widget. Loads on click. Prices and availability are on the service’s side.',
-    frameTitle: 'Hotel search in Montenegro — Trip.com',
-  },
   article: {
     tocHeading: 'Contents',
     relatedHeading: 'Read also',

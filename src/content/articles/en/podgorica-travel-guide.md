@@ -46,7 +46,6 @@ affiliate:
     label: 'Rent a car at Podgorica Airport'
     position: 'body-end'
 sources: ['montenegro.travel', 'podgorica.travel', 'en.wikipedia.org', 'aerodromi.me']
-hotelWidget: true
 draft: false
 ---
 

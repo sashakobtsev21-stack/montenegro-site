@@ -40,7 +40,6 @@ affiliate:
     label: 'Book a Bay of Kotor boat tour'
     position: 'body-end'
 sources: ['montenegro.travel', 'whc.unesco.org', 'en.wikipedia.org', 'kotor.travel']
-hotelWidget: true
 draft: false
 ---
 

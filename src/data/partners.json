@@ -1,5 +1,5 @@
 {
-  "$schema-note": "Карта партнёров для /go/ (SPEC §16). Ключ — партнёр из URL /go/{partner}. urlTemplate — целевой URL с плейсхолдером {subid}, куда подставляется ?c={slug} клика (SubID для атрибуции). Прямые URL партнёрок в контенте запрещены — только через /go/. Подключено: Trip.com (Allianceid 8701645, SID 319548076, trip_sub3 D17960553); {subid} идёт в trip_sub1. Localrent, Aviasales, Airalo — трекинг-ссылки Travelpayouts (*.tpx.gr) с SubID: {subid} подставляется в ?sub_id= (slug-источник клика). ⚠️ EKTA — ВРЕМЕННО прямой URL ektatraveling.com (без атрибуции): присланная tpx.gr-ссылка вела на VisitorsCoverage (p=4552) с ошибкой «marker is not subscribed»; заменить на корректную трекинг-ссылку EKTA из кабинета Travelpayouts (вступить в программу EKTA), тогда вернуть ?sub_id={subid}+allowSubId:true. Авиабилеты — aviasales (trip-flights не используется). Trip.com (carhire/hotels/tours/transfers) без изменений. ⚠️ БОЛВАНКИ EN-партнёрок discovercars/getyourguide/booking — пока ПРЯМЫЕ URL без атрибуции (как EKTA): при регистрации владельца заменить urlTemplate на трекинг-ссылку из кабинета (Travelpayouts/партнёрская сеть) и выставить allowSubId:true + ?sub_id={subid} (или эквивалент). До этого клики НЕ атрибутируются. См. SPEC §16.",
+  "$schema-note": "Карта партнёров для /go/ (SPEC §16). Ключ — партнёр из URL /go/{partner}. urlTemplate — целевой URL с плейсхолдером {subid}, куда подставляется ?c={slug} клика (SubID для атрибуции). Прямые URL партнёрок в контенте запрещены — только через /go/. Подключено: Trip.com (Allianceid 8701645, SID 319548076, trip_sub3 D17960553); {subid} идёт в trip_sub1. Localrent, Aviasales, Airalo — трекинг-ссылки Travelpayouts (*.tpx.gr) с SubID: {subid} подставляется в ?sub_id= (slug-источник клика). ⚠️ EKTA — ВРЕМЕННО прямой URL ektatraveling.com (без атрибуции): присланная tpx.gr-ссылка вела на VisitorsCoverage (p=4552) с ошибкой «marker is not subscribed»; заменить на корректную трекинг-ссылку EKTA из кабинета Travelpayouts (вступить в программу EKTA), тогда вернуть ?sub_id={subid}+allowSubId:true. Авиабилеты — aviasales (trip-flights не используется). Trip.com (carhire/hotels/tours/transfers) без изменений.",
   "fallback": "/",
   "partners": {
     "trip-carhire": {
@@ -41,18 +41,6 @@
     "aviasales": {
       "urlTemplate": "https://aviasales.tpx.gr/EhNbez89?sub_id={subid}",
       "allowSubId": true
-    },
-    "discovercars": {
-      "urlTemplate": "https://www.discovercars.com/",
-      "allowSubId": false
-    },
-    "getyourguide": {
-      "urlTemplate": "https://www.getyourguide.com/",
-      "allowSubId": false
-    },
-    "booking": {
-      "urlTemplate": "https://www.booking.com/",
-      "allowSubId": false
     },
     "yesim": {
       "urlTemplate": "https://yesim.tpx.gr/MSDGcQK7?sub_id={subid}",

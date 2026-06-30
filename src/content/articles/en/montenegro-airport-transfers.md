@@ -28,7 +28,7 @@ sources:
   - 'https://en.wikipedia.org/wiki/Tivat_Airport'
   - 'https://www.rome2rio.com/s/Dubrovnik-Airport-DBV/Kotor'
   - 'https://gomontenegro.me/main-bus-station-podgorica/'
-draft: true
+draft: false
 ---
 
 Three airports feed Montenegro's coast: **Tivat (TIV)** and **Podgorica (TGD)** inside the country, and **Dubrovnik (DBV)** just over the border in Croatia. From all three, the simplest way to your hotel is a **pre-booked private transfer** or a **taxi**; a cheaper **bus** works from Tivat and Podgorica but not really from Dubrovnik. This guide covers each airport in turn — rough fares, drive times and the catches — so you can match the transfer to your arrival (prices and times checked July 2026; they move with the season, so reconfirm before you travel).

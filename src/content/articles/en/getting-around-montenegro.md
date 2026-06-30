@@ -116,6 +116,9 @@ When you are ready to price a hire car or a fixed-price airport transfer, compar
 - [Renting a car in Montenegro](/car-rental/renting-a-car-in-montenegro/) — pickup points, roads, parking and costs.
 - [Driving in Montenegro](/transport/driving-in-montenegro/) — rules, speed limits, tolls, fuel and parking.
 - [Tivat Airport to Kotor](/transport/tivat-airport-to-kotor/) — taxi, transfer and the budget bus route.
+- [Tivat vs Podgorica Airport](/transport/tivat-vs-podgorica-airport/) — which airport to fly into for the coast or the north.
+- [Airport transfers in Montenegro](/transport/montenegro-airport-transfers/) — Tivat, Podgorica and Dubrovnik options compared.
+- [Podgorica Airport to Budva](/transport/podgorica-airport-to-budva/) — taxi, transfer and the bus via Podgorica.
 - [Kotor to Dubrovnik](/transport/kotor-to-dubrovnik/) — bus, transfer and the Croatian border crossing.
 - [Kotor to Budva](/transport/kotor-to-budva-bus/) — frequent buses, taxis and the two driving routes.
 - [Montenegro road trip itinerary](/routes/montenegro-road-trip/) — the self-drive route through coast and mountains.

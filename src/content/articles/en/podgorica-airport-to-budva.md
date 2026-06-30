@@ -27,7 +27,7 @@ sources:
   - 'https://www.rome2rio.com/s/Podgorica-Airport-TGD/Budva'
   - 'https://gomontenegro.me/main-bus-station-podgorica/'
   - 'https://mack-rent.me/blog/tivat-vs-podgorica-airport/'
-draft: true
+draft: false
 ---
 
 Podgorica Airport (TGD) to Budva is about **65 km**, and the drive takes roughly **an hour** (a bit more in summer traffic). There's no direct bus from the terminal, so your real choices are a **taxi**, a **pre-booked private transfer**, or a **two-step bus** — a short hop to Podgorica's main bus station, then a coach to Budva. Here's what each costs in 2026, how long it takes, and when to use which (fares and times checked July 2026 — they shift with the season, so reconfirm before you travel).

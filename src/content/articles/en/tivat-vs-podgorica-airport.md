@@ -30,7 +30,7 @@ sources:
   - 'https://www.airmilescalculator.com/distance/tiv-to-tgd/'
   - 'https://en.wikipedia.org/wiki/Tivat_Airport'
   - 'https://caffemontenegro.me/en/news/summer-with-more-than-60-direct-flights/'
-draft: true
+draft: false
 ---
 
 For a beach holiday around **Budva or Kotor**, fly into **Tivat (TIV)** — it sits right on the Bay of Kotor, about 8 km from Kotor and 20 km from Budva, so you reach your hotel in under half an hour. For the **north, Lake Skadar, Ostrog or the capital**, or for cheaper year-round flights, fly into **Podgorica (TGD)**, the inland airport an hour or more from the coast. Below is how the two compare on distance, time, cost and flight choice (distances and fares checked July 2026 — reconfirm before you book).

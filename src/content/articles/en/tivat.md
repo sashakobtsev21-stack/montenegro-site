@@ -93,7 +93,7 @@ Just offshore lies **Gospa od Milosti** ("Our Lady of Mercy"), a small islet usu
 
 ### Plavi Horizonti beach and the salt pans
 
-For sand, head out to the Luštica peninsula. **Plavi Horizonti ("Blue Horizons")** near the village of Radoviči is one of the best-regarded sandy beaches on this stretch of coast — a shallow, sheltered bay backed by pine woods, popular with families and about a 15–20 minute drive from Tivat. Closer to town, the **Solila salt pans** are a protected wetland nature reserve where flamingos and other birds stop on migration — a quiet, flat walk that is a complete change of pace from the marina.
+For sand, head out to the Luštica peninsula. **Plavi Horizonti ("Blue Horizons")** near the village of Radoviči is one of the best-regarded sandy beaches on this stretch of coast — a shallow, sheltered bay backed by pine woods, popular with families and about a 15–20 minute drive from Tivat. It earns its place among the [best beaches in Montenegro](/attractions/best-beaches-in-montenegro/) alongside the Budva Riviera and Ulcinj's long sands. Closer to town, the **Solila salt pans** are a protected wetland nature reserve where flamingos and other birds stop on migration — a quiet, flat walk that is a complete change of pace from the marina.
 
 <figure class="figure">
 <img src="/images/tivat/plavi-horizonti.webp" alt="The sandy bay of Plavi Horizonti beach near Tivat backed by pine woods and a low resort" width="1280" height="960" loading="lazy" decoding="async" />

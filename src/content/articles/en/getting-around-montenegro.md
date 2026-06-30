@@ -66,7 +66,7 @@ There is **no Uber or Bolt in Montenegro**. A few local apps exist instead — T
 
 ## Hire car: the way to see the country
 
-A car is the difference between seeing one resort and seeing Montenegro. The coast is doable by bus, but the north — Durmitor, Žabljak, the Tara Canyon — and Lake Skadar's wineries and viewpoints really need your own wheels. You pick up at **Tivat (TIV)** or **Podgorica (TGD)** airport, or in Dubrovnik just across the Croatian border, and you drive on the **right**.
+A car is the difference between seeing one resort and seeing Montenegro. The coast is doable by bus, but the north — Durmitor, Žabljak, the Tara Canyon — and Lake Skadar's wineries and viewpoints really need your own wheels. You pick up at **Tivat (TIV)** or **Podgorica (TGD)** airport, or in Dubrovnik just across the Croatian border, and you drive on the **right**. If you arrive over a land border, check the documents you need first in our [Montenegro entry requirements](/planning/montenegro-entry-requirements/) guide.
 
 The roads are spectacular and demanding in equal measure. Outside a few fast stretches, expect two-lane mountain roads that climb, twist and narrow without much warning — the old **Kotor–Lovćen serpentine** screws up the mountainside in roughly 25 hairpin bends. Take a small car, drive in daylight on the tightest sections, and you will be rewarded with some of the best driving in the Mediterranean. Our full guide to [renting a car in Montenegro](/car-rental/renting-a-car-in-montenegro/) covers pickup points, parking, the green card for border trips and how to keep costs down.
 

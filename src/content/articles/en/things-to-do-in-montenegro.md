@@ -42,7 +42,7 @@ The wider **Bay of Kotor** is just as important as the town. The water curls inl
 
 Budva is Montenegro's beach-and-nightlife counterweight to Kotor. The old town is walled and photogenic, but the mood is more resort-like: long promenades, beach clubs, summer crowds and a string of nearby coves. It is the right base if swimming, restaurants and late evenings matter as much as sightseeing.
 
-The easiest Budva day mixes three pieces: the Old Town in the morning, a beach break around Mogren or the wider Riviera, and the Sveti Stefan viewpoint before sunset. Sveti Stefan itself is a tiny fortified islet connected to the mainland by a narrow causeway; access to the islet depends on the hotel/resort arrangements, but the public viewpoint and the beaches around it are the reason most travellers stop.
+The easiest Budva day mixes three pieces: the Old Town in the morning, a beach break around Mogren or the wider Riviera, and the Sveti Stefan viewpoint before sunset. If swimming is a priority, our guide to the [best beaches in Montenegro](/attractions/best-beaches-in-montenegro/) ranks the coast from here down to Ulcinj. Sveti Stefan itself is a tiny fortified islet connected to the mainland by a narrow causeway; access to the islet depends on the hotel/resort arrangements, but the public viewpoint and the beaches around it are the reason most travellers stop.
 
 <figure class="figure">
 <img src="/images/things-to-do-in-montenegro/sveti-stefan.webp" alt="Sveti Stefan islet and beaches on the Budva Riviera in Montenegro" width="1280" height="655" loading="lazy" decoding="async" />

@@ -87,7 +87,7 @@ A rough rule for splitting a week: spend the larger share on a coastal base for 
 
 ## Entry, money and practical basics
 
-Montenegro is straightforward to enter for most Western travellers. Citizens of the US, UK, EU and Ukraine can typically visit **visa-free for up to 90 days within any 180-day period**. You are expected to register your stay within 24 hours of arrival, but if you're in a hotel or registered rental the property normally does this for you automatically. Because entry rules can change, verify your own situation on the official government source ([gov.me](https://www.gov.me/)) before travel.
+Montenegro is straightforward to enter for most Western travellers. Citizens of the US, UK, EU and Ukraine can typically visit **visa-free for up to 90 days within any 180-day period**. You are expected to register your stay within 24 hours of arrival, but if you're in a hotel or registered rental the property normally does this for you automatically. Because entry rules can change, verify your own situation on the official government source ([gov.me](https://www.gov.me/)) before travel. For the full picture — passport validity, the 24-hour registration rule and how ETIAS will fit in — see our [Montenegro entry requirements](/planning/montenegro-entry-requirements/) guide.
 
 A few money and safety basics:
 

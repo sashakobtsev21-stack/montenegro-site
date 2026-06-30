@@ -10,6 +10,13 @@ export const en: UIDictionary = {
   langName: 'English',
   skipToContent: 'Skip to content',
   backToTop: 'Back to top',
+  cookieConsent: {
+    text: 'We use cookies only for analytics (Google Analytics) to understand what readers find useful. Analytics runs only with your consent.',
+    accept: 'Accept',
+    decline: 'Decline',
+    aria: 'Cookie consent',
+    learnMore: 'Learn more',
+  },
   notFound: {
     heading: 'Page not found',
     text: 'The page you are looking for doesn’t exist or has moved. Use the menu above or head back to the homepage.',
@@ -59,6 +66,7 @@ export const en: UIDictionary = {
     note: 'Places are chosen by rating and cross-checked with experienced travelers, guides and locals.',
     creatorPrefix: 'Made by',
     creator: 'KOBTSEV',
+    privacy: 'Privacy & Cookie Policy',
   },
   verified: {
     inPlace: 'Verified · {date}',
@@ -454,6 +462,61 @@ export const en: UIDictionary = {
       email: 'info@montenegroguidebook.com',
       emailUrl: 'mailto:info@montenegroguidebook.com',
     },
+  },
+  privacy: {
+    heading: 'Privacy & Cookie Policy',
+    breadcrumb: 'Privacy',
+    updatedLabel: 'Last updated',
+    updatedIso: '2026-06-30',
+    intro: [
+      'This page explains what limited data this website collects, the cookies it uses, and the choices you have. We keep it deliberately simple: this is a static travel guide with no accounts, no forms, and no newsletter, so we don’t ask for or store your personal details.',
+    ],
+    sections: [
+      {
+        heading: 'What we collect',
+        paragraphs: [
+          'We use Google Analytics 4 to understand which articles readers find useful — for example, which pages are visited and roughly which country a visit comes from. This is aggregate, statistical data; we don’t use it to identify you personally.',
+          'Analytics runs only after you agree to it. Until you accept the cookie banner, analytics is switched off and no analytics cookies are set (Google Consent Mode v2, default “denied”). If you decline, the site works exactly the same — we simply collect no analytics.',
+        ],
+      },
+      {
+        heading: 'Cookies we use',
+        paragraphs: [
+          'Analytics cookies (set by Google Analytics, such as _ga) — only after you accept. They help us count visits and see which content works. You can clear them at any time in your browser.',
+          'Your consent choice is stored locally in your browser so the banner doesn’t ask again on every page. It stays on your device and isn’t sent to us.',
+          'We don’t use advertising, social-media, or other tracking cookies beyond the analytics described above.',
+        ],
+      },
+      {
+        heading: 'Affiliate links',
+        paragraphs: [
+          'Some outbound links to partners — for example car rental, transfers, insurance, eSIM, tours, or hotels — are affiliate links. If you book through them we may earn a commission at no extra cost to you; this is how the guide pays for itself. We only point to services we consider worth it, and a commission never changes our selection.',
+          'When you follow such a link you leave this site, and the partner’s own privacy policy and cookies then apply. We have no control over how partners process your data.',
+        ],
+      },
+      {
+        heading: 'Third-party services',
+        paragraphs: [
+          'Google Analytics processes the analytics data described above, once you consent — see Google’s own privacy policy for details.',
+          'The site is served by our hosting provider, which may process standard technical request logs (such as your IP address) to deliver pages and protect against abuse. Some pages show live weather and currency rates fetched from public third-party APIs; those requests don’t send any personal data about you.',
+        ],
+      },
+      {
+        heading: 'Your choices and rights',
+        paragraphs: [
+          'You can accept or decline analytics in the cookie banner, and change your mind any time by clearing this site’s data in your browser, which makes the banner appear again.',
+          'You can also block or delete cookies in your browser settings, or use Google’s analytics opt-out browser add-on.',
+          'If you’re in the EU or UK, data-protection law gives you rights over your personal data, such as access or erasure. Because this site stores no personal data of its own, these mainly concern consent-based analytics — and you can withdraw consent at any time as described above. For any request, email us (below).',
+        ],
+      },
+      {
+        heading: 'Changes to this policy',
+        paragraphs: [
+          'We may update this policy as the site evolves; the date above shows the last revision. Significant changes will be reflected on this page.',
+        ],
+      },
+    ],
+    contactLabel: 'Questions about privacy or this policy? Email us at',
   },
   relocation: {
     heading: 'Relocating to Montenegro: how to settle in',

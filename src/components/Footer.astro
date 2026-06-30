@@ -3,7 +3,7 @@
  * Footer (§9, §18) — дисклеймер о партнёрских ссылках, навигация, LangSwitcher, ©.
  * Направление «Полевой журнал»: камень-фон, тонкая вино-линия сверху, спокойно.
  */
-import { t, sectionHref, ALL_SECTION_KEYS, type Lang } from '../i18n';
+import { t, sectionHref, langPrefix, ALL_SECTION_KEYS, type Lang } from '../i18n';
 import LangSwitcher from './LangSwitcher.astro';
 
 interface Props {
@@ -42,6 +42,9 @@ const year = new Date().getFullYear();
 
     <p class="disclaimer">{dict.footer.disclaimer}</p>
     <p class="copy">© {year} {dict.siteName}</p>
+    <p class="legal">
+      <a class="u-underline" href={`${langPrefix(lang)}/privacy/`}>{dict.footer.privacy}</a>
+    </p>
     <p class="creator">{dict.footer.creatorPrefix} {dict.footer.creator}</p>
   </div>
 </footer>
@@ -123,6 +126,16 @@ const year = new Date().getFullYear();
   .copy {
     margin: 0;
     color: var(--text-muted);
+  }
+  .legal {
+    margin: var(--space-2) 0 0;
+  }
+  .legal a {
+    color: var(--link);
+  }
+  .legal a:hover,
+  .legal a:focus-visible {
+    color: var(--link-hover);
   }
   .creator {
     margin: var(--space-2) 0 0;

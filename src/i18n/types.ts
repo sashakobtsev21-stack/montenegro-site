@@ -121,6 +121,8 @@ export interface UIDictionary {
   skipToContent: string;
   /** Плавающая кнопка «наверх» на длинных страницах (aria-label). */
   backToTop: string;
+  /** Баннер согласия на cookies под GA4 (Consent Mode v2, §17/§18). */
+  cookieConsent: { text: string; accept: string; decline: string; aria: string; learnMore: string };
   /** Страница 404 (не найдена) — единая на сайт, рендерится на языке по умолчанию. */
   notFound: { heading: string; text: string; home: string };
   /** Блок «Сейчас в Черногории» на главной (§8.4): погода + курс евро. */
@@ -162,6 +164,8 @@ export interface UIDictionary {
     creatorPrefix: string;
     /** Подпись-кредит создателя сайта в подвале. */
     creator: string;
+    /** Подпись-ссылка на политику конфиденциальности в подвале. */
+    privacy: string;
   };
   /** VerifiedBadge (signature §9, §10). */
   verified: {
@@ -535,6 +539,24 @@ export interface UIDictionary {
       /** mailto-ссылка. */
       emailUrl: string;
     };
+  };
+  /**
+   * Страница «Политика конфиденциальности и cookies» (§18) — раскрытие аналитики
+   * (GA4 через Consent Mode v2), cookies, партнёрских ссылок, сторонних сервисов и
+   * прав пользователя. Обычная индексируемая страница (рекламные сети требуют
+   * доступной политики); один компонент на язык, текст — из словарей. Юрлица не выдумываем.
+   */
+  privacy: {
+    heading: string;
+    breadcrumb: string;
+    /** Лейбл даты последней правки («Last updated»). */
+    updatedLabel: string;
+    /** ISO-дата последней правки (для бейджа и WebPage schema). */
+    updatedIso: string;
+    intro: string[];
+    sections: { heading: string; paragraphs: string[] }[];
+    /** Подпись перед адресом почты (сам адрес — из contacts.channels). */
+    contactLabel: string;
   };
   /**
    * Хаб «Релокация» (§7, §8.3 — выделенный контент, паттерн InsuranceHub).
